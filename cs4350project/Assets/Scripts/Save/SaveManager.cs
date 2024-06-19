@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// TODO: Note that flags should be accessible by constant name from another file
+// to avoid errors and also have these flags be accessible globally
 public class SaveManager : Singleton<SaveManager>
 {
     #region Init
