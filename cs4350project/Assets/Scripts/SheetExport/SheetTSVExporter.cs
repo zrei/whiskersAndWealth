@@ -21,7 +21,16 @@ public static class SheetTSVExporter
     public static void DownloadSheet(string workbookId, string sheetId, Action<string> rawTextCallback)
     {
         string exportUrl = string.Format(GoogleSheetsExportUrl, workbookId, sheetId);
-        StartCoroutine(DownloadSheetCoroutine(url, rawTextCallback));
+        IEnumerator coroutine = DownloadSheetCoroutine(exportUrl, rawTextCallback);
+        // subscribe to the editor's update loop because otherwise script content won't run
+        EditorApplication.update += EditorUpdate;
+
+        void EditorUpdate()
+        {
+            // has reached the end of the coroutine, unsubscribe
+            if (!coroutine.MoveNext())
+                EditorApplication.update -= EditorUpdate;
+        }
     }
 
     private static IEnumerator DownloadSheetCoroutine(string url, Action<string> callback)

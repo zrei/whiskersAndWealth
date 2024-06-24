@@ -7,6 +7,6 @@ using UnityEngine;
 /// </summary>
 public abstract class TSVDataParser : ScriptableObject
 {
-    public abstract void Parse(string[,] cells);
+    public abstract void Parse(ExportedDataTable table);
 }
 #endif

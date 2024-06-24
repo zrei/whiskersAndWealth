@@ -5,6 +5,24 @@ using System.Text.RegularExpressions;
 using System.Linq;
 
 /// <summary>
+/// Class to hold the exported information as a 2D array,
+/// together with its various properties
+/// </summary>
+public class ExportedDataTable
+{
+    public string[,] Cells;
+    public int Rows;
+    public int Cols;
+
+    public ExportedDataTable(int rows, int cols)
+    {
+        this.Rows = rows;
+        this.Cols = cols;
+        this.Cells = new string[Rows, Cols];
+    }
+}
+
+/// <summary>
 /// Class to parse TSV formatted data into a readable 2D array
 /// </summary>
 public static class SheetTSVParser
@@ -12,7 +30,7 @@ public static class SheetTSVParser
     private const string RowDelimiter = "\r\n";
     private const string ColDelimiter = "\t";
 
-    public static string[,] Parse(string rawData, int startingRow)
+    public static ExportedDataTable Parse(string rawData, int startingRow)
     {
         if (rawData.Contains("<!DOCTYPE html>") || rawData.Contains("<!doctype html>"))
         {
@@ -32,24 +50,25 @@ public static class SheetTSVParser
         }
 
         rows = rows.SubArray(startingRow, rows.Length - startingRow);
-        string[] cols = rows[0].Split(new string[] { ColDelimiter }, StringSplitOptions.None).Length;
-        string[,] sheetCells = new string[rows.Length, cols.Length];
+        string[] cols = rows[0].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
+        
+        ExportedDataTable table = new ExportedDataTable(rows.Length, cols.Length);
 
-        for (int r = 0; r < rows.Length; r++)
+        for (int r = 0; r < table.Rows; r++)
         {
             string[] cells = rows[r].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
 
-            if (cells.Length != cols.Length)
+            if (cells.Length != table.Cols)
             {
                 Debug.LogError("Malformed row " + (r + startingRow) + ". Expected Cols=" + cols.Length + " but got " + cells.Length + " " + "\nRAW:\n" + rows[r]);
                 return null;
             }
 
-            for (int c = 0; c < cells.Length; c++)
-                sheetCells[r, c] = cells[c].Trim();
+            for (int c = 0; c < table.Cols; c++)
+                table.Cells[r, c] = cells[c].Trim();
         }
 
-        return sheetCells;
+        return table;
     }
 }
 #endif
