@@ -5,35 +5,20 @@ using System.Text.RegularExpressions;
 using System.Linq;
 
 /// <summary>
-/// Class to represent exported sheet data as a table
+/// Class to hold the exported information as a 2D array,
+/// together with its various properties
 /// </summary>
-public class DataTable
+public class ExportedDataTable
 {
-    public int rows;
-    public int cols;
-    private SheetTSVParser.SheetConstraints m_Constraints;
-
-    public DataTable(SheetTSVParser.SheetConstraints constraints)
-    {
-        m_Constraints = constraints;
-    }
-
-    /// <summary>
-    /// [rows, cols]
-    /// </summary>
     public string[,] Cells;
+    public int Rows;
+    public int Cols;
 
-    public string Get(int x, int y)
+    public ExportedDataTable(int rows, int cols)
     {
-        return Cells[y, x];
-    }
-
-    /// <summary>
-    /// Returns the Cell Name like in Sheets. I.e. A2, D6
-    /// </summary>
-    public string GetCellName(int x, int y)
-    {
-        return TSVParsingTools.GetCellName(x, y + m_Constraints.StartRow);
+        this.Rows = rows;
+        this.Cols = cols;
+        this.Cells = new string[Rows, Cols];
     }
 }
 
@@ -42,24 +27,10 @@ public class DataTable
 /// </summary>
 public static class SheetTSVParser
 {
-    private const string ROW_DELIM = "\r\n";
-    private const string COL_DELIM = "\t";
+    private const string RowDelimiter = "\r\n";
+    private const string ColDelimiter = "\t";
 
-    /// <summary>
-    /// Cuts out all cells outside of this range, restricting the context (the origin can change)
-    /// </summary>
-    [System.Serializable]
-    public class SheetConstraints
-    {
-        public int StartRow;
-
-        public SheetConstraints(int startRow = 0)
-        {
-            StartRow = startRow;
-        }
-    }
-
-    public static DataTable Parse(string rawData, SheetConstraints constraints)
+    public static ExportedDataTable Parse(string rawData, int startingRow)
     {
         if (rawData.Contains("<!DOCTYPE html>") || rawData.Contains("<!doctype html>"))
         {
@@ -67,36 +38,33 @@ public static class SheetTSVParser
             return null;
         }
 
-        DataTable table = new DataTable(constraints);
-
         string[] rows = rawData.Split(
-            new string[] { ROW_DELIM },
+            new string[] { RowDelimiter },
             StringSplitOptions.RemoveEmptyEntries
         );
 
-        if (rows.Length <= constraints.StartRow)
+        if (rows.Length <= startingRow)
         {
-            Debug.LogError("Constraints startrow is out of bounds!");
+            Debug.LogError("Starting row is out of bounds!");
             return null;
         }
 
-        rows = rows.SubArray(constraints.StartRow, rows.Length - constraints.StartRow);
+        rows = rows.SubArray(startingRow, rows.Length - startingRow);
+        string[] cols = rows[0].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
+        
+        ExportedDataTable table = new ExportedDataTable(rows.Length, cols.Length);
 
-        table.rows = rows.Length;
-        table.cols = rows[0].Split(new string[] { COL_DELIM }, StringSplitOptions.None).Length;
-        table.Cells = new string[table.rows, table.cols];
-
-        for (int r = 0; r < table.rows; r++)
+        for (int r = 0; r < table.Rows; r++)
         {
-            string[] cells = rows[r].Split(new string[] { COL_DELIM }, StringSplitOptions.None);
+            string[] cells = rows[r].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
 
-            if (cells.Length != table.cols)
+            if (cells.Length != table.Cols)
             {
-                Debug.LogError("Malformed row " + (r + constraints.StartRow) + ". Expected Cols=" + table.cols + " but got " + cells.Length + " " + "\nRAW:\n" + rows[r]);
+                Debug.LogError("Malformed row " + (r + startingRow) + ". Expected Cols=" + cols.Length + " but got " + cells.Length + " " + "\nRAW:\n" + rows[r]);
                 return null;
             }
 
-            for (int c = 0; c < cells.Length; c++)
+            for (int c = 0; c < table.Cols; c++)
                 table.Cells[r, c] = cells[c].Trim();
         }
 
