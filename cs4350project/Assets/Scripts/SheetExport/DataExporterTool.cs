@@ -71,7 +71,7 @@ public class DataExporterTool : EditorWindow
             return;
         }
 
-        SheetTSVExporter.DownloadSheet(sheetId, sheetGuid, (data) => dataParser.Parse(SheetTSVParser.Parse(data, new SheetTSVParser.SheetConstraints(startingRow))));
+        SheetTSVExporter.DownloadSheet(sheetId, sheetGuid, (data) => dataParser.Parse(SheetTSVParser.Parse(data, startingRow)));
     }
 }
 #endif
