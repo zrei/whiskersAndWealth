@@ -8,13 +8,13 @@ public class FoodDataParser : TSVDataParser
     {
         if (table == null)
         {
-            Debug.LogError("No cells provided!");
+            Logger.LogEditor(this.GetType().Name, "No cells provided!", LogLevel.ERROR);
             return;
         }
 
         for (int r = 0; r < table.Rows; ++r)
             for (int c = 0; c < table.Cols; ++c)
-                Debug.Log(table.Cells[r, c]);
+                Logger.LogEditor(this.GetType().Name, table.Cells[r, c], LogLevel.LOG);
         // do stuff to create the necessary SO
     }
 }

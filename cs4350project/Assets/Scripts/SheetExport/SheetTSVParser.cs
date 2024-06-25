@@ -27,6 +27,8 @@ public class ExportedDataTable
 /// </summary>
 public static class SheetTSVParser
 {
+    private const string LoggerName = "SheetTSVParser";
+
     private const string RowDelimiter = "\r\n";
     private const string ColDelimiter = "\t";
 
@@ -34,33 +36,33 @@ public static class SheetTSVParser
     {
         if (rawData.Contains("<!DOCTYPE html>") || rawData.Contains("<!doctype html>"))
         {
-            Debug.LogError("Document is restricted! Change permissions to \"Anyone on the internet with this link can view\"");
+            Logger.Log(LoggerName, "The sheet is restricted and can't be pulled. Change permissions to \"Anyone on the internet with this link can view\"", LogLevel.ERROR);
             return null;
         }
 
         string[] rows = rawData.Split(
-            new string[] { RowDelimiter },
+            RowDelimiter,
             StringSplitOptions.RemoveEmptyEntries
         );
 
         if (rows.Length <= startingRow)
         {
-            Debug.LogError("Starting row is out of bounds!");
+            Logger.LogEditor(LoggerName, "Starting row is out of bounds!", LogLevel.ERROR);
             return null;
         }
 
         rows = rows.SubArray(startingRow, rows.Length - startingRow);
-        string[] cols = rows[0].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
+        string[] cols = rows[0].Split(ColDelimiter);
         
         ExportedDataTable table = new ExportedDataTable(rows.Length, cols.Length);
 
         for (int r = 0; r < table.Rows; r++)
         {
-            string[] cells = rows[r].Split(new string[] { ColDelimiter }, StringSplitOptions.None);
+            string[] cells = rows[r].Split(ColDelimiter);
 
             if (cells.Length != table.Cols)
             {
-                Debug.LogError("Malformed row " + (r + startingRow) + ". Expected Cols=" + cols.Length + " but got " + cells.Length + " " + "\nRAW:\n" + rows[r]);
+                Logger.LogEditor(LoggerName, "Row " + (r + startingRow) + " does not have the expected number of columns. Are some columns empty? Expected number of columns is " + cols.Length + " but there are only " + cells.Length + " cells found." + "\nRAW:\n" + rows[r], LogLevel.ERROR);
                 return null;
             }
 

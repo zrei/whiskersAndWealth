@@ -12,8 +12,10 @@ using UnityEditor;
 /// </summary>
 public static class SheetTSVExporter
 {
-    private static string GoogleSheetsExportUrl = "https://docs.google.com/spreadsheets/d/{0}/export?gid={1}&format=tsv";
-    private static int TimeOutAmount = 5;
+    private const string LoggerName = "SheetTSVExporter";
+
+    private const string GoogleSheetsExportUrl = "https://docs.google.com/spreadsheets/d/{0}/export?gid={1}&format=tsv";
+    private const int TimeOutAmount = 5;
     
     /// <summary>
     /// The actual download call is async and fire and forget, so an Action
@@ -56,7 +58,7 @@ public static class SheetTSVExporter
         }
 
         if (hasTimedOut)
-            Debug.LogError("Timed out!");
+            Logger.LogEditor(LoggerName, "Timed out!", LogLevel.ERROR);
         else
             callback?.Invoke(www.downloadHandler.text);
     }

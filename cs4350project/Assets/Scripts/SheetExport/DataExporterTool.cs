@@ -52,7 +52,7 @@ public class DataExporterTool : EditorWindow
     {
         if (startingRow < 0)
         {
-            Debug.LogError("Starting row for " + sheetName + " is negative!");
+            Logger.LogEditor(this.GetType().Name, "Starting row for " + sheetName + " is negative!", LogLevel.ERROR);
             return false;
         }
         return true;
@@ -64,7 +64,7 @@ public class DataExporterTool : EditorWindow
 
         if (dataParser == null)
         {
-            Debug.LogError("No data parser found for: " + dataParserName);
+            Logger.LogEditor(this.GetType().Name, "No data parser found for: " + dataParserName, LogLevel.ERROR);
             return;
         } else if (!SheetConstraintsCheck(startingRow, dataParserName))
         {

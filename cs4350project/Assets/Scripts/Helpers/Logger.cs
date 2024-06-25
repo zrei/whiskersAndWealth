@@ -8,8 +8,12 @@ public enum LogLevel
 }
 public static class Logger
 {
-    private static string LogObjectFormat = "<color=purple>[Class]</color> <color=blue>[{0}]</color> <color=green>[{1}]</color> {2}"; // class name, object name, message
-    private static string LogSingletonFormat = "<color=purple>[Singleton]</color> <color=blue>[{0}]</color> {1}"; // class name, message
+    private const string HeaderColor = "#d199de";
+    private const string ClassColor = "#a2e6f5";
+    private const string ObjectColor = "#a1f0ae";
+    private const string LogObjectFormat = "<color=" + HeaderColor + ">[Class]</color> <color=" + ClassColor + ">[{0}]</color> <color=" + ObjectColor + ">[{1}]</color> {2}"; // class name, object name, message
+    private const string LogSingletonFormat = "<color=" + HeaderColor + ">[Singleton]</color> <color=" + ClassColor + ">[{0}]</color> {1}"; // class name, message
+    private const string LogEditorFormat = "<color=" + HeaderColor + ">[Editor]</color> <color=" + ClassColor + ">[{0}]</color> {1}"; // class name, message
 
     public static void Log(string singletonName, string message, LogLevel level)
     {
@@ -19,6 +23,11 @@ public static class Logger
     public static void Log(string className, string objectName, string message, Object context, LogLevel level)
     {
         Log(level, string.Format(LogObjectFormat, className, objectName, message), context);
+    }
+
+    public static void LogEditor(string className, string message, LogLevel level)
+    {
+        Log(level, string.Format(LogEditorFormat, className, message));
     }
 
     private static void Log(LogLevel log, string message)
