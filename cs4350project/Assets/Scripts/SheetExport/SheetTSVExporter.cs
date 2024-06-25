@@ -13,7 +13,8 @@ using UnityEditor;
 public static class SheetTSVExporter
 {
     private static string GoogleSheetsExportUrl = "https://docs.google.com/spreadsheets/d/{0}/export?gid={1}&format=tsv";
-
+    private static int TimeOutAmount = 5;
+    
     /// <summary>
     /// The actual download call is async and fire and forget, so an Action
     /// is provided to act on the data after it was downloaded
@@ -41,13 +42,12 @@ public static class SheetTSVExporter
 
         bool hasTimedOut = false;
         double time = EditorApplication.timeSinceStartup;
-        double timeout = 5;
 
         // while the request has not succeeded, continue ticking and yield control back to the main process
         // until the request succeeds or timeout is reached
         while (www.result != UnityWebRequest.Result.Success)
         {
-            if (EditorApplication.timeSinceStartup - time > timeout)
+            if (EditorApplication.timeSinceStartup - time > TimeOutAmount)
             {
                 hasTimedOut = true;
                 break;
