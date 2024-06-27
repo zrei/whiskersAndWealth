@@ -18,29 +18,54 @@ public enum InputTypes
 
 // i think this conflicts with unity's in-built stuff
 // also might need to be a class to allow data changes
-public struct Input 
+public class Input
 {
-    public readonly InputTypes InputType;
-    public bool IsBlocked;
-    public bool IsActive;
+    public InputTypes InputType => {public get; private set;};
+    public Unity.Key InputKey => {public get; private set;};
+    public bool IsBlocked => {public get; private set;};
+    public bool IsActive => {public get; private set;};
 
-    public Input(InputTypes inputType, bool isBlocked)
+    public Input(InputTypes inputType, Unity.Key inputKey, bool isBlocked)
     {
         InputType = inputType;
+        InputKey = inputKey;
         IsBlocked = isBlocked;
         IsActive = false;
     }
+
+    public void ToggleBlocked(bool isBlocked)
+    {
+        IsBlocked = isBlocked;
+    }
+
+    /// <summary>
+    /// Accepts the new key and returns the old key
+    /// </summary>
+    public Unity.Key Remap(Unity.Key newKey)
+    {
+        Unity.Key oldKey = InputKey;
+        InputKey = newKey;
+        return oldKey;
+    }
+
+    /*
+    public void ToggleActive(bool isActive)
+    {
+        IsActive = isActive;
+    }
+    */
 }
 
 public class InputManager : Singleton<InputManager>
 {
 
-    private Dictionary<InputTypes, Input> Inputs;;   
+    private Dictionary<InputTypes, Input> inputs;   
     // another dictionary to map THE ACTUAL INPUT KEY to the input? or just put the input key down or something
     // also need a is held possibly. maybe. probably?
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
+        InitInputs();
         base.HandleAwake();
     }
 
@@ -50,8 +75,36 @@ public class InputManager : Singleton<InputManager>
         base.HandleDestroy();
     }
 
-    public bool IsInputActive()
+    private void InitInputs()
     {
+        foreach (enumEntry)
+        {
 
+        }
+    }
+
+    public bool IsInputActive(InputTypes inputType)
+    {
+        if (!inputs.ContainsKey(inputType))
+        {
+            Logger.Log(this.GetType().Name, "No knowledge of the input type: " + inputType, LogLevel.Error);
+            return false;
+        }
+
+        Input input = inputs.Get(inputType);
+
+        return !input.IsBlocked && Input.IsKeyHeldDown(input.InputKey);
+    }
+
+    public void ToggleInputBlocked(InputTypes inputType, bool isBlocked)
+    {
+        if (!inputs.ContainsKey(inputType))
+        {
+            Logger.Log(this.GetType().Name, "No knowledge of the input type: " + inputType, LogLevel.Error);
+            return;
+        }
+
+        Input input = inputs.Get(inputType);
+        input.ToggleIsBlocked(isBlocked);
     }
 }
