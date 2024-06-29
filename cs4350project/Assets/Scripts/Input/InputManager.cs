@@ -1,70 +1,46 @@
+using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public enum InputTypes
+/// <summary>
+/// Enum to provide strong typing for the rest of the project.
+/// Note: Entries should follow the format ActionMapName_ActionName
+/// </summary>
+public enum InputType
 {
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    MOVE_DOWN,
-    MOVE_UP,
-    INTERACT,
-    UI_CLICK, // need UI_SELECT?
+    PLAYER_MOVE,
+    PLAYER_INTERACT,
+    PLAYER_PAUSE,
+    UI_SELECT,
     UI_MOVE_UP,
     UI_MOVE_DOWN,
     UI_MOVE_LEFT,
     UI_MOVE_RIGHT,
-    UI_CLOSE,
-    UI_PAUSE
+    UI_CLOSE
 }
 
-// i think this conflicts with unity's in-built stuff
-// also might need to be a class to allow data changes
-public class Input
+public struct InputMapAndAction
 {
-    public InputTypes InputType => {public get; private set;};
-    public Unity.Key InputKey => {public get; private set;};
-    public bool IsBlocked => {public get; private set;};
-    public bool IsActive => {public get; private set;};
+    public readonly string MapName;
+    public readonly string ActionName;
 
-    public Input(InputTypes inputType, Unity.Key inputKey, bool isBlocked)
+    public InputMapAndAction(string mapName, string actionName)
     {
-        InputType = inputType;
-        InputKey = inputKey;
-        IsBlocked = isBlocked;
-        IsActive = false;
+        MapName = mapName;
+        ActionName = actionName;
     }
-
-    public void ToggleBlocked(bool isBlocked)
-    {
-        IsBlocked = isBlocked;
-    }
-
-    /// <summary>
-    /// Accepts the new key and returns the old key
-    /// </summary>
-    public Unity.Key Remap(Unity.Key newKey)
-    {
-        Unity.Key oldKey = InputKey;
-        InputKey = newKey;
-        return oldKey;
-    }
-
-    /*
-    public void ToggleActive(bool isActive)
-    {
-        IsActive = isActive;
-    }
-    */
 }
 
 public class InputManager : Singleton<InputManager>
 {
-    private Dictionary<InputTypes, Input> m_Inputs;
-    private bool m_AllInputsBlocked;
-    public bool AllInputsBlocked => m_AllInputsBlocked;
+    [SerializeField] private InputActionAsset m_InputActionAsset;
 
-    // another dictionary to map THE ACTUAL INPUT KEY to the input? or just put the input key down or something
-    // also need a is held possibly. maybe. probably?
-    // subscribe to events and handle dependencies here
+    // TODO: Better way to do this?
+    public const string UI_ACTION_MAP_NAME = "UI";
+    public const string PLAYER_ACTION_MAP_NAME = "PLAYER";
+
+    #region Initialization
     protected override void HandleAwake()
     {
         InitInputs();
@@ -74,47 +50,102 @@ public class InputManager : Singleton<InputManager>
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
+        m_InputActionAsset.Disable();
         base.HandleDestroy();
     }
 
+    // TODO: may not want to enable all inputs
     private void InitInputs()
     {
-        foreach (enumEntry)
-        {
+        m_InputActionAsset.Enable();
+    }
+    #endregion
 
+    #region Helper
+    private bool TryGetInputMapAndAction(InputType inputType, out InputMapAndAction result)
+    {
+        string[] inputNameComponents = inputType.ToString().Split("_", StringSplitOptions.RemoveEmptyEntries);
+        
+        if (inputNameComponents.Count() < 2)
+        {
+            Logger.Log(this.GetType().Name, "The enum entry is not formatted properly", LogLevel.ERROR);
+            result = new InputMapAndAction();
+            return false;
         }
+
+        string mapName = inputNameComponents[0];
+        string actionName = string.Join("_", inputNameComponents.SubArray(0, 1));
+        result = new InputMapAndAction(mapName, actionName);
+        return true;
     }
 
-    public bool IsInputActive(InputTypes inputType)
+    private InputAction GetInputAction(InputType inputType)
     {
-        if (m_AllInputsBlocked)
-            return false;
-
-        if (!inputs.ContainsKey(inputType))
+        bool success = TryGetInputMapAndAction(inputType, out InputMapAndAction inputMapAndAction);
+        if (!success)
         {
-            Logger.Log(this.GetType().Name, "No knowledge of the input type: " + inputType, LogLevel.Error);
-            return false;
+            Logger.Log(this.GetType().Name, "Unable to find input action!", LogLevel.ERROR);
+            return null;
         }
+        return m_InputActionAsset.FindActionMap(inputMapAndAction.MapName).FindAction(inputMapAndAction.ActionName);
+    }
+    #endregion
 
-        Input input = inputs.Get(inputType);
-
-        return !input.IsBlocked && Input.IsKeyHeldDown(input.InputKey);
+    public bool IsInputActive(InputType inputType)
+    {
+        return GetInputAction(inputType).triggered;
     }
 
-    public void ToggleInputBlocked(InputTypes inputType, bool isBlocked)
+    public void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
-        if (!inputs.ContainsKey(inputType))
-        {
-            Logger.Log(this.GetType().Name, "No knowledge of the input type: " + inputType, LogLevel.Error);
-            return;
-        }
+        GetInputAction(inputType).performed += callback;
+    }
 
-        Input input = inputs.Get(inputType);
-        input.ToggleIsBlocked(isBlocked);
+    public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
+    {
+        GetInputAction(inputType).performed -= callback;
+    }
+
+    public void ToggleInputBlocked(InputType inputType, bool isBlocked)
+    {
+        InputAction inputAction = GetInputAction(inputType);
+
+        if (isBlocked)
+            inputAction.Disable();
+        else
+            inputAction.Enable();
     }
 
     public void ToggleAllInputsBlocked(bool isBlocked)
     {
-        m_AllInputsBlocked = isBlocked;
+        if (isBlocked)
+            m_InputActionAsset.Disable();
+        else
+            m_InputActionAsset.Enable();
     }
+
+    public void ToggleInputMapBlocked(string mapName, bool isBlocked)
+    {
+        InputActionMap actionMap = m_InputActionAsset.FindActionMap(mapName);
+        
+        if (isBlocked)
+            actionMap.Disable();
+        else
+            actionMap.Enable();
+    }
+
+    public void SwitchToInputMap(string mapName)
+    {
+        m_InputActionAsset.Disable();
+
+        m_InputActionAsset.FindActionMap(mapName).Enable();
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (m_InputActionAsset == null)
+            Logger.Log(this.GetType().Name, "No input action provided", LogLevel.ERROR);
+    }
+#endif
 }
