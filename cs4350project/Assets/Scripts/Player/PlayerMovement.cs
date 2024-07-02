@@ -3,12 +3,12 @@ using UnityEngine.InputSystem;
 
 // need collider? ok i mean yes but we alson eed a trigger
 
-[RequireComponent(typeof(RigidBody2D))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : Singleton<PlayerMovement>
 {
-    [SerializeField] private RigidBody2D m_RB;
+    [SerializeField] private Rigidbody2D m_RB;
 
-    public override void HandleAwake()
+    protected override void HandleAwake()
     {
         HandleDependencies();
         base.HandleAwake();
@@ -27,14 +27,15 @@ public class PlayerMovement : Singleton<PlayerMovement>
         InputManager.Instance.SubscribeToAction(InputType.PLAYER_MOVE, OnMove);
     }
 
-    private void HandleDestroy()
+    protected override void HandleDestroy()
     {
         InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_MOVE, OnMove);
+        base.HandleDestroy();
     }
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        Logger.Log(this.GetType().Name, context.Value, LogLevel.LOG);
+        Logger.Log(this.GetType().Name, context.ReadValue<Vector2>().ToString(), LogLevel.LOG);
     }
 
 #if UNITY_EDITOR
