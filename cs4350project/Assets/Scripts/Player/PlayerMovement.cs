@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// need collider? ok i mean yes but we alson eed a trigger
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : Singleton<PlayerMovement>
 {
@@ -16,14 +14,6 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private void HandleDependencies()
     {
-        if (!InputManager.IsReady)
-        {
-            InputManager.OnReady += HandleDependencies;
-            return;
-        }
-
-        InputManager.OnReady -= HandleDependencies;
-
         InputManager.Instance.SubscribeToAction(InputType.PLAYER_MOVE, OnMove);
     }
 
@@ -35,6 +25,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        m_RB.MovePosition(m_RB.position + context.ReadValue<Vector2>() * GlobalSettings.PlayerVelocity * Time.deltaTime);
         Logger.Log(this.GetType().Name, context.ReadValue<Vector2>().ToString(), LogLevel.LOG);
     }
 
