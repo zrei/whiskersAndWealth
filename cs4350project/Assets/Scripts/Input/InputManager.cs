@@ -106,9 +106,23 @@ public class InputManager : Singleton<InputManager>
         GetInputAction(inputType).performed += callback;
     }
 
+    public void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        InputAction action = GetInputAction(inputType);
+        action.performed += performedCallback;
+        action.canceled += cancelCallback;
+    }
+
     public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
         GetInputAction(inputType).performed -= callback;
+    }
+
+    public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        InputAction action = GetInputAction(inputType);
+        action.performed -= performedCallback;
+        action.canceled -= cancelCallback;
     }
 
     public void ToggleInputBlocked(InputType inputType, bool isBlocked)
