@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class TestSceneStart : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(GoToTestScene());
@@ -13,10 +12,8 @@ public class TestSceneStart : MonoBehaviour
 
     private IEnumerator GoToTestScene()
     {
-        
         yield return new WaitForSeconds(1f);
 
-        Debug.Log("Test");
         string sceneNameToLoad = EditorPrefs.GetString(TestingKeys.TEST_SCENE_TO_PLAY.ToString());
 
         if (sceneNameToLoad == string.Empty)
