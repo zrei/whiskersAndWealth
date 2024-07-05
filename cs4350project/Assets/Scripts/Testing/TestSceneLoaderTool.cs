@@ -47,7 +47,7 @@ public class TestSceneLoaderTool : EditorWindow
         }
 
         EditorGUILayout.Space();
-        GUILayout.Label("CLEANUP");
+        GUILayout.Label("CLEANUP - Please either use this to cleanup the build setting scenes or manually do so");
         GUILayout.Label("Number of scenes to keep in build settings:");
         m_BuildSettingScenesToKeep = EditorGUILayout.IntField(m_BuildSettingScenesToKeep);
         if (GUILayout.Button("Clear build setting scenes"))
