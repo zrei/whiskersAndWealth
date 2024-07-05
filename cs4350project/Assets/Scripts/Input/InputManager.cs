@@ -35,6 +35,7 @@ public struct InputMapAndAction
 public class InputManager : Singleton<InputManager>
 {
     [SerializeField] private InputActionAsset m_InputActionAsset;
+    [SerializeField] private bool m_DoDebug = false; // TODO: Move this to global settings or something later
 
     // TODO: Better way to do this?
     public const string UI_ACTION_MAP_NAME = "UI";
@@ -74,7 +75,7 @@ public class InputManager : Singleton<InputManager>
         }
 
         string mapName = inputNameComponents[0];
-        string actionName = string.Join("_", inputNameComponents.SubArray(0, 1));
+        string actionName = string.Join("_", inputNameComponents.SubArray(1, inputNameComponents.Count() - 1));
         result = new InputMapAndAction(mapName, actionName);
         return true;
     }
@@ -87,6 +88,10 @@ public class InputManager : Singleton<InputManager>
             Logger.Log(this.GetType().Name, "Unable to find input action!", LogLevel.ERROR);
             return null;
         }
+        
+        if (m_DoDebug)
+            Logger.Log(this.GetType().Name, string.Format("Action map: {0} and input name: {1}", inputMapAndAction.MapName, inputMapAndAction.ActionName), LogLevel.LOG);
+        
         return m_InputActionAsset.FindActionMap(inputMapAndAction.MapName).FindAction(inputMapAndAction.ActionName);
     }
     #endregion
@@ -101,9 +106,23 @@ public class InputManager : Singleton<InputManager>
         GetInputAction(inputType).performed += callback;
     }
 
+    public void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        InputAction action = GetInputAction(inputType);
+        action.performed += performedCallback;
+        action.canceled += cancelCallback;
+    }
+
     public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
         GetInputAction(inputType).performed -= callback;
+    }
+
+    public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        InputAction action = GetInputAction(inputType);
+        action.performed -= performedCallback;
+        action.canceled -= cancelCallback;
     }
 
     public void ToggleInputBlocked(InputType inputType, bool isBlocked)

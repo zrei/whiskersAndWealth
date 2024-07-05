@@ -22,6 +22,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
         HandleAwake();
         m_IsReady = true;
         OnReady?.Invoke();
+        Logger.Log(this.GetType().Name, "Singleton is ready", LogLevel.LOG);
     }
 
     protected virtual void HandleAwake()
