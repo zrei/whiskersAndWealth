@@ -33,7 +33,6 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private void OnMove(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<Vector2>();
-        Logger.Log(this.GetType().Name, context.ReadValue<Vector2>().ToString(), LogLevel.LOG);
     }
 
     
