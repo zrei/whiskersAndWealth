@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class TestInteractionScene : MonoBehaviour
 {
+    [SerializeField] private bool m_DoToggleInteractionOverTime = true;
     [SerializeField] private Button m_ToggleInteractionInputBtn;
     [SerializeField] private float m_ToggleInteractionInputInterval = 10f;
 
@@ -11,6 +12,9 @@ public class TestInteractionScene : MonoBehaviour
 
     private void Update()
     {
+        if (!m_DoToggleInteractionOverTime)
+            return;
+
         m_CurrCount += Time.deltaTime;
         if (m_CurrCount >= m_ToggleInteractionInputInterval)
         {

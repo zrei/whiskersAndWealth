@@ -36,21 +36,20 @@ public abstract class Interaction : MonoBehaviour
         // can also add a bunch of events + conditions under which it is disabled...
     }
 
-    private void Update()
-    {
-        HandleHold();
-
-        // update position of indicator if currently visible?
-    }
-
     private void OnEnable()
     {
-        // m_PopupInstance = UIManager.Instance.SpawnPopup(m_PopupIndicator, m_PopupLocation);
+        m_IndicatorInstance = UIManager.Instance.OpenIndicator(m_InteractionIndicator, m_IndicatorLocation);
     }
 
     private void OnDisable()
     {
+        UIManager.Instance.RemoveIndicator(m_IndicatorInstance);
+    }
 
+    private void Update()
+    {
+        UpdateIndicatorPosition();
+        HandleHold();
     }
     #endregion
 
@@ -71,6 +70,9 @@ public abstract class Interaction : MonoBehaviour
     {
         m_IsEnabled = isEnabled;
         m_InteractionCollider.enabled = m_IsEnabled;
+        
+        if (m_IndicatorInstance)
+            m_IndicatorInstance.SetActive(isEnabled);
 
         if (!isEnabled)
             ResetHold();
@@ -129,6 +131,15 @@ public abstract class Interaction : MonoBehaviour
     }
     #endregion
 
+    #region Indicator
+    private void UpdateIndicatorPosition()
+    {
+        if (m_IndicatorInstance)
+        {
+            UIManager.Instance.UpdateIndicatorPosition(m_IndicatorInstance.transform, m_IndicatorLocation.position);
+        }
+    }
+    #endregion
     private void FireInteraction()
     {
         HandleInteraction();
