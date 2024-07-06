@@ -1,60 +1,142 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// NOTE: This doesn't handle the case when there are two colliders overlapping. Do we need a conflict resolver?
+// NOTE: When in the middle of holding and the input action is disabled, the hold will not start up again unless you release and re-press the button
 [RequireComponent(typeof(Collider2D))]
 public abstract class Interaction : MonoBehaviour
 {
+    [Header("Trigger")]
     [SerializeField] private Collider2D m_InteractionCollider;
 
     [Header("Hold Interaction")]
-    [SerializeField] private bool m_RequireHold; // needed? Idk i'll just add it first
-    [SerializeField] private float m_HoldDuration;
-    [SerializeField] private GameObject m_PopupIndicator;
-    [SerializeField] private Transform m_PopupLocation;
+    [SerializeField] private bool m_RequireHold;
+    [SerializeField] private float m_RequiredHoldDuration;
 
-    private bool m_IsEnabled;
-    private GameObject m_PopupInstance;
+    [Header("Interaction Indicator")]
+    [SerializeField] private GameObject m_InteractionIndicator;
+    [SerializeField] private Transform m_IndicatorLocation;
+
+    // indicator
+    private GameObject m_IndicatorInstance;
+
+    // holding
+    private float m_CurrentHoldDuration = 0f;
+    private bool m_IsHolding = false;
+
+    // state
+    private bool m_IsEnabled = true;
+
+    #region Initialization
+    private void Awake()
+    {
+        m_IsEnabled = true;
+        ResetHold();
+
+        // can also add a bunch of events + conditions under which it is disabled...
+    }
 
     private void Update()
     {
-        // update position if currently visible?
+        HandleHold();
+
+        // update position of indicator if currently visible?
     }
+
     private void OnEnable()
     {
-        m_PopupInstance = UIManager.Instance.SpawnPopup(m_PopupIndicator, m_PopupLocation);
+        // m_PopupInstance = UIManager.Instance.SpawnPopup(m_PopupIndicator, m_PopupLocation);
     }
 
     private void OnDisable()
     {
 
     }
+    #endregion
 
-    // can also add a bunch of events + conditions under which it is disabled...
-    // also add the indicator popup if necessary
-    private void OnTriggerEnter()
+    #region Trigger
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        InputManager.Instance.SubscribeToAction(InputType.PLAYER_INTERACT, HandleInput);
+        HandleTriggerEnter();
     }
 
-    private void OnTriggerExit()
+    private void OnTriggerExit2D(Collider2D collider)
     {
-        InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput);
+        HandleTriggerExit();
     }
+    #endregion
 
+    #region State
     private void ToggleEnabled(bool isEnabled)
     {
         m_IsEnabled = isEnabled;
         m_InteractionCollider.enabled = m_IsEnabled;
 
-        if (!m_IsEnabled)
-            InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput);
+        if (!isEnabled)
+            ResetHold();
     }
 
+    protected virtual void HandleTriggerEnter()
+    {
+        InputManager.Instance.SubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
+    }
+
+    protected virtual void HandleTriggerExit()
+    {
+        InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
+        ResetHold();
+    }
+    #endregion
+
+    #region Input
     private void HandleInput(InputAction.CallbackContext context)
     {
         if (!m_IsEnabled)
             return;
-        HandleInteraction();
+
+        if (!m_RequireHold)
+        {
+            FireInteraction();
+            return;
+        }
+
+        m_IsHolding = true;
     }
+
+    private void HandleInputCancelled(InputAction.CallbackContext context)
+    {   
+        ResetHold();
+    }
+    #endregion
+
+    #region Hold
+    private void ResetHold()
+    {
+        m_IsHolding = false;
+        m_CurrentHoldDuration = 0f;
+    }
+
+    private void HandleHold()
+    {
+        if (!m_IsHolding || !m_IsEnabled)
+            return;
+
+        m_CurrentHoldDuration += Time.deltaTime;
+        if (m_CurrentHoldDuration > m_RequiredHoldDuration)
+        {
+            FireInteraction();
+        }
+    }
+    #endregion
+
+    private void FireInteraction()
+    {
+        HandleInteraction();
+        ResetHold();
+    }
+
+    /// <summary>
+    /// Action to perform once the interaction is fired.
+    /// </summary>
     protected abstract void HandleInteraction();
 }
