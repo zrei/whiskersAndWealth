@@ -2,9 +2,12 @@ using UnityEngine;
 
 public abstract class UILayer : MonoBehaviour
 {
-    // ADD YOUR OWN FIELDS HERE
+    public abstract void HandleOpen();
 
-    protected abstract void HandleOpen();
+    public abstract void HandleClose();
 
-    protected abstract void HandleClose();
+    protected void CloseLayer()
+    {
+        UIManager.Instance.CloseLayer();
+    }
 }

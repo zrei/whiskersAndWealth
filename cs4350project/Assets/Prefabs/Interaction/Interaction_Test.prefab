@@ -173,5 +173,5 @@ MonoBehaviour:
   m_InteractionCollider: {fileID: 219579120294990811}
   m_RequireHold: 0
   m_RequiredHoldDuration: 0
-  m_InteractionIndicator: {fileID: 0}
+  m_InteractionIndicator: {fileID: 3506864135373296409, guid: 1d82f658f954df645a6adf8035852381, type: 3}
   m_IndicatorLocation: {fileID: 3130074677793777732}
