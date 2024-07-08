@@ -4,8 +4,7 @@ using Cinemachine;
 // hm...
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Camera camera;
-    [SerializeField] private Cinemachine.VirtualCamera virtualCam;
+    [SerializeField] private CinemachineVirtualCamera virtualCam;
 
     public void SetWorldPosition(Vector3 worldPosition)
     {
