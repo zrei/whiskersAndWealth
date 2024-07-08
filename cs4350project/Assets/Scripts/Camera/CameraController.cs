@@ -24,4 +24,9 @@ public class CameraController : MonoBehaviour
         if (hardSet)
             SetWorldPosition(toFollow.position);
     }
+
+    public void ResetFollow()
+    {
+        virtualCam.Follow = null;
+    }
 }
