@@ -16,4 +16,10 @@ public static class GlobalEvents {
     public static class Player {
 
     }
+
+    public static class Time {
+        public delegate void TimePeriodEvent(TimePeriod _);
+
+        public static TimePeriodEvent OnAdvanceTimePeriod;
+    }
 }
