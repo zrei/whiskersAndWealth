@@ -19,13 +19,27 @@ public class TimeManager : Singleton<TimeManager>
         base.HandleAwake();
     }
 
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+            SaveManager.OnReady += HandleDependencies;
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        InitTimePeriod();
+    }
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
     }
 
-    private void AdvanceTimePeriod()
+    private void InitTimePeriod()
+    {
+        m_CurrTimePeriod = (TimePeriod) SaveManager.Instance.GetTimePeriod();
+    }
+
+    public void AdvanceTimePeriod()
     {
         m_CurrTimePeriod = (TimePeriod) (((int) m_CurrTimePeriod + 1) % Enum.GetNames(typeof(TimePeriod)).Length);
         GlobalEvents.Time.OnAdvanceTimePeriod?.Invoke(m_CurrTimePeriod);

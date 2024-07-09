@@ -22,4 +22,10 @@ public static class GlobalEvents {
 
         public static TimePeriodEvent OnAdvanceTimePeriod;
     }
+
+    public static class Narrative {
+        public delegate void FlagEvent(string flag, bool value);
+
+        public static FlagEvent OnSetFlagValue;
+    }
 }
