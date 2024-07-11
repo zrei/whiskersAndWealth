@@ -28,4 +28,8 @@ public static class GlobalEvents {
 
         public static FlagEvent OnSetFlagValue;
     }
+
+    public static class Map {
+        public static VoidEvent OnBeginMapLoad;
+    }
 }
