@@ -16,6 +16,7 @@ public class MapLoader : Singleton<MapLoader>
 
     protected override void HandleAwake()
     {
+        // wait for player to be ready...
         // start loading main screen
         base.HandleAwake();
     }
@@ -30,5 +31,27 @@ public class MapLoader : Singleton<MapLoader>
         yield return new WaitUntil(() => NarrativeManager.IsReady);
         GameObject mapInstance = Instantiate(map, Vector3.zero, Quaternion.identity, m_MapParent);
         yield return null;
+        // StarvationManager.Proceed();
+        // if (StarvationManager.Instance.Starved)
+        // set transient flag
+
+        // check for any playable cutscenes based on : location flag, time flag, story flags (handled by narrative manager)
+        // StorySO currStory = NarrativeManager.Instance.GetAdvanceableStory();
+
+        Map map = mapInstance.GetComponent<Map>();
+        map.Load(); // should load player as well. pass the desired camera? or something?
+
+        // occasionally set the load percentage based on our metrics
+
     } // if there's only ever gonna be one map then this si fine but... 
+
+    private IEnumerator UnloadPrevMap()
+    {
+        yield return null;
+    }
+
+    private void SetMapFlag()
+    {
+        // unset the previous map flag and set the current one
+    }
 }
