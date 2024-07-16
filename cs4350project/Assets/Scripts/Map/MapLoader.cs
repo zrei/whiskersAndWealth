@@ -16,8 +16,7 @@ public class MapLoader : Singleton<MapLoader>
 
     protected override void HandleAwake()
     {
-        // wait for player to be ready...
-        // start loading main screen
+        HandleDependencies();
         base.HandleAwake();
     }
 
@@ -26,24 +25,35 @@ public class MapLoader : Singleton<MapLoader>
         base.HandleDestroy();
     }
 
-    private IEnumerator LoadMap(GameObject map)
+    public void HandleDependencies()
     {
+        // move transition manager to persisting or wait for it to be ready?
+        StartCoroutine(LoadMap(m_StartingMap));
+    }
+
+    private IEnumerator LoadMap(GameObject mapObj)
+    {
+        GlobalEvents.Map.OnBeginMapLoad?.Invoke();
+
         yield return new WaitUntil(() => NarrativeManager.IsReady);
-        GameObject mapInstance = Instantiate(map, Vector3.zero, Quaternion.identity, m_MapParent);
+        GameObject mapInstance = Instantiate(mapObj, Vector3.zero, Quaternion.identity, m_MapParent);
         yield return null;
         // StarvationManager.Proceed();
         // if (StarvationManager.Instance.Starved)
         // set transient flag
-
+        GlobalEvents.Map.OnMapLoadProgress?.Invoke(0.2f);
         // check for any playable cutscenes based on : location flag, time flag, story flags (handled by narrative manager)
         // StorySO currStory = NarrativeManager.Instance.GetAdvanceableStory();
 
         Map map = mapInstance.GetComponent<Map>();
         map.Load(); // should load player as well. pass the desired camera? or something?
-
+        GlobalEvents.Map.OnMapLoadProgress?.Invoke(0.5f);
         // occasionally set the load percentage based on our metrics
+        GlobalEvents.Map.OnMapLoadProgress?.Invoke(1f);
+        yield return null;
 
-    } // if there's only ever gonna be one map then this si fine but... 
+        GlobalEvents.Map.OnEndMapLoad?.Invoke();
+    }
 
     private IEnumerator UnloadPrevMap()
     {

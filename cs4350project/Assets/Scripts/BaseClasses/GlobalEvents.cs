@@ -31,5 +31,7 @@ public static class GlobalEvents {
 
     public static class Map {
         public static VoidEvent OnBeginMapLoad;
+        public static FloatEvent OnMapLoadProgress;
+        public static VoidEvent OnEndMapLoad;
     }
 }

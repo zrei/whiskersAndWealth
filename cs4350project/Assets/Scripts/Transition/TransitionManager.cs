@@ -24,4 +24,9 @@ public class TransitionManager : Singleton<TransitionManager>
     {
         UIManager.Instance.OpenLayer(m_LoadingScreen);
     }
+
+    private void OnEndMapLoad()
+    {
+        UIManager.Instance.CloseLayer();
+    }
 }

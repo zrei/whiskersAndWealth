@@ -127,6 +127,7 @@ public class UIManager : Singleton<UIManager>
 
     private void OnLayerClosed(InputAction.CallbackContext _)
     {
-        CloseLayer();
+        if (m_OpenLayers.Count > 0 && m_OpenLayers.Peek().IsEscClosable)
+            CloseLayer();
     }
 }

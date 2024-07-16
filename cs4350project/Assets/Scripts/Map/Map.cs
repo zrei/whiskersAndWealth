@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public struct NPCSpawnPoints
@@ -15,6 +16,12 @@ public class Map : MonoBehaviour
 
     public void Load()
     {
-        
+        PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
+        SpawnNPCs();
+    }
+
+    public void SpawnNPCs()
+    {
+
     }
 }
