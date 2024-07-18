@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : Singleton<PlayerMovement>
 {
     [SerializeField] private Rigidbody2D m_RB;
+    [SerializeField] private PlayerAnimator m_PlayerAnimator;
 
     private Vector2 m_MovementInput;
 
@@ -33,12 +34,14 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private void OnMove(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<Vector2>();
+        m_PlayerAnimator.SetBoolParam(PlayerAnimator.HORIZONTAL_WALK_PARAM, true);
     }
 
     
     private void OnMoveCancel(InputAction.CallbackContext context)
     {
         m_MovementInput = Vector2.zero;
+        m_PlayerAnimator.SetBoolParam(PlayerAnimator.HORIZONTAL_WALK_PARAM, false);
     }
 
 #if UNITY_EDITOR
