@@ -88,6 +88,8 @@ public class TestSceneLoaderTool : EditorWindow
         Logger.LogEditor(this.GetType().Name, "Scene to be loaded: " + scenePath, LogLevel.LOG);
         //VerifyPath(path);
         EditorPrefs.SetString(TestingKeys.TEST_SCENE_TO_PLAY.ToString(), StripExtensionAndBaseFolder(scenePath));
+        UnityEngine.SceneManagement.Scene[] scenesToSave = new UnityEngine.SceneManagement.Scene[] {EditorSceneManager.GetActiveScene()};
+        EditorSceneManager.SaveModifiedScenesIfUserWantsTo(scenesToSave);
         EditorSceneManager.OpenScene(TestSceneStartPath);
         EditorApplication.EnterPlaymode();
     }
