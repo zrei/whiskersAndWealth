@@ -4,8 +4,13 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : Singleton<PlayerMovement>
 {
+    [Header("References")]
     [SerializeField] private Rigidbody2D m_RB;
-    [SerializeField] private PlayerAnimator m_PlayerAnimator;
+    [SerializeField] private AnimatorController m_PlayerAnimator;
+    [SerializeField] private SpriteRenderer m_SR;
+
+    [Header("Animation Params")]
+    [SerializeField] private AnimatorParam m_HorizontalMoveParam;
 
     private Vector2 m_MovementInput;
 
@@ -34,14 +39,17 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private void OnMove(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<Vector2>();
-        m_PlayerAnimator.SetBoolParam(PlayerAnimator.HORIZONTAL_WALK_PARAM, true);
+        m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, m_MovementInput.x != 0f);
+
+        if (m_MovementInput.x != 0f)
+            m_SR.flipX = m_MovementInput.x < 0f;
     }
 
     
     private void OnMoveCancel(InputAction.CallbackContext context)
     {
         m_MovementInput = Vector2.zero;
-        m_PlayerAnimator.SetBoolParam(PlayerAnimator.HORIZONTAL_WALK_PARAM, false);
+        m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, false);
     }
 
 #if UNITY_EDITOR
