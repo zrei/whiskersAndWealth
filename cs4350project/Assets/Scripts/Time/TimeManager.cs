@@ -11,7 +11,7 @@ public enum TimePeriod
 public class TimeManager : Singleton<TimeManager>
 {
     // starting period when first starting the game.
-    // can shift this to global settings too
+    // not sure whether to use this or the save manager
     [SerializeField] private TimePeriod m_StartingPeriod;
     private TimePeriod m_CurrTimePeriod;
     public TimePeriod CurrTimePeriod => m_CurrTimePeriod;
@@ -24,20 +24,15 @@ public class TimeManager : Singleton<TimeManager>
 
     private void HandleDependencies()
     {
-        if (!SaveManager.IsReady)
-            SaveManager.OnReady += HandleDependencies;
-
-        SaveManager.OnReady -= HandleDependencies;
-
         InitTimePeriod();
     }
+
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
     }
 
-    // this might need to be handled by the map loader instead hm... unless we put the check for new save here, or otherwise init the save file with the starting time period?
     private void InitTimePeriod()
     {
         m_CurrTimePeriod = (TimePeriod) SaveManager.Instance.GetTimePeriod();
