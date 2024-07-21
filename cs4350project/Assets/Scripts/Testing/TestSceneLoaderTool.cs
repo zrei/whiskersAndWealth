@@ -22,7 +22,7 @@ public class TestSceneLoaderTool : EditorWindow
 
     private SceneAsset m_SceneToPlay = null;
 
-    private int m_BuildSettingScenesToKeep = 1;
+    private int m_BuildSettingScenesToKeep = 2;
 
     [MenuItem("Window/Test Scene Loader Tool")]
     public static void ShowWindow()

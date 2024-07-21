@@ -34,4 +34,8 @@ public static class GlobalEvents {
         public static FloatEvent OnMapLoadProgress;
         public static VoidEvent OnEndMapLoad;
     }
+
+    public static class Starvation {
+        public static VoidEvent OnPlayerStarve;
+    }
 }

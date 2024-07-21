@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NarrativeManager : Singleton<NarrativeManager>
 {
+    #region TEST
     // these should be set when pulling flags as well
     // might move these to a SO at some point
     [SerializeField] private List<string> m_ListFlagsPersistent = new()
@@ -14,6 +15,7 @@ public class NarrativeManager : Singleton<NarrativeManager>
     {
         "TEST_4", "TEST_5"
     };
+    #endregion
 
     private Dictionary<string, bool> m_Flags;
 
@@ -32,9 +34,6 @@ public class NarrativeManager : Singleton<NarrativeManager>
 
     private void HandleDependencies()
     {
-        if (!SaveManager.IsReady)
-            SaveManager.OnReady += HandleDependencies;
-        
         m_Flags = new Dictionary<string, bool>();
         InitPersistentFlags();
         InitSessionFlags();
