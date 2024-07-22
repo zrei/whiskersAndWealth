@@ -12,11 +12,13 @@ public struct NPCSpawnPoints
 public class Map : MonoBehaviour
 {
     [SerializeField] Transform m_PlayerStartPosition;
+    [SerializeField] CameraController m_MapCamera;
     [SerializeField] List<NPCSpawnPoints> m_NPCSpawnPoints;
 
     public void Load()
     {
         PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
+        m_MapCamera.SetFollow(PlayerMovement.Instance.transform, true);
         SpawnNPCs();
     }
 
