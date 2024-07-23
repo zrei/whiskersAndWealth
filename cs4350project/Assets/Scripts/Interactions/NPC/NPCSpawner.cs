@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class NPCSpawner : MonoBehaviour
+public class NPCSpawner : Singleton<NPCSpawner>
 {
     [SerializeField] private List<NPCSpawnSO> m_NPCSpawns;
 
@@ -15,19 +15,25 @@ public class NPCSpawner : MonoBehaviour
     }
 
     // can return bool
-    private void TrySpawnNPC(NPCSpawnSO npcSpawnSO, in List<Transform> mapSpawnPoints)
+    private bool TrySpawnNPC(NPCSpawnSO npcSpawnSO, in List<Transform> mapSpawnPoints)
     {
         // ordered dictionary?
-        List<Transform> possibleSpawnPoints = new List<Transform>();
-        foreach (NPCSpawnPoint npcSpawnPoint in NPCSpawnSO.m_SpawnPoints)
+        SortedList<int, Transform> possibleSpawnPoints = new SortedList<int, Transform>();
+        foreach (NPCSpawnPoint npcSpawnPoint in npcSpawnSO.m_SpawnPoints)
         {
             if (MeetsSpawnConditions(npcSpawnPoint) && TryRetrieveSpawnPoint(npcSpawnPoint.SpawnPointName, mapSpawnPoints, out Transform spawnPoint) && !HasNPCOccupying(spawnPoint))
             {
-                possibleSpawnPoints.Add(spawnPoint);
+                possibleSpawnPoints.Add(npcSpawnPoint.Priority, spawnPoint);
             }
         }
 
-        // sort by priority and spawn, may have some similar priority
+        if (possibleSpawnPoints.Count > 0)
+        {
+            SpawnNPC(possibleSpawnPoints[possibleSpawnPoints.Count - 1], npcSpawnSO.m_NPC);
+            return true;
+        }
+
+        return false;
     }
 
     private bool TryRetrieveSpawnPoint(string spawnPointName, in List<Transform> mapSpawnPoints, out Transform foundSpawnPoint)
@@ -54,7 +60,7 @@ public class NPCSpawner : MonoBehaviour
         return mapSpawnPoint.childCount > 0;
     }
 
-    private void SpawnNPC(Transform spawnPoint, gameObject NPC)
+    private void SpawnNPC(Transform spawnPoint, GameObject NPC)
     {
         Instantiate(NPC, spawnPoint);
     }

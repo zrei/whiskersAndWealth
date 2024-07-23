@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4644622493022285308}
   m_Layer: 0
-  m_Name: SpawnPointB
+  m_Name: StartingMap_SpawnPointB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3994147525968278917}
   m_Layer: 0
-  m_Name: SpawnPointA
+  m_Name: StartingMap_SpawnPointA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerStartPosition: {fileID: 3306474228190244562}
   m_MapCamera: {fileID: 4800478534629041873}
-  m_NPCSpawnPoints: []
+  m_NPCSpawnPointsParent: {fileID: 956544837862571608}
 --- !u!1 &6149404219909408333
 GameObject:
   m_ObjectHideFlags: 0

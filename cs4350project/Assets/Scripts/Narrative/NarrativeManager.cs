@@ -80,6 +80,8 @@ public class NarrativeManager : Singleton<NarrativeManager>
 
     public bool GetFlagValue(string flag)
     {
+        if (!m_Flags.ContainsKey(flag))
+            return false;
         return m_Flags[flag];
     }
 

@@ -2,18 +2,11 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[Serializable]
-public struct NPCSpawnPoints
-{
-    public Transform SpawnPoint;
-    public string SpawnFlag;
-}
-
 public class Map : MonoBehaviour
 {
     [SerializeField] Transform m_PlayerStartPosition;
     [SerializeField] CameraController m_MapCamera;
-    [SerializeField] List<NPCSpawnPoints> m_NPCSpawnPoints;
+    [SerializeField] Transform m_NPCSpawnPointsParent;
 
     public void Load()
     {
@@ -24,6 +17,10 @@ public class Map : MonoBehaviour
 
     public void SpawnNPCs()
     {
+        List<Transform> spawnPoints = new List<Transform>();
+        foreach (Transform spawnPoint in m_NPCSpawnPointsParent)
+            spawnPoints.Add(spawnPoint);
 
+        NPCSpawner.Instance.SpawnNPCs(spawnPoints);
     }
 }
