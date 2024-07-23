@@ -82,4 +82,14 @@ public class NarrativeManager : Singleton<NarrativeManager>
     {
         return m_Flags[flag];
     }
+
+    public bool CheckFlagValues(in List<string> flags)
+    {
+        foreach (string flag in flags)
+        {
+            if (!GetFlagValue(flag))
+                return false;
+        }
+        return true;
+    }
 }
