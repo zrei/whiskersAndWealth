@@ -86,7 +86,7 @@ public class UIManager : Singleton<UIManager>
     /// <summary>
     /// Instantiates the game object prefab and opens its UI layer
     /// </summary>
-    public void OpenLayer(GameObject layerObject)
+    public UILayer OpenLayer(GameObject layerObject)
     {
         GameObject layerInstance = Instantiate(layerObject, m_MenuCanvas.transform);
         UILayer layer = layerInstance.GetComponent<UILayer>();
@@ -94,7 +94,7 @@ public class UIManager : Singleton<UIManager>
         {
             Logger.Log(this.GetType().Name, "This object doesn't have a UILayer component attached!", LogLevel.ERROR);
             Destroy(layerObject);
-            return;
+            return null;
         }
 
         layer.HandleOpen();
@@ -105,6 +105,8 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 0f;
             InputManager.Instance.SwitchToInputMap(InputManager.UI_ACTION_MAP_NAME);
         }
+
+        return layer;
     }
 
     public void CloseLayer()

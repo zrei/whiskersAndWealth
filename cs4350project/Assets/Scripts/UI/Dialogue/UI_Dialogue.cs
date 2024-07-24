@@ -38,11 +38,15 @@ public class UI_Dialogue : UILayer
     private IEnumerator AnimateDialogueLine(string line, int numChars)
     {
         int index = 0;
-        float timePerChar = 50 / numChars;
+        float timePerChar = 17 / numChars;
+        m_DialogueText.text = string.Empty;
+
         while (index < numChars)
         {
+            Debug.Log("A line!");
             m_DialogueText.text += line[index];
-            yield return new WaitForSeconds(timePerChar);
+            ++index;
+            yield return new WaitForSecondsRealtime(timePerChar);
         }
         m_IndicatorArrow.SetActive(true);
     }
