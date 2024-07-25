@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TransitionManager : Singleton<TransitionManager>
 {
-    [SerializeField] private GameObject m_LoadingScreen;
+    [SerializeField] private UILayer m_LoadingScreenPrefab;
 
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
@@ -22,7 +22,7 @@ public class TransitionManager : Singleton<TransitionManager>
 
     private void OnBeginMapLoad()
     {
-        UIManager.Instance.OpenLayer(m_LoadingScreen);
+        UIManager.Instance.OpenLayer(m_LoadingScreenPrefab);
     }
 
     private void OnEndMapLoad()

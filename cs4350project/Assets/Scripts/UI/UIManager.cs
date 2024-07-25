@@ -16,7 +16,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Canvas m_IndicatorCanvas;
 
     [Header("Pause Menu")]
-    [SerializeField] private GameObject m_PauseMenu;
+    [SerializeField] private UILayer m_PauseMenuPrefab;
 
     private HashSet<GameObject> m_OpenHUD;
     private HashSet<GameObject> m_OpenIndicators;
@@ -86,19 +86,12 @@ public class UIManager : Singleton<UIManager>
     /// <summary>
     /// Instantiates the game object prefab and opens its UI layer
     /// </summary>
-    public UILayer OpenLayer(GameObject layerObject)
+    public UILayer OpenLayer(UILayer layerObject)
     {
-        GameObject layerInstance = Instantiate(layerObject, m_MenuCanvas.transform);
-        UILayer layer = layerInstance.GetComponent<UILayer>();
-        if (layer == null)
-        {
-            Logger.Log(this.GetType().Name, "This object doesn't have a UILayer component attached!", LogLevel.ERROR);
-            Destroy(layerObject);
-            return null;
-        }
+        UILayer layerInstance = Instantiate(layerObject, m_MenuCanvas.transform);
 
-        layer.HandleOpen();
-        m_OpenLayers.Push(layer);
+        layerInstance.HandleOpen();
+        m_OpenLayers.Push(layerInstance);
 
         if (m_OpenLayers.Count == 1)
         {
@@ -106,7 +99,7 @@ public class UIManager : Singleton<UIManager>
             InputManager.Instance.SwitchToInputMap(InputManager.UI_ACTION_MAP_NAME);
         }
 
-        return layer;
+        return layerInstance;
     }
 
     public void CloseLayer()
@@ -124,7 +117,7 @@ public class UIManager : Singleton<UIManager>
 
     private void OpenPauseMenu(InputAction.CallbackContext _)
     {
-        OpenLayer(m_PauseMenu);
+        OpenLayer(m_PauseMenuPrefab);
     }
 
     private void OnLayerClosed(InputAction.CallbackContext _)

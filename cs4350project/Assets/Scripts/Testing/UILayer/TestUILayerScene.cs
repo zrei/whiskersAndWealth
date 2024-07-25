@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class TestUILayerScene : MonoBehaviour
 {
     [SerializeField] private Button m_OpenExampleLayerButton;
-    [SerializeField] private GameObject m_ExampleLayer;
+    [SerializeField] private UILayer m_ExampleLayerPrefab;
 
     private void Start()
     {
@@ -17,6 +17,6 @@ public class TestUILayerScene : MonoBehaviour
     }
     private void OnOpenExampleLayer()
     {
-        UIManager.Instance.OpenLayer(m_ExampleLayer);
+        UIManager.Instance.OpenLayer(m_ExampleLayerPrefab);
     }
 }
