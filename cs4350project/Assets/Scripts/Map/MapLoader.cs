@@ -53,7 +53,6 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         GlobalEvents.Map.OnEndMapLoad?.Invoke();
-        DialogueManager.Instance.DisplayDialogue();
     }
 
     private IEnumerator UnloadPrevMap()

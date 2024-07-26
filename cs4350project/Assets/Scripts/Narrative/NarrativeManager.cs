@@ -17,6 +17,10 @@ public class NarrativeManager : Singleton<NarrativeManager>
     };
     #endregion
 
+    // haven't dealt with cutscenes that have already been played
+    // likely will just have a string that represents its name wwww
+    [SerializeField] private List<DialogueSO> m_Cutscenes;
+
     private Dictionary<string, bool> m_Flags;
 
     protected override void HandleAwake()
@@ -67,15 +71,8 @@ public class NarrativeManager : Singleton<NarrativeManager>
     private void SetFlagValue(string flag, bool value)
     {
         m_Flags[flag] = value;
-    }
-
-    /// <summary>
-    /// Check if there's a cutscene to play for the upcoming time period based on current progress
-    /// </summary>
-    /// <returns></returns>
-    private bool CheckForCutsceneQuest()
-    {
-        return false;
+        if (value)
+            CheckForCutscenes();
     }
 
     public bool GetFlagValue(string flag)
@@ -93,5 +90,20 @@ public class NarrativeManager : Singleton<NarrativeManager>
                 return false;
         }
         return true;
+    }
+
+    // probably needs priority. might move this elsewhere into another one later
+    private void CheckForCutscenes()
+    {
+        foreach (DialogueSO dialogueSO in m_Cutscenes)
+        {
+            if (!dialogueSO.m_Repeatable && GetFlagValue(dialogueSO.m_DialogueName))
+                continue;
+            if (CheckFlagValues(dialogueSO.m_Flags))
+            {
+                DialogueManager.Instance.PlayDialogue(dialogueSO);
+                return;
+            }
+        }
     }
 }
