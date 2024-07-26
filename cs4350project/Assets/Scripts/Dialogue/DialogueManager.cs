@@ -42,4 +42,8 @@ public class DialogueManager : Singleton<DialogueManager>
     // like flags that should be met for this dialogue to play, versus flags to fire to ACTIVATE this dialogue, versus flags that are FIRED when the conversation is completed
     // then when the conversation is complete the dialogue manager should close UI_Dialogue
     // hrm UI _Dialgoue will be used regardless but yeah
+
+    // so the dialogue SOs exist as. individual objects. they hold the contents of the "conversation" held on the dialogue UI. 
+    // cutscene SOs contain a dialogue SO and are maanged by the narrative manager?
+    // then each NPCDataSO (not the spawn SO) holds their individual dialogue SOs???? UH ? ? ? ? ?MAKES SENSE IGUESS???? 
 }
