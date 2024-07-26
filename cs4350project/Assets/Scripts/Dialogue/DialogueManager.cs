@@ -7,21 +7,41 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private UI_Dialogue m_DialogueInstance;
 
-    private bool m_Reached = false;
-    public void DisplayDialogue()
+    private int m_LineIndex = 0;
+    private DialogueSO m_CurrDialogue;
+
+    public void PlayDialogue(DialogueSO dialogueSO)
     {
+        m_CurrDialogue = dialogueSO;
         m_DialogueInstance = (UI_Dialogue) UIManager.Instance.OpenLayer(m_DialogueDisplay);
         m_DialogueInstance.Initialise(OnReachEndOfLine);
-        m_DialogueInstance.SetDialogueLine(true, "Hello", "HELLLLLLLLO!!!!!!!", null);
+        m_LineIndex = 0;
+        PlayLine();
     }
 
+    private void PlayLine()
+    {
+        if (m_LineIndex >= m_CurrDialogue.m_DialogueLines.Count)
+        {
+            FinishDialogue();
+            return;
+        }
+        
+        m_DialogueInstance.SetDialogueLine(m_CurrDialogue.m_DialogueLines[m_LineIndex]);
+        ++m_LineIndex;
+    }
     private void OnReachEndOfLine()
     {
-        Debug.Log("HEH!");
-        if (!m_Reached)
-            m_DialogueInstance.SetDialogueLine(true, "Owo", "Yayyyy", null);
+        PlayLine();
+    }
 
-        m_Reached = true;
+    private void FinishDialogue()
+    {
+        foreach (string flag in m_CurrDialogue.m_CompleteFlags)
+        {
+            GlobalEvents.Narrative.OnSetFlagValue?.Invoke(flag, true);
+            UIManager.Instance.CloseLayer();
+        }
     }
 
     // we could? pass the entire SO to the UI_dialogue and just fire the dialogue over.

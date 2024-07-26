@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ShopInteraction : Interaction
 {
-    public override void HandleInteraction()
+    protected override void HandleInteraction()
     {
         
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public struct PotionIngredient
@@ -8,7 +9,7 @@ public struct PotionIngredient
     public int m_Quantity;
 }
 
-[CreateAssetMenu(fileName="PotionSO", menuName="ScriptableObject/PotionSO")]
+[CreateAssetMenu(fileName="PotionSO", menuName="ScriptableObjects/PotionSO")]
 public class PotionSO : ScriptableObject
 {
     public List<PotionIngredient> m_Ingredients;

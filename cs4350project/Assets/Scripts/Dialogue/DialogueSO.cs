@@ -1,9 +1,11 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public struct DialogueLine
 {
     public Sprite m_Sprite;
+    public string m_CharacterName;
     public string m_TextLine;
     public bool m_IsLeft;
 }

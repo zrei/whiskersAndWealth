@@ -61,27 +61,27 @@ public class UI_Dialogue : UILayer
     }
 
     // give the dialogue. hm.
-    public void SetDialogueLine(bool isLeftSide, string characterName, string line, Sprite characterSprite, bool instant = false)
+    public void SetDialogueLine(DialogueLine dialogueLine, bool instant = false)
     {
-        m_CurrLine = line;
+        m_CurrLine = dialogueLine.m_TextLine;
 
-        m_CharacterName.text = characterName;
-        if (isLeftSide)
+        m_CharacterName.text = dialogueLine.m_CharacterName;
+        if (dialogueLine.m_IsLeft)
         {
-            m_LeftSprite.sprite = characterSprite;
+            m_LeftSprite.sprite = dialogueLine.m_Sprite;
         } else
         {
-            m_RightSprite.sprite = characterSprite;
+            m_RightSprite.sprite = dialogueLine.m_Sprite;
         }
-        m_LeftSprite.gameObject.SetActive(isLeftSide);
-        m_RightSprite.gameObject.SetActive(!isLeftSide);
+        m_LeftSprite.gameObject.SetActive(dialogueLine.m_IsLeft);
+        m_RightSprite.gameObject.SetActive(!dialogueLine.m_IsLeft);
 
         ClearDialogueLine();
 
         if (instant)
             CompleteLine();
         else
-            m_DialogueCoroutine = StartCoroutine(AnimateDialogueLine(line, line.Length));
+            m_DialogueCoroutine = StartCoroutine(AnimateDialogueLine(m_CurrLine, m_CurrLine.Length));
     }
 
     private IEnumerator AnimateDialogueLine(string line, int numChars)
