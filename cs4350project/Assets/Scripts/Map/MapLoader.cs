@@ -53,6 +53,7 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         GlobalEvents.Map.OnEndMapLoad?.Invoke();
+        GlobalEvents.Narrative.OnSetFlagValue?.Invoke("skibidi", true);
     }
 
     private IEnumerator UnloadPrevMap()

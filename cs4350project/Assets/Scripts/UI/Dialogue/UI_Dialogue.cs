@@ -93,7 +93,6 @@ public class UI_Dialogue : UILayer
 
         while (index < numChars)
         {
-            Debug.Log("A line!");
             m_DialogueText.text += line[index];
             ++index;
             yield return new WaitForSecondsRealtime(m_PerCharacterTime);

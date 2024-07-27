@@ -72,7 +72,7 @@ public class NarrativeManager : Singleton<NarrativeManager>
     {
         m_Flags[flag] = value;
         if (value)
-            CheckForCutscenes();
+            CheckForCutscenes(flag);
     }
 
     public bool GetFlagValue(string flag)
@@ -92,13 +92,16 @@ public class NarrativeManager : Singleton<NarrativeManager>
         return true;
     }
 
-    // probably needs priority. might move this elsewhere into another one later
-    private void CheckForCutscenes()
+    // hasn't yet accounted for priority and randomising which one to play if they have the same priority. might move this elsewhere into another one later
+    private void CheckForCutscenes(string trippedFlag)
     {
         foreach (DialogueSO dialogueSO in m_Cutscenes)
         {
             if (!dialogueSO.m_Repeatable && GetFlagValue(dialogueSO.m_DialogueName))
                 continue;
+            // don't bother checking the cutscene if the flags don't contain the tripped flag
+            if (!dialogueSO.m_Flags.Contains(trippedFlag))
+                return;
             if (CheckFlagValues(dialogueSO.m_Flags))
             {
                 DialogueManager.Instance.PlayDialogue(dialogueSO);

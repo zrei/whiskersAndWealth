@@ -37,12 +37,12 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void FinishDialogue()
     {
+        GlobalEvents.Narrative.OnSetFlagValue?.Invoke(m_CurrDialogue.m_DialogueName, true);
         foreach (string flag in m_CurrDialogue.m_CompleteFlags)
         {
             GlobalEvents.Narrative.OnSetFlagValue?.Invoke(flag, true);
         }
         UIManager.Instance.CloseLayer();
-        GlobalEvents.Narrative.OnSetFlagValue?.Invoke(m_CurrDialogue.m_DialogueName, true);
     }
 
     // we could? pass the entire SO to the UI_dialogue and just fire the dialogue over.
