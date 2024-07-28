@@ -41,6 +41,6 @@ public class TimeManager : Singleton<TimeManager>
     public void AdvanceTimePeriod()
     {
         m_CurrTimePeriod = (TimePeriod) (((int) m_CurrTimePeriod + 1) % Enum.GetNames(typeof(TimePeriod)).Length);
-        GlobalEvents.Time.OnAdvanceTimePeriod?.Invoke(m_CurrTimePeriod);
+        GlobalEvents.Time.AdvanceTimePeriodEvent?.Invoke(m_CurrTimePeriod);
     }
 }

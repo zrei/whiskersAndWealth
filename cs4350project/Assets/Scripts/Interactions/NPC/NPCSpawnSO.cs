@@ -11,7 +11,7 @@ public struct NPCSpawnPoint
     [Tooltip("Identifies the name of the spawn point")]
     public string SpawnPointName;
 }
-[CreateAssetMenu(fileName = "NPCSpawnSO", menuName = "ScriptableObjects/NPCSpawnSO")]
+[CreateAssetMenu(fileName = "NPCSpawnSO", menuName = "ScriptableObjects/NPC/NPCSpawnSO")]
 public class NPCSpawnSO : ScriptableObject
 {
     // will only appear in this position when these flags are met

@@ -33,7 +33,7 @@ public class MapLoader : Singleton<MapLoader>
 
     private IEnumerator LoadMap(GameObject mapObj)
     {
-        GlobalEvents.Map.OnBeginMapLoad?.Invoke();
+        GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
 
         yield return new WaitUntil(() => NarrativeManager.IsReady);
         GameObject mapInstance = Instantiate(mapObj, Vector3.zero, Quaternion.identity, m_MapParent);
@@ -41,18 +41,19 @@ public class MapLoader : Singleton<MapLoader>
         // StarvationManager.Proceed();
         // if (StarvationManager.Instance.Starved)
         // set transient flag
-        GlobalEvents.Map.OnMapLoadProgress?.Invoke(0.2f);
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.2f);
         // check for any playable cutscenes based on : location flag, time flag, story flags (handled by narrative manager)
         // StorySO currStory = NarrativeManager.Instance.GetAdvanceableStory();
 
         Map map = mapInstance.GetComponent<Map>();
         map.Load(); // should load player as well. pass the desired camera? or something?
-        GlobalEvents.Map.OnMapLoadProgress?.Invoke(0.5f);
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
         // occasionally set the load percentage based on our metrics
-        GlobalEvents.Map.OnMapLoadProgress?.Invoke(1f);
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
-        GlobalEvents.Map.OnEndMapLoad?.Invoke();
+        GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke("skibidi", true);
     }
 
     private IEnumerator UnloadPrevMap()

@@ -7,12 +7,12 @@ public class UI_TransitionScene : UILayer
 
     private void Awake()
     {
-        GlobalEvents.Map.OnMapLoadProgress += OnMapLoadProgress;
+        GlobalEvents.Map.MapLoadProgressEvent += OnMapLoadProgress;
     }
 
     private void OnDestroy()
     {
-        GlobalEvents.Map.OnMapLoadProgress -= OnMapLoadProgress;
+        GlobalEvents.Map.MapLoadProgressEvent -= OnMapLoadProgress;
     }
 
     private void OnMapLoadProgress(float progress)

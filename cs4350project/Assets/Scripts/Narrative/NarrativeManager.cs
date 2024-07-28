@@ -17,18 +17,22 @@ public class NarrativeManager : Singleton<NarrativeManager>
     };
     #endregion
 
+    // haven't dealt with cutscenes that have already been played
+    // likely will just have a string that represents its name wwww
+    [SerializeField] private List<DialogueSO> m_Cutscenes;
+
     private Dictionary<string, bool> m_Flags;
 
     protected override void HandleAwake()
     {
-        GlobalEvents.Narrative.OnSetFlagValue += SetFlagValue;
+        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
         HandleDependencies();
         base.HandleAwake();
     }
 
     protected override void HandleDestroy()
     {
-        GlobalEvents.Narrative.OnSetFlagValue -= SetFlagValue;
+        GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
         base.HandleDestroy();
     }
 
@@ -67,15 +71,8 @@ public class NarrativeManager : Singleton<NarrativeManager>
     private void SetFlagValue(string flag, bool value)
     {
         m_Flags[flag] = value;
-    }
-
-    /// <summary>
-    /// Check if there's a cutscene to play for the upcoming time period based on current progress
-    /// </summary>
-    /// <returns></returns>
-    private bool CheckForCutsceneQuest()
-    {
-        return false;
+        if (value)
+            CheckForCutscenes(flag);
     }
 
     public bool GetFlagValue(string flag)
@@ -93,5 +90,23 @@ public class NarrativeManager : Singleton<NarrativeManager>
                 return false;
         }
         return true;
+    }
+
+    // hasn't yet accounted for priority and randomising which one to play if they have the same priority. might move this elsewhere into another one later
+    private void CheckForCutscenes(string trippedFlag)
+    {
+        foreach (DialogueSO dialogueSO in m_Cutscenes)
+        {
+            if (!dialogueSO.m_Repeatable && GetFlagValue(dialogueSO.m_DialogueName))
+                continue;
+            // don't bother checking the cutscene if the flags don't contain the tripped flag
+            if (!dialogueSO.m_Flags.Contains(trippedFlag))
+                return;
+            if (CheckFlagValues(dialogueSO.m_Flags))
+            {
+                DialogueManager.Instance.PlayDialogue(dialogueSO);
+                return;
+            }
+        }
     }
 }
