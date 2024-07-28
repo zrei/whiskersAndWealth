@@ -8,6 +8,7 @@ public enum CanvasType
     SCREEN_MENU
 }
 
+// might want to merge all the spawning into one function
 public class UIManager : Singleton<UIManager>
 {
     [Header("Canvases")]
@@ -22,6 +23,7 @@ public class UIManager : Singleton<UIManager>
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
 
+    #region Initialisation
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
@@ -52,12 +54,16 @@ public class UIManager : Singleton<UIManager>
         InputManager.Instance.UnsubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
         base.HandleDestroy();
     }
+    #endregion
 
+    #region Canvas
     private void ToggleCanvasEnabled(CanvasType type, bool isEnabled)
     {
 
     }
+    #endregion
 
+    #region Indicators
     public GameObject OpenIndicator(GameObject indicatorObject, Transform location)
     {
         GameObject indicator = Instantiate(indicatorObject, m_IndicatorCanvas.transform);// Camera.main.WorldToScreenPoint(location.position), Quaternion.identity, m_IndicatorCanvas.transform);
@@ -82,7 +88,9 @@ public class UIManager : Singleton<UIManager>
     {
         indicatorTransform.position = Camera.main.WorldToScreenPoint(worldPosition);
     }
+    #endregion
 
+    #region UI Layers
     /// <summary>
     /// Instantiates the game object prefab and opens its UI layer
     /// </summary>
@@ -125,4 +133,19 @@ public class UIManager : Singleton<UIManager>
         if (m_OpenLayers.Count > 0 && m_OpenLayers.Peek().IsEscClosable)
             CloseLayer();
     }
+    #endregion
+
+    #region UI Elements
+    public GameObject OpenUIElement(GameObject elementObj)
+    {
+        GameObject UIElement = Instantiate(elementObj, m_HUDCanvas.transform);// Camera.main.WorldToScreenPoint(location.position), Quaternion.identity, m_IndicatorCanvas.transform);
+        m_OpenHUD.Add(UIElement);
+        return UIElement;
+    }
+
+    public void RemoveUIElement(GameObject elementObj)
+    {
+        m_OpenHUD.Remove(elementObj);
+    }
+    #endregion
 }

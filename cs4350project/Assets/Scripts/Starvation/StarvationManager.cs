@@ -12,7 +12,7 @@ public class StarvationManager : Singleton<StarvationManager>
         HandleDependencies();
         base.HandleAwake();
 
-        GlobalEvents.Time.OnAdvanceTimePeriod += HandleAdvanceTimePeriod;
+        GlobalEvents.Time.AdvanceTimePeriodEvent += HandleAdvanceTimePeriod;
     }
 
     // unsubscribe to events and cleanup
@@ -20,7 +20,7 @@ public class StarvationManager : Singleton<StarvationManager>
     {
         base.HandleDestroy();
 
-        GlobalEvents.Time.OnAdvanceTimePeriod -= HandleAdvanceTimePeriod;
+        GlobalEvents.Time.AdvanceTimePeriodEvent -= HandleAdvanceTimePeriod;
     }
 
     private void HandleDependencies()
@@ -41,7 +41,7 @@ public class StarvationManager : Singleton<StarvationManager>
         if (m_StarvationAmount == 0)
         {
             IsStarved = true;
-            GlobalEvents.Starvation.OnPlayerStarve?.Invoke();
+            GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
         }
     }
 }

@@ -25,14 +25,14 @@ public class NarrativeManager : Singleton<NarrativeManager>
 
     protected override void HandleAwake()
     {
-        GlobalEvents.Narrative.OnSetFlagValue += SetFlagValue;
+        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
         HandleDependencies();
         base.HandleAwake();
     }
 
     protected override void HandleDestroy()
     {
-        GlobalEvents.Narrative.OnSetFlagValue -= SetFlagValue;
+        GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
         base.HandleDestroy();
     }
 

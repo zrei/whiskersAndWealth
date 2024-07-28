@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // uhh maybe make this NOT a singleton later but you can leave it be for now
 public class DialogueManager : Singleton<DialogueManager>
@@ -10,11 +11,29 @@ public class DialogueManager : Singleton<DialogueManager>
     private int m_LineIndex = 0;
     private DialogueSO m_CurrDialogue;
 
+    private bool m_CurrPlaying;
+
+    private Queue<DialogueSO> m_QueuedCutscenes = new Queue<DialogueSO>();
+
     public void PlayDialogue(DialogueSO dialogueSO)
     {
-        m_CurrDialogue = dialogueSO;
-        m_DialogueInstance = (UI_Dialogue) UIManager.Instance.OpenLayer(m_DialogueDisplay);
-        m_DialogueInstance.Initialise(OnReachEndOfLine);
+        if (!m_CurrPlaying)
+        {
+            m_CurrDialogue = dialogueSO;
+            BeginDialogue();
+        }
+        else
+            m_QueuedCutscenes.Enqueue(dialogueSO);
+    }
+
+    private void BeginDialogue()
+    {
+        m_CurrPlaying = true;
+        if (m_DialogueInstance == null)
+        {
+            m_DialogueInstance = (UI_Dialogue) UIManager.Instance.OpenLayer(m_DialogueDisplay);
+            m_DialogueInstance.Initialise(OnReachEndOfLine);
+        }
         m_LineIndex = 0;
         PlayLine();
     }
@@ -37,12 +56,21 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void FinishDialogue()
     {
-        GlobalEvents.Narrative.OnSetFlagValue?.Invoke(m_CurrDialogue.m_DialogueName, true);
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrDialogue.m_DialogueName, true);
         foreach (string flag in m_CurrDialogue.m_CompleteFlags)
         {
-            GlobalEvents.Narrative.OnSetFlagValue?.Invoke(flag, true);
+            GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(flag, true);
         }
-        UIManager.Instance.CloseLayer();
+
+        if (m_QueuedCutscenes.Count > 0)
+            PlayDialogue(m_QueuedCutscenes.Dequeue());
+        else
+        {
+            UIManager.Instance.CloseLayer();
+            m_CurrPlaying = false;
+            m_CurrDialogue = null;
+            m_DialogueInstance = null;
+        }
     }
 
     // we could? pass the entire SO to the UI_dialogue and just fire the dialogue over.

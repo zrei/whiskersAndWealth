@@ -7,7 +7,7 @@ public class TransitionManager : Singleton<TransitionManager>
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
-        GlobalEvents.Map.OnBeginMapLoad += OnBeginMapLoad;
+        GlobalEvents.Map.MapLoadBeginEvent += OnBeginMapLoad;
 
         base.HandleAwake();
     }
@@ -15,7 +15,7 @@ public class TransitionManager : Singleton<TransitionManager>
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
-        GlobalEvents.Map.OnBeginMapLoad -= OnBeginMapLoad;
+        GlobalEvents.Map.MapLoadBeginEvent -= OnBeginMapLoad;
 
         base.HandleDestroy();
     }
