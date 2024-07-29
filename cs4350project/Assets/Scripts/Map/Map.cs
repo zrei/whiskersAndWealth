@@ -11,6 +11,7 @@ public class Map : MonoBehaviour
 
     public void Load()
     {
+        DespawnNPCs();
         PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
         m_MapCamera.SetFollow(PlayerMovement.Instance.transform, true);
         foreach (GameObject UIElement in m_UIElements)
@@ -18,12 +19,22 @@ public class Map : MonoBehaviour
         SpawnNPCs();
     }
 
-    public void SpawnNPCs()
+    private void SpawnNPCs()
     {
         List<Transform> spawnPoints = new List<Transform>();
         foreach (Transform spawnPoint in m_NPCSpawnPointsParent)
             spawnPoints.Add(spawnPoint);
 
         NPCSpawner.Instance.SpawnNPCs(spawnPoints);
+    }
+
+    private void DespawnNPCs()
+    {
+        foreach (Transform NPCSpawnPoint in m_NPCSpawnPointsParent)
+        {
+            int childCount = NPCSpawnPoint.childCount;
+            for (int i = 0; i < childCount; ++i)
+                Destroy(NPCSpawnPoint.GetChild(i).gameObject);
+        }
     }
 }

@@ -12,6 +12,7 @@ public enum InputType
     PLAYER_MOVE,
     PLAYER_INTERACT,
     PLAYER_PAUSE,
+    PLAYER_DEBUG,
     UI_SELECT,
     UI_MOVE_UP,
     UI_MOVE_DOWN,
@@ -46,6 +47,10 @@ public class InputManager : Singleton<InputManager>
     {
         InitInputs();
         base.HandleAwake();
+
+        // debug
+        InputAction action = GetInputAction(InputType.PLAYER_DEBUG);
+        action.performed += DebugAction;
     }
 
     // unsubscribe to events and cleanup
@@ -158,6 +163,11 @@ public class InputManager : Singleton<InputManager>
         m_InputActionAsset.Disable();
 
         m_InputActionAsset.FindActionMap(mapName).Enable();
+    }
+
+    private void DebugAction(InputAction.CallbackContext context)
+    {
+        TimeManager.Instance.AdvanceTimePeriod();
     }
 
 #if UNITY_EDITOR

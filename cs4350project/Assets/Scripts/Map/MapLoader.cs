@@ -14,15 +14,21 @@ public class MapLoader : Singleton<MapLoader>
     [SerializeField] private Transform m_MapParent;
     [SerializeField] private GameObject m_StartingMap;
 
+    private Map m_CurrMapInstance;
+
     protected override void HandleAwake()
     {
         HandleDependencies();
         base.HandleAwake();
+
+        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+
+        GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
 
     public void HandleDependencies()
@@ -45,20 +51,32 @@ public class MapLoader : Singleton<MapLoader>
         // check for any playable cutscenes based on : location flag, time flag, story flags (handled by narrative manager)
         // StorySO currStory = NarrativeManager.Instance.GetAdvanceableStory();
 
-        Map map = mapInstance.GetComponent<Map>();
-        map.Load(); // should load player as well. pass the desired camera? or something?
+        m_CurrMapInstance = mapInstance.GetComponent<Map>();
+        m_CurrMapInstance.Load(); // should load player as well. pass the desired camera? or something?
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
         // occasionally set the load percentage based on our metrics
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
-        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke("skibidi", true);
     }
 
-    private IEnumerator UnloadPrevMap()
+    private void OnAdvanceTimePeriod(TimePeriod _)
     {
+        GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
+        StartCoroutine(AdvanceTimePeriod());
+    }
+
+    private IEnumerator AdvanceTimePeriod()
+    {
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.2f);
+        m_CurrMapInstance.Load();
+         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
+        // occasionally set the load percentage based on our metrics
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
+
+        GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
     }
 
     private void SetMapFlag()
