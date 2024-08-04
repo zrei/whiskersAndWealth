@@ -39,12 +39,12 @@ public class UI_Dialogue : UILayer
 
     public override void HandleClose()
     {
-        InputManager.Instance.UnsubscribeToAction(InputType.UI_SELECT, HandleSelect);
+        InputManager.UnsubscribeToAction(InputType.UI_SELECT, HandleSelect);
     }
 
     public override void HandleOpen()
     {
-        InputManager.Instance.SubscribeToAction(InputType.UI_SELECT, HandleSelect);
+        InputManager.SubscribeToAction(InputType.UI_SELECT, HandleSelect);
     }
 
     private void HandleSelect(InputAction.CallbackContext _)

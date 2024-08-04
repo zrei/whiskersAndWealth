@@ -4,19 +4,36 @@ using System.Collections.Generic;
 
 public class Map : MonoBehaviour
 {
+    [SerializeField] string m_MapName;
     [SerializeField] Transform m_PlayerStartPosition;
     [SerializeField] CameraController m_MapCamera;
     [SerializeField] Transform m_NPCSpawnPointsParent;
     [SerializeField] List<GameObject> m_UIElements;
 
+    public string MapName => m_MapName;
+
+    private List<GameObject> m_UIElementInstances = new List<GameObject>();
+
+    // can turn this into an enumerator
     public void Load()
     {
         DespawnNPCs();
         PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
         m_MapCamera.SetFollow(PlayerMovement.Instance.transform, true);
-        foreach (GameObject UIElement in m_UIElements)
-            UIManager.Instance.OpenUIElement(UIElement);
+        if (m_UIElementInstances.Count == 0)
+        {
+            foreach (GameObject UIElement in m_UIElements)
+                m_UIElementInstances.Add(UIManager.Instance.OpenUIElement(UIElement));
+        }
         SpawnNPCs();
+    }
+
+    // can turn this into an enumerator
+    public void Unload()
+    {
+        foreach (GameObject UIElement in m_UIElementInstances)
+            UIManager.Instance.RemoveUIElement(UIElement);
+        m_UIElementInstances.Clear();
     }
 
     private void SpawnNPCs()

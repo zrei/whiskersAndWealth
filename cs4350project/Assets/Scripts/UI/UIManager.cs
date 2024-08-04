@@ -37,21 +37,15 @@ public class UIManager : Singleton<UIManager>
 
     private void HandleDependencies()
     {
-        if (!InputManager.IsReady)
-        {
-            InputManager.OnReady += HandleDependencies;
-            return;
-        }
-
-        InputManager.OnReady -= HandleDependencies;
-        InputManager.Instance.SubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
-        InputManager.Instance.SubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
+        InputManager.SubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
+        InputManager.SubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
     }
+
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
-        InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
-        InputManager.Instance.UnsubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
+        InputManager.UnsubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
+        InputManager.UnsubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
         base.HandleDestroy();
     }
     #endregion

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 /// <summary>
 /// Enum to provide strong typing for the rest of the project.
@@ -42,10 +43,13 @@ public class InputManager : Singleton<InputManager>
     public const string UI_ACTION_MAP_NAME = "UI";
     public const string PLAYER_ACTION_MAP_NAME = "PLAYER";
 
+    private static List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)> m_CachedList = new List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)>();
+
     #region Initialization
     protected override void HandleAwake()
     {
         InitInputs();
+        HandleCachedInputs();
         base.HandleAwake();
 
         // debug
@@ -63,7 +67,22 @@ public class InputManager : Singleton<InputManager>
     // TODO: may not want to enable all inputs
     private void InitInputs()
     {
-        m_InputActionAsset.Enable();
+        SwitchToInputMap(UI_ACTION_MAP_NAME);
+    }
+
+    private void HandleCachedInputs()
+    {
+        foreach ((InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback) cachedInput in m_CachedList)
+        {
+            if (cachedInput.cancelCallback == null)
+            {
+                SubscribeToAction_Instance(cachedInput.inputType, cachedInput.performedCallback);
+            } else
+            {
+                SubscribeToAction_Instance(cachedInput.inputType, cachedInput.performedCallback, cachedInput.cancelCallback);
+            }
+        }
+        m_CachedList.Clear();
     }
     #endregion
 
@@ -106,24 +125,58 @@ public class InputManager : Singleton<InputManager>
         return GetInputAction(inputType).triggered;
     }
 
-    public void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
+    public static void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
+    {
+        if (IsReady)
+        {
+            Instance.SubscribeToAction_Instance(inputType, callback);
+        } else
+        {
+            m_CachedList.Add((inputType, callback, null));
+        }
+    }
+
+    private void SubscribeToAction_Instance(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
         GetInputAction(inputType).performed += callback;
     }
 
-    public void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    public static void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        if (IsReady)
+        {
+            Instance.SubscribeToAction_Instance(inputType, performedCallback, cancelCallback);
+        } else
+        {
+            m_CachedList.Add((inputType, performedCallback, cancelCallback));
+        }
+    }
+
+    private void SubscribeToAction_Instance(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
     {
         InputAction action = GetInputAction(inputType);
         action.performed += performedCallback;
         action.canceled += cancelCallback;
     }
 
-    public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
+    public static void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
+    {
+        if (IsReady)
+            Instance.UnsubscribeToAction_Instance(inputType, callback);
+    }
+
+    public static void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    {
+        if (IsReady)
+            Instance.UnsubscribeToAction_Instance(inputType, performedCallback, cancelCallback);
+    }
+
+    private void UnsubscribeToAction_Instance(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
         GetInputAction(inputType).performed -= callback;
     }
 
-    public void UnsubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
+    private void UnsubscribeToAction_Instance(InputType inputType, Action<InputAction.CallbackContext> performedCallback, Action<InputAction.CallbackContext> cancelCallback)
     {
         InputAction action = GetInputAction(inputType);
         action.performed -= performedCallback;

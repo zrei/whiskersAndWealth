@@ -17,39 +17,39 @@ public class NarrativeManager : Singleton<NarrativeManager>
     };
     #endregion
 
-    // haven't dealt with cutscenes that have already been played
-    // likely will just have a string that represents its name wwww
     [SerializeField] private List<DialogueSO> m_Cutscenes;
 
     private Dictionary<string, bool> m_Flags;
 
     protected override void HandleAwake()
     {
-        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
-        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
         HandleDependencies();
         base.HandleAwake();
+
+        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
+        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
     }
 
     protected override void HandleDestroy()
     {
+        base.HandleDestroy();
+
         GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
-        base.HandleDestroy();
     }
 
     private void HandleDependencies()
     {
         m_Flags = new Dictionary<string, bool>();
-        InitPersistentFlags();
+        InitPersistentFlags(SaveManager.Instance.IsNewSave);
         InitSessionFlags();
     }
 
-    private void InitPersistentFlags()
+    private void InitPersistentFlags(bool isNewSave)
     {
         foreach (string flag in m_ListFlagsPersistent)
         {
-            m_Flags[flag] = SaveManager.Instance.GetFlagValue(flag);
+            m_Flags[flag] = isNewSave ? false : SaveManager.Instance.GetFlagValue(flag);
             Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
         }
     }
@@ -112,6 +112,7 @@ public class NarrativeManager : Singleton<NarrativeManager>
         }
     }
 
+    // hm don't know whether to move this to the time period manager instead?
     private void OnAdvanceTimePeriod(TimePeriod timePeriod)
     {
         SetFlagValue("MORNING", false);

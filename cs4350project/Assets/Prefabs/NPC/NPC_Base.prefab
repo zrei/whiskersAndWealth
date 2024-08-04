@@ -175,3 +175,4 @@ MonoBehaviour:
   m_RequiredHoldDuration: 0
   m_InteractionIndicator: {fileID: 1873314201276151836, guid: 7688bb7505da7464caf6d1f51ac84609, type: 3}
   m_IndicatorLocation: {fileID: 166490015510329998}
+  m_NPCData: {fileID: 11400000, guid: b07584331fa6b45348708dee4085681d, type: 2}
