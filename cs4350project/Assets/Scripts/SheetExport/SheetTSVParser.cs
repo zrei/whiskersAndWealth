@@ -34,11 +34,7 @@ public static class SheetTSVParser
 
     public static ExportedDataTable Parse(string rawData, int startingRow)
     {
-        if (rawData.Contains("<!DOCTYPE html>") || rawData.Contains("<!doctype html>"))
-        {
-            Logger.Log(LoggerName, "The sheet is restricted and can't be pulled. Change permissions to \"Anyone on the internet with this link can view\"", LogLevel.ERROR);
-            return null;
-        }
+        Logger.Log("TSV Parser", "Raw data:\n" + rawData, LogLevel.LOG);
 
         string[] rows = rawData.Split(
             RowDelimiter,
