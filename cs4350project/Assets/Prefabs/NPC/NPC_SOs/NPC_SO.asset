@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 639d4453a9af54aeaa61087a93c17aac, type: 3}
-  m_Name: Test_SpawnSO
+  m_Script: {fileID: 11500000, guid: afb980a98f6e14e5aa33ae3c4c106ae0, type: 3}
+  m_Name: NPC_SO
   m_EditorClassIdentifier: 
-  m_SpawnPoints:
-  - Flags:
-    - AFTERNOON
-    Priority: 0
-    SpawnPointName: StartingMap_SpawnPointA
-  m_NPC: {fileID: 8953702529116321677, guid: 1f8b92c7a26af40099ec5a6e08252a24, type: 3}
+  m_Dialogues:
+  - {fileID: 11400000, guid: bb5919679b5714c4ebb4936e71aac1de, type: 2}

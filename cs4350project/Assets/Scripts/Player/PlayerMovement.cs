@@ -27,12 +27,12 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private void HandleDependencies()
     {
-        InputManager.Instance.SubscribeToAction(InputType.PLAYER_MOVE, OnMove, OnMoveCancel);
+        InputManager.SubscribeToAction(InputType.PLAYER_MOVE, OnMove, OnMoveCancel);
     }
 
     protected override void HandleDestroy()
     {
-        InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_MOVE, OnMoveCancel);
+        InputManager.UnsubscribeToAction(InputType.PLAYER_MOVE, OnMove, OnMoveCancel);
         base.HandleDestroy();
     }
 

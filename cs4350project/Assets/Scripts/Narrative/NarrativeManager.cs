@@ -17,37 +17,39 @@ public class NarrativeManager : Singleton<NarrativeManager>
     };
     #endregion
 
-    // haven't dealt with cutscenes that have already been played
-    // likely will just have a string that represents its name wwww
     [SerializeField] private List<DialogueSO> m_Cutscenes;
 
     private Dictionary<string, bool> m_Flags;
 
     protected override void HandleAwake()
     {
-        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
         HandleDependencies();
         base.HandleAwake();
+
+        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
+        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
     }
 
     protected override void HandleDestroy()
     {
-        GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
         base.HandleDestroy();
+
+        GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
+        GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
 
     private void HandleDependencies()
     {
         m_Flags = new Dictionary<string, bool>();
-        InitPersistentFlags();
+        InitPersistentFlags(SaveManager.Instance.IsNewSave);
         InitSessionFlags();
     }
 
-    private void InitPersistentFlags()
+    private void InitPersistentFlags(bool isNewSave)
     {
         foreach (string flag in m_ListFlagsPersistent)
         {
-            m_Flags[flag] = SaveManager.Instance.GetFlagValue(flag);
+            m_Flags[flag] = isNewSave ? false : SaveManager.Instance.GetFlagValue(flag);
             Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
         }
     }
@@ -107,6 +109,31 @@ public class NarrativeManager : Singleton<NarrativeManager>
                 DialogueManager.Instance.PlayDialogue(dialogueSO);
                 return;
             }
+        }
+    }
+
+    // hm don't know whether to move this to the time period manager instead?
+    private void OnAdvanceTimePeriod(TimePeriod timePeriod)
+    {
+        SetFlagValue("MORNING", false);
+        SetFlagValue("AFTERNOON", false);
+        SetFlagValue("EVENING", false);
+        SetFlagValue("NIGHT", false);
+
+        switch (timePeriod)
+        {
+            case TimePeriod.MORNING:
+                SetFlagValue("MORNING", true);
+                break;
+            case TimePeriod.AFTERNOON:
+                SetFlagValue("AFTERNOON", true);
+                break;
+            case TimePeriod.EVENING:
+                SetFlagValue("EVENING", true);
+                break;
+            case TimePeriod.NIGHT:
+                SetFlagValue("NIGHT", true);
+                break;
         }
     }
 }

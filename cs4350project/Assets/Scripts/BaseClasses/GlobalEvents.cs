@@ -8,7 +8,7 @@ public delegate void FloatEvent(float _);
 public delegate void Vector3Event(Vector3 _);
 
 public static class GlobalEvents {
-  
+
     public static class UI {
 
     }
@@ -36,7 +36,7 @@ public static class GlobalEvents {
     }
 
     public static class Starvation {
-        public static IntEvent StarvationChangeEvent;
+        public static FloatEvent StarvationChangeEvent;
         public static VoidEvent PlayerStarveEvent;
     }
 }

@@ -80,12 +80,12 @@ public abstract class Interaction : MonoBehaviour
 
     protected virtual void HandleTriggerEnter()
     {
-        InputManager.Instance.SubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
+        InputManager.SubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
     }
 
     protected virtual void HandleTriggerExit()
     {
-        InputManager.Instance.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
+        InputManager.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
         ResetHold();
     }
     #endregion
