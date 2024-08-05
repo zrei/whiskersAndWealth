@@ -91,6 +91,8 @@ public class SaveManager : Singleton<SaveManager>
     /// </summary>
     public void Save()
     {
+        SetFlagValue("GAME_SAVE", true);
+        SetFlagValue("NEW_SAVE", false);
         PlayerPrefs.Save();
     }
 
