@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class UI_MainMenu : UILayer
 {
-    [SerializeField] private Button m_GoToGame;
+    [SerializeField] private Button m_NewGameBtn;
+    [SerializeField] private Button m_ContinueBtn;
+
     public override void HandleClose()
     {
 
@@ -17,17 +19,37 @@ public class UI_MainMenu : UILayer
 
     private void Awake()
     {
-        m_GoToGame.onClick.AddListener(B_GoToGame);
+        m_NewGameBtn.onClick.AddListener(B_NewGame);
+        m_ContinueBtn.onClick.AddListener(B_ContinueGame);
+        HandleDependencies();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        if (!SaveManager.Instance.HasSave)
+            m_ContinueBtn.interactable = false;
     }
 
     private void OnDestroy()
     {
-        m_GoToGame.onClick.RemoveAllListeners();
+        m_NewGameBtn.onClick.RemoveAllListeners();
+        m_ContinueBtn.onClick.RemoveAllListeners();
     }
 
-    private void B_GoToGame()
+    private void B_ContinueGame()
     {
-        // TODO: Have a continue option
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    private void B_NewGame()
+    {
+         // TODO: Have a continue option
         SaveManager.Instance.InitNewSave();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
