@@ -353,4 +353,4 @@ MonoBehaviour:
   m_HUDCanvas: {fileID: 5316536265393691195}
   m_MenuCanvas: {fileID: 8047965690916721032}
   m_IndicatorCanvas: {fileID: 630607867573305778}
-  m_PauseMenu: {fileID: 2382426133417067810, guid: 8b6f107c27510be4692336e007ebc3dd, type: 3}
+  m_PauseMenuPrefab: {fileID: 3813591886959313044, guid: 8b6f107c27510be4692336e007ebc3dd, type: 3}

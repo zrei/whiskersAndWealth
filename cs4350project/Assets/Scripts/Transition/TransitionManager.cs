@@ -2,27 +2,29 @@ using UnityEngine;
 
 public class TransitionManager : Singleton<TransitionManager>
 {
-    [SerializeField] private GameObject m_LoadingScreen;
+    [SerializeField] private UILayer m_LoadingScreenPrefab;
 
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
-        GlobalEvents.Map.OnBeginMapLoad += OnBeginMapLoad;
-
         base.HandleAwake();
+
+        GlobalEvents.Map.MapLoadBeginEvent += OnBeginMapLoad;
+        GlobalEvents.Map.MapLoadCompleteEvent += OnEndMapLoad;
     }
 
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
-        GlobalEvents.Map.OnBeginMapLoad -= OnBeginMapLoad;
-
         base.HandleDestroy();
+
+        GlobalEvents.Map.MapLoadBeginEvent -= OnBeginMapLoad;
+        GlobalEvents.Map.MapLoadCompleteEvent -= OnEndMapLoad;
     }
 
     private void OnBeginMapLoad()
     {
-        UIManager.Instance.OpenLayer(m_LoadingScreen);
+        UIManager.Instance.OpenLayer(m_LoadingScreenPrefab);
     }
 
     private void OnEndMapLoad()

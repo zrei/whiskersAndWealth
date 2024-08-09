@@ -46,5 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_DoDebug: 0
   m_PlayerVelocity: 10
-  m_StartingStarvationValue: 10
+  m_MaxStarvationLevel: 5
+  m_StartingStarvationValue: 5
   m_StartingVolume: 100

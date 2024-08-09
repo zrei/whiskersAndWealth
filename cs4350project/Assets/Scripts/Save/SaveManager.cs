@@ -6,16 +6,6 @@ public class SaveManager : Singleton<SaveManager>
 {
     #region Init
     /// <summary>
-    /// Initialise the game's save, handling the case where this is a new game
-    /// </summary>
-    public void InitSave()
-    {
-        // keys should go into another file for easy access across all files :)
-        if (!GetFlagValue("GAME_SAVE"))
-            InitNewSave();
-    }
-
-    /// <summary>
     /// Initialise the game's config, handling the case where there has not been a
     /// config set before
     /// </summary>
@@ -42,17 +32,16 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     /// <summary>
-    /// Initialise to the starting game values
+    /// Initialise an entirely new save file. Since no save values have been
+    /// overridden, GAME_SAVE is set to false
     /// </summary>
-    private void InitNewSave()
+    public void InitNewSave()
     {
-        // set all starting values here, this is an example
-        SetStarvationLevel(GlobalSettings.StartingStarvationValue);
+        // Indicate an entirely new save
+        SetFlagValue("NEW_SAVE", true);
 
-        // indicate that a game save exists
-        SetFlagValue("GAME_SAVE", true);
-
-        Save();
+        // Override any existing game saves
+        SetFlagValue("GAME_SAVE", false);
     }
     #endregion
 
@@ -138,5 +127,10 @@ public class SaveManager : Singleton<SaveManager>
     {
         PlayerPrefs.SetInt(flag, value ? 1 : 0);
     }
+    #endregion
+
+    #region Save Status
+    public bool HasSave => GetFlagValue("GAME_SAVE");
+    public bool IsNewSave => GetFlagValue("NEW_SAVE"); // disable this flag value upon saving
     #endregion
 }

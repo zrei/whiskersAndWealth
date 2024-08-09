@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NarrativeManager : Singleton<NarrativeManager>
 {
+    #region TEST
     // these should be set when pulling flags as well
     // might move these to a SO at some point
     [SerializeField] private List<string> m_ListFlagsPersistent = new()
@@ -14,37 +15,41 @@ public class NarrativeManager : Singleton<NarrativeManager>
     {
         "TEST_4", "TEST_5"
     };
+    #endregion
+
+    [SerializeField] private List<DialogueSO> m_Cutscenes;
 
     private Dictionary<string, bool> m_Flags;
 
     protected override void HandleAwake()
     {
-        GlobalEvents.Narrative.OnSetFlagValue += SetFlagValue;
         HandleDependencies();
         base.HandleAwake();
+
+        GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
+        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
     }
 
     protected override void HandleDestroy()
     {
-        GlobalEvents.Narrative.OnSetFlagValue -= SetFlagValue;
         base.HandleDestroy();
+
+        GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
+        GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
 
     private void HandleDependencies()
     {
-        if (!SaveManager.IsReady)
-            SaveManager.OnReady += HandleDependencies;
-        
         m_Flags = new Dictionary<string, bool>();
-        InitPersistentFlags();
+        InitPersistentFlags(SaveManager.Instance.IsNewSave);
         InitSessionFlags();
     }
 
-    private void InitPersistentFlags()
+    private void InitPersistentFlags(bool isNewSave)
     {
         foreach (string flag in m_ListFlagsPersistent)
         {
-            m_Flags[flag] = SaveManager.Instance.GetFlagValue(flag);
+            m_Flags[flag] = isNewSave ? false : SaveManager.Instance.GetFlagValue(flag);
             Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
         }
     }
@@ -68,19 +73,67 @@ public class NarrativeManager : Singleton<NarrativeManager>
     private void SetFlagValue(string flag, bool value)
     {
         m_Flags[flag] = value;
-    }
-
-    /// <summary>
-    /// Check if there's a cutscene to play for the upcoming time period based on current progress
-    /// </summary>
-    /// <returns></returns>
-    private bool CheckForCutsceneQuest()
-    {
-        return false;
+        if (value)
+            CheckForCutscenes(flag);
     }
 
     public bool GetFlagValue(string flag)
     {
+        if (!m_Flags.ContainsKey(flag))
+            return false;
         return m_Flags[flag];
+    }
+
+    public bool CheckFlagValues(in List<string> flags)
+    {
+        foreach (string flag in flags)
+        {
+            if (!GetFlagValue(flag))
+                return false;
+        }
+        return true;
+    }
+
+    // hasn't yet accounted for priority and randomising which one to play if they have the same priority. might move this elsewhere into another one later
+    private void CheckForCutscenes(string trippedFlag)
+    {
+        foreach (DialogueSO dialogueSO in m_Cutscenes)
+        {
+            if (!dialogueSO.m_Repeatable && GetFlagValue(dialogueSO.m_DialogueName))
+                continue;
+            // don't bother checking the cutscene if the flags don't contain the tripped flag
+            if (!dialogueSO.m_Flags.Contains(trippedFlag))
+                return;
+            if (CheckFlagValues(dialogueSO.m_Flags))
+            {
+                DialogueManager.Instance.PlayDialogue(dialogueSO);
+                return;
+            }
+        }
+    }
+
+    // hm don't know whether to move this to the time period manager instead?
+    private void OnAdvanceTimePeriod(TimePeriod timePeriod)
+    {
+        SetFlagValue("MORNING", false);
+        SetFlagValue("AFTERNOON", false);
+        SetFlagValue("EVENING", false);
+        SetFlagValue("NIGHT", false);
+
+        switch (timePeriod)
+        {
+            case TimePeriod.MORNING:
+                SetFlagValue("MORNING", true);
+                break;
+            case TimePeriod.AFTERNOON:
+                SetFlagValue("AFTERNOON", true);
+                break;
+            case TimePeriod.EVENING:
+                SetFlagValue("EVENING", true);
+                break;
+            case TimePeriod.NIGHT:
+                SetFlagValue("NIGHT", true);
+                break;
+        }
     }
 }

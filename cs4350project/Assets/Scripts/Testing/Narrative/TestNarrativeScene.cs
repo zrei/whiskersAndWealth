@@ -41,14 +41,14 @@ public class TestNarrativeScene : MonoBehaviour
     private void TogglePersistentFlag()
     {
         bool currValue = NarrativeManager.Instance.GetFlagValue(m_PersistentFlag);
-        GlobalEvents.Narrative.OnSetFlagValue?.Invoke(m_PersistentFlag, !currValue);
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_PersistentFlag, !currValue);
         SetFlagText();
     }
 
     private void ToggleSessionFlag()
     {
         bool currValue = NarrativeManager.Instance.GetFlagValue(m_TransientFlag);
-        GlobalEvents.Narrative.OnSetFlagValue?.Invoke(m_TransientFlag, !currValue);
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_TransientFlag, !currValue);
         SetFlagText();
     }
 

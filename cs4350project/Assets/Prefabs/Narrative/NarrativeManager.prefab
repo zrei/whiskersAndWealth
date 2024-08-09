@@ -51,3 +51,5 @@ MonoBehaviour:
   m_ListFlagsSession:
   - TEST_4
   - TEST_5
+  m_Cutscenes:
+  - {fileID: 11400000, guid: eed86622b745942cc9eed4b0273daea2, type: 2}

@@ -19,10 +19,13 @@ public class CameraController : MonoBehaviour
 
     public void SetFollow(Transform toFollow, bool hardSet = false)
     {
-        virtualCam.Follow = toFollow;
-
         if (hardSet)
+        {
+            virtualCam.Follow = null;
             SetWorldPosition(toFollow.position);
+        }
+
+        virtualCam.Follow = toFollow;
     }
 
     public void ResetFollow()

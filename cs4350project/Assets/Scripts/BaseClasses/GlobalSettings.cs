@@ -10,9 +10,9 @@ public class GlobalSettings : Singleton<GlobalSettings>
     [SerializeField] private float m_PlayerVelocity;
     public static float PlayerVelocity => Instance.m_PlayerVelocity;
 
-    [Header("Starting Gameplay Values")]
-    [SerializeField] private float m_StartingStarvationValue = 10.0f;
-    public static float StartingStarvationValue => Instance.m_StartingStarvationValue;
+    [Header("Starvation")]
+    [SerializeField] private int m_MaxStarvationLevel = 5;
+    public static int MaxStarvationLevel => Instance.m_MaxStarvationLevel;
 
     [Header("Starting Config Values")]
     [SerializeField] private float m_StartingVolume = 100.0f;

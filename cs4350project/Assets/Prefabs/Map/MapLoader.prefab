@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6859899229394930962}
   - component: {fileID: 6189048642601157444}
+  - component: {fileID: 5564996292171924280}
   m_Layer: 0
   m_Name: MapLoader
   m_TagString: Untagged
@@ -77,4 +78,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MapParent: {fileID: 3714494756237686024}
-  m_StartingMap: {fileID: 5754254072676219966, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
+  m_StartingMap: {fileID: 6838377133923786532, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
+--- !u!114 &5564996292171924280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813187168944156380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1fcada42bad47aeab87d2c391ee985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NPCSpawns:
+  - {fileID: 11400000, guid: 81370e651c8b34c8db2792bfc7cc6fd2, type: 2}

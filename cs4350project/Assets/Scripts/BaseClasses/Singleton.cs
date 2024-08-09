@@ -41,6 +41,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
         if (m_Instance == this)
         {
             m_Instance = null;
+            Logger.Log(this.GetType().Name, "Singleton has been destroyed", LogLevel.LOG);
         }
     }
 }

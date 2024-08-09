@@ -27,6 +27,8 @@ public class UI_MainMenu : UILayer
 
     private void B_GoToGame()
     {
+        // TODO: Have a continue option
+        SaveManager.Instance.InitNewSave();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
