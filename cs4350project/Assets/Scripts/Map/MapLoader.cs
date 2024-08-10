@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles loading the current map instance and deloading the previous map instance
@@ -12,6 +13,9 @@ public class MapLoader : Singleton<MapLoader>
     [Header("Starting Data")]
     [SerializeField] private Map m_StartingMap;
 
+    [Header("Data")]
+    [SerializeField] private List<Map> m_Maps;
+
     private Map m_CurrMapInstance = null;
 
     #region Initialisation
@@ -20,7 +24,7 @@ public class MapLoader : Singleton<MapLoader>
         base.HandleAwake();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
-        StartCoroutine(LoadMap(m_StartingMap));
+        LoadInitialMap();
     }
 
     protected override void HandleDestroy()
@@ -28,6 +32,20 @@ public class MapLoader : Singleton<MapLoader>
         base.HandleDestroy();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
+    }
+
+    private void LoadInitialMap()
+    {
+        if (SaveManager.Instance.IsNewSave)
+        {
+            SaveManager.Instance.SetCurrentMap(m_StartingMap.MapName);
+            StartCoroutine(LoadMap(m_StartingMap));
+        }
+        else
+        {
+            string currMapName = SaveManager.Instance.GetCurrentMap();
+            StartCoroutine(LoadMap(RetrieveMap(currMapName)));
+        }
     }
     #endregion
 
@@ -37,30 +55,69 @@ public class MapLoader : Singleton<MapLoader>
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
 
         yield return new WaitUntil(() => NarrativeManager.IsReady);
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.2f);
+        
+        float currLoadProgress = 0.4f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return new WaitUntil(() => TimeManager.IsReady);
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.3f);
+
+        currLoadProgress += 0.1f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return new WaitUntil(() => StarvationManager.IsReady);
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.4f);
+
+        currLoadProgress += 0.1f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+        yield return null;
 
         // unload previous map if needed
         if (m_CurrMapInstance && m_CurrMapInstance != mapObj)
         {
             GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, false);
             m_CurrMapInstance.Unload();
+            currLoadProgress += 0.05f;
+            GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+            yield return null;
+
             Destroy(m_CurrMapInstance);
             m_CurrMapInstance = null;
         }
 
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
-        
-        if (m_CurrMapInstance == null)
-            m_CurrMapInstance = Instantiate(mapObj, Vector3.zero, Quaternion.identity, m_MapParent);
+        currLoadProgress = 0.7f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return null;
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.6f);
+
+        if (m_CurrMapInstance == null)
+        {
+            AsyncInstantiateOperation<Map> asyncMapInstantiateOperation = InstantiateAsync(mapObj); /*, m_MapParent, Vector3.zero, Quaternion.identity);*/
+            while (!asyncMapInstantiateOperation.isDone)
+            {
+                if (currLoadProgress < 0.8f)
+                {
+                    currLoadProgress += 0.01f;
+                    GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+                }
+                yield return null;
+            }
+            m_CurrMapInstance = asyncMapInstantiateOperation.Result[0];
+
+            // for some reason placing the parent in the instantiation doesn't work
+            m_CurrMapInstance.gameObject.transform.parent = m_MapParent;
+            m_CurrMapInstance.gameObject.transform.rotation = Quaternion.identity;
+            m_CurrMapInstance.gameObject.transform.localScale = Vector3.one;
+        }
+
+        if (currLoadProgress != 0.8f)
+        {
+            GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+            yield return null;
+        }
+
         GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, true);
         m_CurrMapInstance.Load();
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.7f);
+        currLoadProgress += 0.1f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+        yield return null;
+
+        currLoadProgress += 0.1f;
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
@@ -72,6 +129,20 @@ public class MapLoader : Singleton<MapLoader>
     private void OnAdvanceTimePeriod(TimePeriod _)
     {
         StartCoroutine(LoadMap(m_CurrMapInstance));
+    }
+    #endregion
+
+    #region Helper
+    private Map RetrieveMap(string mapName)
+    {
+        foreach (Map map in m_Maps)
+        {
+            if (map.MapName == mapName)
+                return map;
+        }
+
+        Logger.Log(this.GetType().Name, "No map found with name: " + mapName, LogLevel.ERROR);
+        return null;
     }
     #endregion
 }

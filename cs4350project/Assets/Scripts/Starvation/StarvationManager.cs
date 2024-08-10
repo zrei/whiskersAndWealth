@@ -42,7 +42,10 @@ public class StarvationManager : Singleton<StarvationManager>
     private void InitStarvation()
     {
         if (SaveManager.Instance.IsNewSave)
+        {
             m_StarvationAmount = m_StartingStarvationValue;
+            SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+        }
         else
             m_StarvationAmount = SaveManager.Instance.RetrieveStarvationLevel();
     }
@@ -52,6 +55,7 @@ public class StarvationManager : Singleton<StarvationManager>
     private void HandleAdvanceTimePeriod(TimePeriod _)
     {
         m_StarvationAmount -= 1;
+        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
         GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
 
         if (m_StarvationAmount == 0)
