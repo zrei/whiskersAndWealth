@@ -22,6 +22,9 @@ public enum InputType
     UI_CLOSE
 }
 
+/// <summary>
+/// Bundles the input map and action name for convenience.
+/// </summary>
 public struct InputMapAndAction
 {
     public readonly string MapName;
@@ -34,9 +37,16 @@ public struct InputMapAndAction
     }
 }
 
+/// <summary>
+/// Handles which inputs are enabled, and the detection of inputs which activate
+/// the appropriate events that other classes can subscribe to
+/// </summary>
 public class InputManager : Singleton<InputManager>
 {
+    [Header("Input Map")]
     [SerializeField] private InputActionAsset m_InputActionAsset;
+
+    [Header("Debug")]
     [SerializeField] private bool m_DoDebug = false; // TODO: Move this to global settings or something later
 
     // TODO: Better way to do this?
@@ -52,7 +62,7 @@ public class InputManager : Singleton<InputManager>
         HandleCachedInputs();
         base.HandleAwake();
 
-        // debug
+        // TODO: Clean up this debug
         InputAction action = GetInputAction(InputType.PLAYER_DEBUG);
         action.performed += DebugAction;
     }
@@ -118,13 +128,14 @@ public class InputManager : Singleton<InputManager>
         
         return m_InputActionAsset.FindActionMap(inputMapAndAction.MapName).FindAction(inputMapAndAction.ActionName);
     }
-    #endregion
 
     public bool IsInputActive(InputType inputType)
     {
         return GetInputAction(inputType).triggered;
     }
+    #endregion
 
+    #region Action Subscription/Unsubscription
     public static void SubscribeToAction(InputType inputType, Action<InputAction.CallbackContext> callback)
     {
         if (IsReady)
@@ -182,7 +193,9 @@ public class InputManager : Singleton<InputManager>
         action.performed -= performedCallback;
         action.canceled -= cancelCallback;
     }
+    #endregion
 
+    #region Toggle Inputs
     public void ToggleInputBlocked(InputType inputType, bool isBlocked)
     {
         InputAction inputAction = GetInputAction(inputType);
@@ -217,12 +230,16 @@ public class InputManager : Singleton<InputManager>
 
         m_InputActionAsset.FindActionMap(mapName).Enable();
     }
+    #endregion
 
+    #region Debug
     private void DebugAction(InputAction.CallbackContext context)
     {
         TimeManager.Instance.AdvanceTimePeriod();
     }
+    #endregion
 
+    #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -230,4 +247,5 @@ public class InputManager : Singleton<InputManager>
             Logger.Log(this.GetType().Name, "No input action provided", LogLevel.ERROR);
     }
 #endif
+    #endregion
 }

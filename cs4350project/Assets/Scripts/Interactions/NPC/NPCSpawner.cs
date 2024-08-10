@@ -2,10 +2,15 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Spawns/Despawns NPCs depending on the current map and conditions
+/// </summary>
 public class NPCSpawner : Singleton<NPCSpawner>
 {
+    [Header("Data")]
     [SerializeField] private List<NPCSpawnSO> m_NPCSpawns;
 
+    #region Spawn NPCs
     public void SpawnNPCs(List<Transform> mapSpawnPoints)
     {
         foreach (NPCSpawnSO npcSpawnSO in m_NPCSpawns)
@@ -14,10 +19,9 @@ public class NPCSpawner : Singleton<NPCSpawner>
         }
     }
 
-    // can return bool
     private bool TrySpawnNPC(NPCSpawnSO npcSpawnSO, in List<Transform> mapSpawnPoints)
     {
-        // ordered dictionary?
+        // TODO: ordered dictionary?
         SortedList<int, Transform> possibleSpawnPoints = new SortedList<int, Transform>();
         foreach (NPCSpawnPoint npcSpawnPoint in npcSpawnSO.m_SpawnPoints)
         {
@@ -36,6 +40,13 @@ public class NPCSpawner : Singleton<NPCSpawner>
         return false;
     }
 
+    private void SpawnNPC(Transform spawnPoint, GameObject NPC)
+    {
+        Instantiate(NPC, spawnPoint);
+    }
+    #endregion
+
+    #region Helper
     private bool TryRetrieveSpawnPoint(string spawnPointName, in List<Transform> mapSpawnPoints, out Transform foundSpawnPoint)
     {
         foreach (Transform spawnPoint in mapSpawnPoints)
@@ -59,9 +70,5 @@ public class NPCSpawner : Singleton<NPCSpawner>
     {
         return mapSpawnPoint.childCount > 0;
     }
-
-    private void SpawnNPC(Transform spawnPoint, GameObject NPC)
-    {
-        Instantiate(NPC, spawnPoint);
-    }
+    #endregion
 }

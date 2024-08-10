@@ -1,14 +1,19 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles starvation level
+/// </summary>
 public class StarvationManager : Singleton<StarvationManager>
 {
+    [Header("Starting Data")]
     [SerializeField] private float m_StartingStarvationValue = 5;
 
     private float m_StarvationAmount;
-
-    public bool IsStarved => m_StarvationAmount == 0;
     public float StarvationAmount => m_StarvationAmount;
 
+    public bool IsStarved => m_StarvationAmount == 0;
+
+    #region Initialisation
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
@@ -41,7 +46,9 @@ public class StarvationManager : Singleton<StarvationManager>
         else
             m_StarvationAmount = SaveManager.Instance.RetrieveStarvationLevel();
     }
+    #endregion
 
+    #region Event Callbacks
     private void HandleAdvanceTimePeriod(TimePeriod _)
     {
         m_StarvationAmount -= 1;
@@ -52,4 +59,5 @@ public class StarvationManager : Singleton<StarvationManager>
             GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
         }
     }
+    #endregion
 }

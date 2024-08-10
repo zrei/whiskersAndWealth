@@ -2,19 +2,31 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Handles loading of a map instance
+/// </summary>
 public class Map : MonoBehaviour
 {
+    [Header("Data")]
     [SerializeField] string m_MapName;
+
+    [Header("References")]
     [SerializeField] Transform m_PlayerStartPosition;
-    [SerializeField] CameraController m_MapCamera;
     [SerializeField] Transform m_NPCSpawnPointsParent;
+
+    [Header("Camera")]
+    [SerializeField] CameraController m_MapCamera;
+
+    [Header("Spawned UI")]
     [SerializeField] List<GameObject> m_UIElements;
 
     public string MapName => m_MapName;
 
+    // UI
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
-    // can turn this into an enumerator
+    #region Loading
+    // TODO: turn this into an enumerator
     public void Load()
     {
         DespawnNPCs();
@@ -28,14 +40,16 @@ public class Map : MonoBehaviour
         SpawnNPCs();
     }
 
-    // can turn this into an enumerator
+    // TODO: turn this into an enumerator
     public void Unload()
     {
         foreach (GameObject UIElement in m_UIElementInstances)
             UIManager.Instance.RemoveUIElement(UIElement);
         m_UIElementInstances.Clear();
     }
+    #endregion
 
+    #region Map NPCs
     private void SpawnNPCs()
     {
         List<Transform> spawnPoints = new List<Transform>();
@@ -54,4 +68,5 @@ public class Map : MonoBehaviour
                 Destroy(NPCSpawnPoint.GetChild(i).gameObject);
         }
     }
+    #endregion
 }

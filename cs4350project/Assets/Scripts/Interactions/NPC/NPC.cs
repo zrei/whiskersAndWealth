@@ -1,9 +1,14 @@
 using UnityEngine;
 
+/// <summary>
+/// NPC interaction
+/// </summary>
 public class NPC : Interaction
 {
+    [Header("Data")]
     [SerializeField] private NPC_SO m_NPCData;
 
+    #region Interaction
     protected override void HandleInteraction()
     {
         if (TryRetrieveDialogue(out DialogueSO dialogueSO))
@@ -11,12 +16,15 @@ public class NPC : Interaction
             DialogueManager.Instance.PlayDialogue(dialogueSO);
         }
     }
+    #endregion
 
+    #region Dialogue
+    // TODO: Doesn't handle priority/randomisation
     private bool TryRetrieveDialogue(out DialogueSO dialogueSOReturn)
     {
         foreach (DialogueSO dialogueSO in m_NPCData.m_Dialogues)
         {
-            if (ConditionsMet(dialogueSO))
+            if (DialogueConditionsMet(dialogueSO))
             {
                 dialogueSOReturn = dialogueSO;
                 return true;
@@ -26,8 +34,9 @@ public class NPC : Interaction
         return false;
     }
 
-    private bool ConditionsMet(DialogueSO dialogueSO)
+    private bool DialogueConditionsMet(DialogueSO dialogueSO)
     {
         return NarrativeManager.Instance.CheckFlagValues(dialogueSO.m_Flags);
     }
+    #endregion
 }

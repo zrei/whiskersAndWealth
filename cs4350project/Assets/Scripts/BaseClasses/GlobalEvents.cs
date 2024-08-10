@@ -28,6 +28,12 @@ public static class GlobalEvents {
 
         public static FlagEvent SetFlagValueEvent;
     }
+    
+    public static class Scene {
+        public delegate void SceneEnumEvent(SceneEnum scene);
+
+        public static SceneEnumEvent ChangeSceneEvent;
+    }
 
     public static class Map {
         public static VoidEvent MapLoadBeginEvent;

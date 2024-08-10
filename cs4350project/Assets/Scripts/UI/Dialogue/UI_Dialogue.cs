@@ -6,20 +6,9 @@ using TMPro;
 using DG.Tweening;
 using System;
 using UnityEngine.InputSystem;
+
 public class UI_Dialogue : UILayer
 {
-    // would it be faster to move the sprite around while rotating it or just have two
-    // we DO need an input blocker
-    // zzzz remember
-
-    // things to respond to: 
-    // skip to end of line
-    // skip to next line
-    // hmmm. it will know if it's in the middle of a line, that is knowledge it should hold
-    // it WILL NOT store the lines itself that will be stored by?
-
-    // or i suppose the entire dialogue SO could be passed here in all honesty
-    // dk that part can still change
     [Header("UI References")]
     [SerializeField] private Image m_LeftSprite;
     [SerializeField] private Image m_RightSprite;
@@ -30,37 +19,38 @@ public class UI_Dialogue : UILayer
     [Header("Values")]
     [SerializeField] private float m_PerCharacterTime = 0.1f;
 
-    private Coroutine m_DialogueCoroutine;
-    private bool m_AnimatingCurrLine;
-
     private Action m_OnReachEndOfLine;
 
     private string m_CurrLine;
+    private bool m_AnimatingCurrLine;
+    private Coroutine m_DialogueCoroutine;
 
+    #region Interactions
     public override void HandleClose()
     {
-        InputManager.UnsubscribeToAction(InputType.UI_SELECT, HandleSelect);
     }
 
     public override void HandleOpen()
     {
-        InputManager.SubscribeToAction(InputType.UI_SELECT, HandleSelect);
     }
 
-    private void HandleSelect(InputAction.CallbackContext _)
+    public override void HandleUISelect()
     {
         if (m_AnimatingCurrLine)
             CompleteLine();
         else
             m_OnReachEndOfLine?.Invoke();
     }
+    #endregion
 
+    #region Initialisation
     public void Initialise(Action onReachEndOfLine)
     {
         m_OnReachEndOfLine = onReachEndOfLine;
     }
+    #endregion
 
-    // give the dialogue. hm.
+    #region Handle Dialogue
     public void SetDialogueLine(DialogueLine dialogueLine, bool instant = false)
     {
         m_CurrLine = dialogueLine.m_TextLine;
@@ -120,4 +110,5 @@ public class UI_Dialogue : UILayer
         m_DialogueText.text = m_CurrLine;
         m_IndicatorArrow.SetActive(true);
     }
+    #endregion
 }
