@@ -87,7 +87,7 @@ public class MapLoader : Singleton<MapLoader>
 
         if (m_CurrMapInstance == null)
         {
-            AsyncInstantiateOperation<Map> asyncMapInstantiateOperation = InstantiateAsync(mapObj, m_MapParent, Vector3.zero, Quaternion.identity);
+            AsyncInstantiateOperation<Map> asyncMapInstantiateOperation = InstantiateAsync(mapObj); /*, m_MapParent, Vector3.zero, Quaternion.identity);*/
             while (!asyncMapInstantiateOperation.isDone)
             {
                 if (currLoadProgress < 0.8f)
@@ -98,6 +98,11 @@ public class MapLoader : Singleton<MapLoader>
                 yield return null;
             }
             m_CurrMapInstance = asyncMapInstantiateOperation.Result[0];
+
+            // for some reason placing the parent in the instantiation doesn't work
+            m_CurrMapInstance.gameObject.transform.parent = m_MapParent;
+            m_CurrMapInstance.gameObject.transform.rotation = Quaternion.identity;
+            m_CurrMapInstance.gameObject.transform.localScale = Vector3.one;
         }
 
         if (currLoadProgress != 0.8f)
