@@ -2,9 +2,14 @@ using UnityEngine;
 
 // TODO: Note that flags should be accessible by constant name from another file
 // to avoid errors and also have these flags be accessible globally
+
+/// <summary>
+/// Handles saving persistent data between sessions, retrieving persistent
+/// data, and clearing persistent data
+/// </summary>
 public class SaveManager : Singleton<SaveManager>
 {
-    #region Init
+    #region Initialisation
     /// <summary>
     /// Initialise the game's config, handling the case where there has not been a
     /// config set before
@@ -69,8 +74,8 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
 
-    #region TimePeriod
-    // NOTE: this one should be linked to an enum that can be translated to the int
+    #region Time Period
+    // TODO: this one should be linked to an enum that can be translated to the int
     // directly
     public void SetTimePeriod(int timePeriod)
     {
@@ -83,7 +88,7 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
 
-    #region ManagingActiveSave
+    #region Managing Active Save
     /// <summary>
     /// Actually save the current values to the game file.
     /// Before calling this function, any values you set through
@@ -96,7 +101,6 @@ public class SaveManager : Singleton<SaveManager>
         PlayerPrefs.Save();
     }
 
-    // more likely to be an editor only thing
     private void ClearSave()
     {
         // should not clear config
@@ -105,7 +109,7 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
 
-    #region ManagingConfig
+    #region Managing Config
     /// <summary>
     /// Reset config back to the default.
     /// </summary>

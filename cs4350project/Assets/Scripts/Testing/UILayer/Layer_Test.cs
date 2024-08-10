@@ -14,4 +14,8 @@ public class Layer_Test : UILayer
         Logger.Log(this.GetType().Name, name, "Opened", gameObject, LogLevel.LOG);
         _closeButton.onClick.AddListener(CloseLayer);
     }
+
+    public override void HandleUISelect() {
+        
+    }
 }

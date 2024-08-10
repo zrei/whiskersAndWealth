@@ -8,14 +8,20 @@ public enum TimePeriod
     EVENING,
     NIGHT
 }
+
+/// <summary>
+/// Handles the advancement of time
+/// </summary>
 public class TimeManager : Singleton<TimeManager>
 {
-    // starting period when first starting the game.
+    [Header("Starting Data")]
+    [Tooltip("Starting period when first starting the game")]
     [SerializeField] private TimePeriod m_StartingPeriod;
     
     private TimePeriod m_CurrTimePeriod;
     public TimePeriod CurrTimePeriod => m_CurrTimePeriod;
 
+    #region Initialisation
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
@@ -41,10 +47,13 @@ public class TimeManager : Singleton<TimeManager>
         else
             m_CurrTimePeriod = (TimePeriod) SaveManager.Instance.GetTimePeriod();
     }
+    #endregion
 
+    #region Advance Time
     public void AdvanceTimePeriod()
     {
         m_CurrTimePeriod = (TimePeriod) (((int) m_CurrTimePeriod + 1) % Enum.GetNames(typeof(TimePeriod)).Length);
         GlobalEvents.Time.AdvanceTimePeriodEvent?.Invoke(m_CurrTimePeriod);
     }
+    #endregion
 }

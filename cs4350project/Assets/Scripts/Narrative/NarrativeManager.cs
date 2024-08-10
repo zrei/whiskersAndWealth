@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles setting of flags and playing of cutscenes
+/// </summary>
 public class NarrativeManager : Singleton<NarrativeManager>
 {
     #region TEST
-    // these should be set when pulling flags as well
-    // might move these to a SO at some point
+    [Header("Test")]
+    // TODO: Shift to data at some point
     [SerializeField] private List<string> m_ListFlagsPersistent = new()
     {
         "TEST_1", "TEST_2", "TEST_3"
@@ -17,10 +20,12 @@ public class NarrativeManager : Singleton<NarrativeManager>
     };
     #endregion
 
+    [Header("Cutscenes")]
     [SerializeField] private List<DialogueSO> m_Cutscenes;
 
     private Dictionary<string, bool> m_Flags;
 
+    #region Initialisation
     protected override void HandleAwake()
     {
         HandleDependencies();
@@ -61,7 +66,9 @@ public class NarrativeManager : Singleton<NarrativeManager>
             m_Flags[flag] = false;
         }
     }
+    #endregion
 
+    #region Save
     public void SavePersistentFlags()
     {
         foreach (string flag in m_ListFlagsPersistent)
@@ -69,7 +76,9 @@ public class NarrativeManager : Singleton<NarrativeManager>
             SaveManager.Instance.SetFlagValue(flag, m_Flags[flag]);
         }
     }
+    #endregion
 
+    #region Flags
     private void SetFlagValue(string flag, bool value)
     {
         m_Flags[flag] = value;
@@ -93,8 +102,10 @@ public class NarrativeManager : Singleton<NarrativeManager>
         }
         return true;
     }
+    #endregion
 
-    // hasn't yet accounted for priority and randomising which one to play if they have the same priority. might move this elsewhere into another one later
+    #region Cutscenes
+    // TODO: hasn't yet accounted for priority and randomising which one to play if they have the same priority. might move this elsewhere into another one later
     private void CheckForCutscenes(string trippedFlag)
     {
         foreach (DialogueSO dialogueSO in m_Cutscenes)
@@ -111,8 +122,10 @@ public class NarrativeManager : Singleton<NarrativeManager>
             }
         }
     }
+    #endregion
 
-    // hm don't know whether to move this to the time period manager instead?
+    #region Event Callbacks
+    // TODO: Can move this to the time period manager instead
     private void OnAdvanceTimePeriod(TimePeriod timePeriod)
     {
         SetFlagValue("MORNING", false);
@@ -136,4 +149,5 @@ public class NarrativeManager : Singleton<NarrativeManager>
                 break;
         }
     }
+    #endregion
 }

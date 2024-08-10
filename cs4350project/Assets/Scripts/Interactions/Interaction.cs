@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// NOTE: This doesn't handle the case when there are two colliders overlapping. Do we need a conflict resolver?
-// NOTE: When in the middle of holding and the input action is disabled, the hold will not start up again unless you release and re-press the button
+// TODO: This doesn't handle the case when there are two colliders overlapping. Do we need a conflict resolver?
+// TODO: When in the middle of holding and the input action is disabled, the hold will not start up again unless you release and re-press the button
 [RequireComponent(typeof(Collider2D))]
 public abstract class Interaction : MonoBehaviour
 {
@@ -33,7 +33,7 @@ public abstract class Interaction : MonoBehaviour
         m_IsEnabled = true;
         ResetHold();
 
-        // can also add a bunch of events + conditions under which it is disabled...
+        // TODO: can add a bunch of events + conditions under which it is disabled...
     }
 
     private void OnEnable()
@@ -44,12 +44,6 @@ public abstract class Interaction : MonoBehaviour
     private void OnDisable()
     {
         UIManager.Instance.RemoveIndicator(m_IndicatorInstance);
-    }
-
-    private void Update()
-    {
-        UpdateIndicatorPosition();
-        HandleHold();
     }
     #endregion
 
@@ -87,6 +81,14 @@ public abstract class Interaction : MonoBehaviour
     {
         InputManager.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
         ResetHold();
+    }
+    #endregion
+
+    #region State Check
+    private void Update()
+    {
+        UpdateIndicatorPosition();
+        HandleHold();
     }
     #endregion
 
@@ -140,6 +142,8 @@ public abstract class Interaction : MonoBehaviour
         }
     }
     #endregion
+
+    #region Interaction
     private void FireInteraction()
     {
         HandleInteraction();
@@ -150,4 +154,5 @@ public abstract class Interaction : MonoBehaviour
     /// Action to perform once the interaction is fired.
     /// </summary>
     protected abstract void HandleInteraction();
+    #endregion
 }

@@ -264,7 +264,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1610852473998883076}
-  - component: {fileID: 1144522368790282470}
+  - component: {fileID: 7262843429366849105}
   m_Layer: 5
   m_Name: UI_MainMenu
   m_TagString: Untagged
@@ -292,7 +292,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1144522368790282470
+--- !u!114 &7262843429366849105
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -304,7 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8e0b8ebfeee4ebbbb2a5e2b230ee8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsEscClosable: 0
   m_NewGameBtn: {fileID: 7077464161261377843}
   m_ContinueBtn: {fileID: 6979633027854706299}
 --- !u!1 &4123839935331515744

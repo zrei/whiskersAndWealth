@@ -1,22 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
-// need to: a) load in the current time period
-// b) load in the inventory?
-// c) load in the narrative stuff
-// d) the player itself ofc and get the camera ready...
-
-// everything else should be in the prefab itself
-// spawn in UI elements but they're not there yet
+/// <summary>
+/// Handles loading the current map instance and deloading the previous map instance
+/// </summary>
 public class MapLoader : Singleton<MapLoader>
 {
+    [Header("References")]
     [SerializeField] private Transform m_MapParent;
 
-    // Can put the map into a SO if it requires more information
+    [Header("Starting Data")]
     [SerializeField] private Map m_StartingMap;
 
     private Map m_CurrMapInstance = null;
 
+    #region Initialisation
     protected override void HandleAwake()
     {
         base.HandleAwake();
@@ -31,8 +29,9 @@ public class MapLoader : Singleton<MapLoader>
 
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
+    #endregion
 
-    // IF there is never a need to load another map we can simplify this
+    #region Load Map
     private IEnumerator LoadMap(Map mapObj)
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
@@ -58,24 +57,21 @@ public class MapLoader : Singleton<MapLoader>
         if (m_CurrMapInstance == null)
             m_CurrMapInstance = Instantiate(mapObj, Vector3.zero, Quaternion.identity, m_MapParent);
         yield return null;
-        // StarvationManager.Proceed();
-        // if (StarvationManager.Instance.Starved)
-        // set transient flag
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.6f);
-        // check for any playable cutscenes based on : location flag, time flag, story flags (handled by narrative manager)
-        // StorySO currStory = NarrativeManager.Instance.GetAdvanceableStory();
         GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, true);
-        m_CurrMapInstance.Load(); // should load player as well. pass the desired camera? or something?
+        m_CurrMapInstance.Load();
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.7f);
-        // occasionally set the load percentage based on our metrics
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
     }
+    #endregion
 
+    #region Event Callbacks
     private void OnAdvanceTimePeriod(TimePeriod _)
     {
         StartCoroutine(LoadMap(m_CurrMapInstance));
     }
+    #endregion
 }

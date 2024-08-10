@@ -8,7 +8,11 @@ public enum CanvasType
     SCREEN_MENU
 }
 
-// might want to merge all the spawning into one function
+// TODO: might want to merge all the spawning into one function
+
+/// <summary>
+/// Handles all UI
+/// </summary>
 public class UIManager : Singleton<UIManager>
 {
     [Header("Canvases")]
@@ -23,6 +27,8 @@ public class UIManager : Singleton<UIManager>
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
 
+    public bool HasLayersOpen => m_OpenLayers.Count > 0;
+
     #region Initialisation
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
@@ -33,12 +39,15 @@ public class UIManager : Singleton<UIManager>
 
         HandleDependencies();
         base.HandleAwake();
+
+        GlobalEvents.Scene.ChangeSceneEvent += HandleSceneChange;
     }
 
     private void HandleDependencies()
     {
         InputManager.SubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
         InputManager.SubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
+        InputManager.SubscribeToAction(InputType.UI_SELECT, OnLayerSelect);
     }
 
     // unsubscribe to events and cleanup
@@ -46,7 +55,9 @@ public class UIManager : Singleton<UIManager>
     {
         InputManager.UnsubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
         InputManager.UnsubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
+        InputManager.UnsubscribeToAction(InputType.UI_SELECT, OnLayerSelect);
         base.HandleDestroy();
+        GlobalEvents.Scene.ChangeSceneEvent -= HandleSceneChange;
     }
     #endregion
 
@@ -113,19 +124,25 @@ public class UIManager : Singleton<UIManager>
         if (m_OpenLayers.Count == 0)
         {
             Time.timeScale = 1f;
-            InputManager.Instance.SwitchToInputMap(InputManager.PLAYER_ACTION_MAP_NAME);
+            if (TransitionManager.IsReady && !TransitionManager.Instance.IsTransitioning && TransitionManager.Instance.CurrScene != SceneEnum.MAIN_MENU)
+            {
+                InputManager.Instance.SwitchToInputMap(InputManager.PLAYER_ACTION_MAP_NAME);
+            }
         }
-    }
-
-    private void OpenPauseMenu(InputAction.CallbackContext _)
-    {
-        OpenLayer(m_PauseMenuPrefab);
     }
 
     private void OnLayerClosed(InputAction.CallbackContext _)
     {
         if (m_OpenLayers.Count > 0 && m_OpenLayers.Peek().IsEscClosable)
             CloseLayer();
+    }
+
+    private void OnLayerSelect(InputAction.CallbackContext _)
+    {
+        if (m_OpenLayers.Count > 0)
+        {
+            m_OpenLayers.Peek().HandleUISelect();
+        }
     }
     #endregion
 
@@ -140,6 +157,28 @@ public class UIManager : Singleton<UIManager>
     public void RemoveUIElement(GameObject elementObj)
     {
         m_OpenHUD.Remove(elementObj);
+    }
+    #endregion
+
+    #region Pause Menu
+    private void OpenPauseMenu(InputAction.CallbackContext _)
+    {
+        if (TransitionManager.IsReady && !TransitionManager.Instance.IsTransitioning)
+            OpenLayer(m_PauseMenuPrefab);
+    }
+    #endregion
+
+    #region Event Callbacks
+    private void HandleSceneChange(SceneEnum scene)
+    {
+        if (scene == SceneEnum.MAIN_MENU)
+        {
+            foreach (GameObject element in m_OpenHUD)
+            {
+                Destroy(element);
+            }
+            m_OpenHUD.Clear();
+        }
     }
     #endregion
 }

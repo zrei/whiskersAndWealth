@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class UI_Starvation : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Transform m_FoodIndicatorParent;
 
     private List<UI_FoodIndicator> m_FoodIndicators = new List<UI_FoodIndicator>();
 
+    #region Initialisation
     private void Awake()
     {
         GlobalEvents.Starvation.StarvationChangeEvent += OnStarvationChange;
@@ -36,11 +38,12 @@ public class UI_Starvation : MonoBehaviour
             m_FoodIndicators[i].ToggleColor(true);
         }
     }
-
+    #endregion
     
-
+    #region Event Callbacks
     private void OnStarvationChange(float starvationAmount)
     {
         SetStarvationIndicators((int) starvationAmount);
     }
+    #endregion
 }
