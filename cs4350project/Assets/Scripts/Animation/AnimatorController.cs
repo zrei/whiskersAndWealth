@@ -9,6 +9,9 @@ public enum AnimatorParamType
     BOOL
 }
 
+/// <summary>
+/// Bundles details on the animator param
+/// </summary>
 [Serializable]
 public struct AnimatorParam
 {
@@ -22,7 +25,10 @@ public struct AnimatorParam
     public bool m_TriggerDefaultValue;
 }
 
-// can be further inherited for more specific behaviour
+/// <summary>
+/// Component that helps to interface with an Animator.
+/// Can be further inherited for more specific behaviour.
+/// </summary>
 [RequireComponent(typeof(Animator))]
 public class AnimatorController : MonoBehaviour 
 {

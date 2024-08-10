@@ -3,8 +3,10 @@ using UnityEngine.UI;
 
 public class UI_TransitionScene : UILayer
 {
-    [SerializeField] private Image m_ColouredImage;
+    [Header("UI References")]
+    [SerializeField] private Image m_GreyedImage;
 
+    #region Initialisation
     private void Awake()
     {
         GlobalEvents.Map.MapLoadProgressEvent += OnMapLoadProgress;
@@ -14,12 +16,16 @@ public class UI_TransitionScene : UILayer
     {
         GlobalEvents.Map.MapLoadProgressEvent -= OnMapLoadProgress;
     }
+    #endregion
 
+    #region Event Callbacks
     private void OnMapLoadProgress(float progress)
     {
-        m_ColouredImage.fillAmount = progress;
+        m_GreyedImage.fillAmount = 1f - progress;
     }
+    #endregion
 
+    #region Interactions
     public override void HandleClose()
     {
         
@@ -29,4 +35,10 @@ public class UI_TransitionScene : UILayer
     {
         
     }
+
+    public override void HandleUISelect()
+    {
+
+    }
+    #endregion
 }

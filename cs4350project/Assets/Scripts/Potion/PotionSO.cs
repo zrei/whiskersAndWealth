@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public struct PotionIngredient
 {
-    // change it to ingredient SOs later. maybe.
+    // TODO: Possibly change it to ingredient SOs later.
     public ItemSO m_Ingredient;
     public int m_Quantity;
 }

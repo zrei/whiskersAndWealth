@@ -1,11 +1,15 @@
 using UnityEngine;
 using Cinemachine;
 
-// hm...
+/// <summary>
+/// Controls a Cinemachine camera. Is currently not a singleton.
+/// </summary>
 public class CameraController : MonoBehaviour
 {
+    [Header("Camera")]
     [SerializeField] private CinemachineVirtualCamera virtualCam;
 
+    #region Position
     public void SetWorldPosition(Vector3 worldPosition)
     {
         virtualCam.transform.position = worldPosition;
@@ -16,7 +20,9 @@ public class CameraController : MonoBehaviour
         float zPos = virtualCam.transform.position.z;
         virtualCam.transform.position = new Vector3(worldPosition.x, worldPosition.y, zPos);
     }
+    #endregion
 
+    #region Follow
     public void SetFollow(Transform toFollow, bool hardSet = false)
     {
         if (hardSet)
@@ -32,4 +38,5 @@ public class CameraController : MonoBehaviour
     {
         virtualCam.Follow = null;
     }
+    #endregion
 }

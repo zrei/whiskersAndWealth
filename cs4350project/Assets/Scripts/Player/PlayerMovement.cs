@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles player movement and the animation associated with it
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : Singleton<PlayerMovement>
 {
@@ -14,11 +17,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     private Vector2 m_MovementInput;
 
-    private void FixedUpdate()
-    {
-        m_RB.MovePosition(m_RB.position + m_MovementInput * GlobalSettings.PlayerVelocity * Time.deltaTime);
-    }
-
+    #region Initialisation
     protected override void HandleAwake()
     {
         HandleDependencies();
@@ -35,7 +34,9 @@ public class PlayerMovement : Singleton<PlayerMovement>
         InputManager.UnsubscribeToAction(InputType.PLAYER_MOVE, OnMove, OnMoveCancel);
         base.HandleDestroy();
     }
+    #endregion
 
+    #region Movement
     private void OnMove(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<Vector2>();
@@ -45,13 +46,19 @@ public class PlayerMovement : Singleton<PlayerMovement>
             m_SR.flipX = m_MovementInput.x < 0f;
     }
 
-    
     private void OnMoveCancel(InputAction.CallbackContext context)
     {
         m_MovementInput = Vector2.zero;
         m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, false);
     }
 
+    private void FixedUpdate()
+    {
+        m_RB.MovePosition(m_RB.position + m_MovementInput * GlobalSettings.PlayerVelocity * Time.deltaTime);
+    }
+    #endregion
+
+    #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -61,4 +68,5 @@ public class PlayerMovement : Singleton<PlayerMovement>
         }
     }
 #endif
+    #endregion
 }
