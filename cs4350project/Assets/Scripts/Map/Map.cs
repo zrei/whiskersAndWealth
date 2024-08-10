@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 /// <summary>
 /// Handles loading of a map instance
@@ -26,7 +27,6 @@ public class Map : MonoBehaviour
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
     #region Loading
-    // TODO: turn this into an enumerator
     public void Load()
     {
         DespawnNPCs();

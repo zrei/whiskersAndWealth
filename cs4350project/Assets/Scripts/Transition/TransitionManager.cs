@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 /// <summary>
 /// The associated integer for each enum entry is the scene build index
@@ -50,23 +51,44 @@ public class TransitionManager : Singleton<TransitionManager>
         m_CurrScene = scene;
         UIManager.Instance.OpenLayer(m_LoadingScreenPrefab);
 
+        StartCoroutine(ChangeSceneCoroutine(scene));
+    }
+
+    private IEnumerator ChangeSceneCoroutine(SceneEnum scene)
+    {
         GlobalEvents.Scene.ChangeSceneEvent?.Invoke(scene);
         m_IsTransitioning = true;
 
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.1f);
-        SceneManager.LoadScene((int) scene); 
-        
+        float currLoadProgress = 0.1f;
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+        yield return null;
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int) scene); 
+
+        while (!asyncLoad.isDone)
+        {
+            if (currLoadProgress < 0.3f)
+            {
+                currLoadProgress += 0.05f;
+                GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+            }
+            yield return null;
+        }
+
+        if (currLoadProgress < 0.3f)
+        {
+            currLoadProgress = 0.3f;
+            GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
+            yield return null;
+        }
+
         // special handling for going to main menu as the map loader is not present
         if (scene == SceneEnum.MAIN_MENU)
         {
             GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
+            yield return null;
             OnEndMapLoad();
         }
-    }
-
-    private void ChangeSceneCoroutine(int sceneBuildIndex)
-    {
-
     }
     #endregion
 
