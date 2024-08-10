@@ -196,9 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e20f8a656f4bd3ac454640e710c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MapName: StartingMap
   m_PlayerStartPosition: {fileID: 3306474228190244562}
-  m_MapCamera: {fileID: 4800478534629041873}
   m_NPCSpawnPointsParent: {fileID: 956544837862571608}
+  m_MapCamera: {fileID: 4800478534629041873}
   m_UIElements:
   - {fileID: 8829221539429368305, guid: 5c5ec4824181f49c6b7b92e1753d3e56, type: 3}
 --- !u!1 &6149404219909408333
