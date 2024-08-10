@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles loading the current map instance and deloading the previous map instance
@@ -12,6 +13,9 @@ public class MapLoader : Singleton<MapLoader>
     [Header("Starting Data")]
     [SerializeField] private Map m_StartingMap;
 
+    [Header("Data")]
+    [SerializeField] private List<Map> m_Maps;
+
     private Map m_CurrMapInstance = null;
 
     #region Initialisation
@@ -20,7 +24,7 @@ public class MapLoader : Singleton<MapLoader>
         base.HandleAwake();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
-        StartCoroutine(LoadMap(m_StartingMap));
+        LoadInitialMap();
     }
 
     protected override void HandleDestroy()
@@ -28,6 +32,20 @@ public class MapLoader : Singleton<MapLoader>
         base.HandleDestroy();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
+    }
+
+    private void LoadInitialMap()
+    {
+        if (SaveManager.Instance.IsNewSave)
+        {
+            SaveManager.Instance.SetCurrentMap(m_StartingMap.MapName);
+            StartCoroutine(LoadMap(m_StartingMap));
+        }
+        else
+        {
+            string currMapName = SaveManager.Instance.GetCurrentMap();
+            StartCoroutine(LoadMap(RetrieveMap(currMapName)));
+        }
     }
     #endregion
 
@@ -106,6 +124,20 @@ public class MapLoader : Singleton<MapLoader>
     private void OnAdvanceTimePeriod(TimePeriod _)
     {
         StartCoroutine(LoadMap(m_CurrMapInstance));
+    }
+    #endregion
+
+    #region Helper
+    private Map RetrieveMap(string mapName)
+    {
+        foreach (Map map in m_Maps)
+        {
+            if (map.MapName == mapName)
+                return map;
+        }
+
+        Logger.Log(this.GetType().Name, "No map found with name: " + mapName, LogLevel.ERROR);
+        return null;
     }
     #endregion
 }

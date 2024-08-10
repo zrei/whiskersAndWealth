@@ -32,7 +32,6 @@ public class NarrativeManager : Singleton<NarrativeManager>
         base.HandleAwake();
 
         GlobalEvents.Narrative.SetFlagValueEvent += SetFlagValue;
-        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
     }
 
     protected override void HandleDestroy()
@@ -40,7 +39,6 @@ public class NarrativeManager : Singleton<NarrativeManager>
         base.HandleDestroy();
 
         GlobalEvents.Narrative.SetFlagValueEvent -= SetFlagValue;
-        GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
 
     private void HandleDependencies()
@@ -120,33 +118,6 @@ public class NarrativeManager : Singleton<NarrativeManager>
                 DialogueManager.Instance.PlayDialogue(dialogueSO);
                 return;
             }
-        }
-    }
-    #endregion
-
-    #region Event Callbacks
-    // TODO: Can move this to the time period manager instead
-    private void OnAdvanceTimePeriod(TimePeriod timePeriod)
-    {
-        SetFlagValue("MORNING", false);
-        SetFlagValue("AFTERNOON", false);
-        SetFlagValue("EVENING", false);
-        SetFlagValue("NIGHT", false);
-
-        switch (timePeriod)
-        {
-            case TimePeriod.MORNING:
-                SetFlagValue("MORNING", true);
-                break;
-            case TimePeriod.AFTERNOON:
-                SetFlagValue("AFTERNOON", true);
-                break;
-            case TimePeriod.EVENING:
-                SetFlagValue("EVENING", true);
-                break;
-            case TimePeriod.NIGHT:
-                SetFlagValue("NIGHT", true);
-                break;
         }
     }
     #endregion
