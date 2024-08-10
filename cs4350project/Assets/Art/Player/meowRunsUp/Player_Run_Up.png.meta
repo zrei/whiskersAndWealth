@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6906d890389a54244b4bd7677cf6da6a
+guid: b4e9537b56e8c46ad8dd3729cf8a7ae7
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_RunRight_0
+      name: Player_Run_Up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 973ccec66b3a71b4ab8227e382ebbb40
-      internalID: -322311743
+      spriteID: 9ece381b381b140f7bada9cb2d07f94a
+      internalID: -1447918841
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_RunRight_1
+      name: Player_Run_Up_1
       rect:
         serializedVersion: 2
         x: 4096
@@ -132,14 +132,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 482ad91032b05fc47927a3b889db39cd
-      internalID: 1063857428
+      spriteID: c7f1ad5539a3f413ab16210693c371b0
+      internalID: 1465489900
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_RunRight_2
+      name: Player_Run_Up_2
       rect:
         serializedVersion: 2
         x: 8192
@@ -153,14 +153,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8fdd8d936adfda24fb17ca09cce7548a
-      internalID: -975294327
+      spriteID: aaa7b108ded6f4857b8158e4fa8856d6
+      internalID: 544421387
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_RunRight_3
+      name: Player_Run_Up_3
       rect:
         serializedVersion: 2
         x: 12288
@@ -174,8 +174,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a75fb5c3231b78643b2764f05f84632e
-      internalID: 681560674
+      spriteID: f53597c264e13400fa711024f9ea2792
+      internalID: -383903303
       vertices: []
       indices: 
       edges: []
@@ -191,10 +191,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Player_RunRight_0: -322311743
-      Player_RunRight_1: 1063857428
-      Player_RunRight_2: -975294327
-      Player_RunRight_3: 681560674
+      Player_Run_Up_0: -1447918841
+      Player_Run_Up_1: 1465489900
+      Player_Run_Up_2: 544421387
+      Player_Run_Up_3: -383903303
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

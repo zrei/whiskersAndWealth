@@ -155,7 +155,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -322311743, guid: 6906d890389a54244b4bd7677cf6da6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa4a0de7e28a644f890d1e5372197134, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -208,8 +208,24 @@ MonoBehaviour:
   m_RB: {fileID: 4752134285541945563}
   m_PlayerAnimator: {fileID: 4374731433197906021}
   m_SR: {fileID: 255970010378388807}
-  m_HorizontalMoveParam:
-    m_Param: MOVE_X
+  m_MoveHorizontalParam:
+    m_Param: MOVE_HORIZ
+    m_ParamType: 3
+    m_SetUsingCode: 1
+    m_FloatDefaultValue: 0
+    m_IntDefaultValue: 0
+    m_BoolDefaultValue: 0
+    m_TriggerDefaultValue: 0
+  m_MoveUpParam:
+    m_Param: MOVE_UP
+    m_ParamType: 3
+    m_SetUsingCode: 1
+    m_FloatDefaultValue: 0
+    m_IntDefaultValue: 0
+    m_BoolDefaultValue: 0
+    m_TriggerDefaultValue: 0
+  m_MoveDownParam:
+    m_Param: MOVE_DOWN
     m_ParamType: 3
     m_SetUsingCode: 1
     m_FloatDefaultValue: 0

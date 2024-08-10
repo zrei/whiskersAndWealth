@@ -13,7 +13,9 @@ public class PlayerMovement : Singleton<PlayerMovement>
     [SerializeField] private SpriteRenderer m_SR;
 
     [Header("Animation Params")]
-    [SerializeField] private AnimatorParam m_HorizontalMoveParam;
+    [SerializeField] private AnimatorParam m_MoveHorizontalParam;
+    [SerializeField] private AnimatorParam m_MoveUpParam;
+    [SerializeField] private AnimatorParam m_MoveDownParam;
 
     private Vector2 m_MovementInput;
 
@@ -40,16 +42,28 @@ public class PlayerMovement : Singleton<PlayerMovement>
     private void OnMove(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<Vector2>();
-        m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, m_MovementInput.x != 0f);
+        m_PlayerAnimator.SetBoolParam(m_MoveHorizontalParam, m_MovementInput.x != 0f);
 
         if (m_MovementInput.x != 0f)
+        {
             m_SR.flipX = m_MovementInput.x < 0f;
+        }
+        else if (m_MovementInput.y > 0f)
+        {
+            m_PlayerAnimator.SetBoolParam(m_MoveUpParam, true);
+        } 
+        else if (m_MovementInput.y < 0f)
+        {
+            m_PlayerAnimator.SetBoolParam(m_MoveDownParam, true);
+        }
     }
 
     private void OnMoveCancel(InputAction.CallbackContext context)
     {
         m_MovementInput = Vector2.zero;
-        m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, false);
+        m_PlayerAnimator.SetBoolParam(m_MoveHorizontalParam, false);
+        m_PlayerAnimator.SetBoolParam(m_MoveDownParam, false);
+        m_PlayerAnimator.SetBoolParam(m_MoveUpParam, false);
     }
 
     private void FixedUpdate()
