@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4644622493022285308}
   m_Layer: 0
-  m_Name: StartingMap_SpawnPointB
+  m_Name: TownMap_SpawnPointB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3994147525968278917}
   m_Layer: 0
-  m_Name: StartingMap_SpawnPointA
+  m_Name: TownMap_SpawnPointA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,9 +159,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4094777952270811087}
-  - component: {fileID: 6838377133923786532}
+  - component: {fileID: 3872264741955314271}
   m_Layer: 0
-  m_Name: StartingMap
+  m_Name: TownMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,7 +184,7 @@ Transform:
   - {fileID: 7892102467303702403}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6838377133923786532
+--- !u!114 &3872264741955314271
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,15 +193,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5754254072676219966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 537e20f8a656f4bd3ac454640e710c7f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f86ef666c85c6c429dda81cbda34c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_MapName: StartingMap
   m_PlayerStartPosition: {fileID: 3306474228190244562}
-  m_NPCSpawnPointsParent: {fileID: 956544837862571608}
   m_MapCamera: {fileID: 4800478534629041873}
   m_UIElements:
   - {fileID: 8829221539429368305, guid: 5c5ec4824181f49c6b7b92e1753d3e56, type: 3}
+  m_AllowedInputs: 00000000010000000200000002000000
+  m_NPCSpawnPointsParent: {fileID: 956544837862571608}
 --- !u!1 &6149404219909408333
 GameObject:
   m_ObjectHideFlags: 0
