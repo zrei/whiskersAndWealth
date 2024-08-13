@@ -19,7 +19,8 @@ public enum InputType
     UI_MOVE_DOWN,
     UI_MOVE_LEFT,
     UI_MOVE_RIGHT,
-    UI_CLOSE
+    UI_CLOSE,
+    MINIGAME_MOVE
 }
 
 /// <summary>
@@ -52,8 +53,12 @@ public class InputManager : Singleton<InputManager>
     // TODO: Better way to do this?
     public const string UI_ACTION_MAP_NAME = "UI";
     public const string PLAYER_ACTION_MAP_NAME = "PLAYER";
+    public const string MINIGAME_ACTION_MAP_NAME = "MINIGAME";
 
     private static List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)> m_CachedList = new List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)>();
+
+    private string m_CurrActionMapName;
+    public string CurrActionMap => m_CurrActionMapName;
 
     #region Initialization
     protected override void HandleAwake()
@@ -229,6 +234,23 @@ public class InputManager : Singleton<InputManager>
         m_InputActionAsset.Disable();
 
         m_InputActionAsset.FindActionMap(mapName).Enable();
+    }
+
+    /// <summary>
+    /// Switch to the currently indicated active input map (not UI)
+    /// Optionally takes in a set of blocked inputs
+    /// </summary>
+    /// <param name="blockedInputs"></param>
+    public void SwitchToCurrInputMap(params InputType[] blockedInputs)
+    {
+        m_InputActionAsset.Disable();
+
+        m_InputActionAsset.FindActionMap(m_CurrActionMapName).Enable();
+
+        foreach (InputType blockedInput in blockedInputs)
+        {
+            ToggleInputBlocked(blockedInput, true);
+        }
     }
     #endregion
 

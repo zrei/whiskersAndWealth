@@ -20,8 +20,10 @@ public abstract class Map : MonoBehaviour
     [Header("Spawned UI")]
     [SerializeField] List<GameObject> m_UIElements;
 
-    [Header("Allowed Player Inputs")]
-    [SerializeField] List<InputType> m_AllowedInputs;
+    [Header("Player Inputs")]
+    [Tooltip("The input map that will be used for this map")]
+    [SerializeField] string m_InputMapName;
+    [SerializeField] InputType[] m_BlockedInputs;
 
     public string MapName => m_MapName;
 
@@ -59,11 +61,12 @@ public abstract class Map : MonoBehaviour
     }
     #endregion
 
+    /*
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        foreach (InputType inputType in m_AllowedInputs)
+        foreach (InputType inputType in m_BlockedInputs)
         {
             if (inputType.ToString().Split("_")[0].Equals("UI"))
             {
@@ -73,4 +76,5 @@ public abstract class Map : MonoBehaviour
     }
 #endif
     #endregion
+    */
 }
