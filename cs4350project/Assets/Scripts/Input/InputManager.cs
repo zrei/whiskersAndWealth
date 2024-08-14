@@ -60,6 +60,8 @@ public class InputManager : Singleton<InputManager>
     private string m_CurrActionMapName;
     public string CurrActionMap => m_CurrActionMapName;
 
+    private InputType[] m_CurrBlockedInputs = new InputType[0];
+
     #region Initialization
     protected override void HandleAwake()
     {
@@ -79,10 +81,11 @@ public class InputManager : Singleton<InputManager>
         base.HandleDestroy();
     }
 
-    // TODO: may not want to enable all inputs
     private void InitInputs()
     {
-        SwitchToInputMap(UI_ACTION_MAP_NAME);
+        // initial active input map is set to UI as we are in the main menu
+        SetCurrInputMap(UI_ACTION_MAP_NAME);
+        SwitchToCurrInputMap();
     }
 
     private void HandleCachedInputs()
@@ -231,23 +234,37 @@ public class InputManager : Singleton<InputManager>
 
     public void SwitchToInputMap(string mapName)
     {
+        // TODO: Can consider removing this, so that this function is used for
+        // special cases that switch away from the default input map but will end
+        // up switching back
+        SetCurrInputMap(mapName);
         m_InputActionAsset.Disable();
 
         m_InputActionAsset.FindActionMap(mapName).Enable();
     }
 
     /// <summary>
-    /// Switch to the currently indicated active input map (not UI)
+    /// Set the current active input map that will be re-enabled when no UI layer is open
     /// Optionally takes in a set of blocked inputs
     /// </summary>
     /// <param name="blockedInputs"></param>
-    public void SwitchToCurrInputMap(params InputType[] blockedInputs)
+    public void SetCurrInputMap(string mapName, params InputType[] blockedInputs)
+    {
+        m_CurrActionMapName = mapName;
+        m_CurrBlockedInputs = blockedInputs;
+    }
+
+    /// <summary>
+    /// Switch to the currently indicated input map
+    /// </summary>
+    /// <param name="blockedInputs"></param>
+    public void SwitchToCurrInputMap()
     {
         m_InputActionAsset.Disable();
 
         m_InputActionAsset.FindActionMap(m_CurrActionMapName).Enable();
 
-        foreach (InputType blockedInput in blockedInputs)
+        foreach (InputType blockedInput in m_CurrBlockedInputs)
         {
             ToggleInputBlocked(blockedInput, true);
         }

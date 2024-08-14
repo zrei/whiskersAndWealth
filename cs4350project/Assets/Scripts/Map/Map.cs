@@ -23,6 +23,7 @@ public abstract class Map : MonoBehaviour
 
     [Header("Player Inputs")]
     [Tooltip("The input map that will be used for this map")]
+    // TODO: Find a more fool-proof way to indicate the map name (ENUM it too?)
     [SerializeField] string m_InputMapName;
     [SerializeField] InputType[] m_BlockedInputs;
 
@@ -37,6 +38,7 @@ public abstract class Map : MonoBehaviour
         SpawnUIElements();
         m_Player.transform.position = m_PlayerStartPosition.position;
         m_MapCamera.SetFollow(m_Player.transform, true);
+        InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
     }
 
     public virtual void Unload() {

@@ -81,6 +81,7 @@ MonoBehaviour:
   m_StartingMap: {fileID: 3872264741955314271, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
   m_Maps:
   - {fileID: 3872264741955314271, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
+  - {fileID: 5852518756612419077, guid: 820e134069a432e4cb56b9f591de75a0, type: 3}
 --- !u!114 &5564996292171924280
 MonoBehaviour:
   m_ObjectHideFlags: 0

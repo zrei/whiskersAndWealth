@@ -85,6 +85,8 @@ public class TransitionManager : Singleton<TransitionManager>
         // special handling for going to main menu as the map loader is not present
         if (scene == SceneEnum.MAIN_MENU)
         {
+            // the input map for the main menu is the UI action map
+            InputManager.Instance.SetCurrInputMap(InputManager.UI_ACTION_MAP_NAME);
             GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
             yield return null;
             OnEndMapLoad();

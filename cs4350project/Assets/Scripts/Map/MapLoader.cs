@@ -69,7 +69,7 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         // unload previous map if needed
-        if (m_CurrMapInstance && m_CurrMapInstance != mapObj)
+        if (m_CurrMapInstance != null && m_CurrMapInstance.MapName != mapObj.MapName)
         {
             GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, false);
             m_CurrMapInstance.Unload();
@@ -77,7 +77,7 @@ public class MapLoader : Singleton<MapLoader>
             GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
             yield return null;
 
-            Destroy(m_CurrMapInstance);
+            Destroy(m_CurrMapInstance.gameObject);
             m_CurrMapInstance = null;
         }
 
@@ -128,7 +128,8 @@ public class MapLoader : Singleton<MapLoader>
     #region Event Callbacks
     private void OnAdvanceTimePeriod(TimePeriod _)
     {
-        StartCoroutine(LoadMap(m_CurrMapInstance));
+        // TODO: THIS IS TEMP, HAVE NOT DONE IN BETWEEN MAP TRANSITIONS AND TIME ADVANCING FLAGS
+        StartCoroutine(LoadMap(RetrieveMap("MinigameMap")));
     }
     #endregion
 

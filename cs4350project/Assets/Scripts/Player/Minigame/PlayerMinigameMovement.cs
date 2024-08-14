@@ -7,9 +7,10 @@ using UnityEngine.InputSystem;
 public class PlayerMinigameMovement : PlayerMovementController
 {
     [Header("Animator Params")]    
-    [SerializeField] private AnimatorParam m_HorizontalMoveParam;
+    [SerializeField] private AnimatorParam m_StartRunParam;
+    [SerializeField] private AnimatorParam m_StopRunParam;
     
-    private float m_MovementInput;
+    private float m_MovementInput = 0f;
 
     #region Initialisation
     protected override void SubscribeToInputs()
@@ -36,17 +37,20 @@ public class PlayerMinigameMovement : PlayerMovementController
 
     protected override void HandleMovement()
     {
-        // Get lane positions? Or jus tmove left and right?
-        float yPos = m_RB.position.y;
-        m_RB.MovePosition(m_RB.position + new Vector2(m_MovementInput * GlobalSettings.PlayerVelocity * Time.deltaTime, yPos));
-        // m_RB.MovePosition(m_RB.position + m_MovementInput * GlobalSettings.PlayerVelocity * Time.deltaTime);
+        // TODO: Clarify movement
+        m_RB.MovePosition(m_RB.position + new Vector2(m_MovementInput * GlobalSettings.PlayerVelocity * Time.deltaTime, 0f));
     }
     #endregion
 
     #region Animation
     protected override void ResetAnimations()
     {
-        m_PlayerAnimator.SetBoolParam(m_HorizontalMoveParam, false);
+        m_PlayerAnimator.SetParam(m_StopRunParam);
+    }
+
+    public void ToggleRunAnim(bool isRunning)
+    {
+        m_PlayerAnimator.SetParam(isRunning ? m_StartRunParam : m_StopRunParam);
     }
     #endregion
 }
