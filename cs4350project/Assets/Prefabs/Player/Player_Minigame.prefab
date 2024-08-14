@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5577147464871750673}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.12, y: -4.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -88,11 +88,11 @@ GameObject:
   - component: {fileID: 4496644157588775714}
   - component: {fileID: 255970010378388807}
   - component: {fileID: 4752134285541945563}
-  - component: {fileID: 491378084976639907}
   - component: {fileID: 7469808110095944267}
   - component: {fileID: 4374731433197906021}
+  - component: {fileID: 6773696968032746571}
   m_Layer: 6
-  m_Name: Player
+  m_Name: Player_Minigame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,45 +193,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &491378084976639907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6248029682347318356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49ded9c0dd374dc48989a72b3b63cc72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RB: {fileID: 4752134285541945563}
-  m_PlayerAnimator: {fileID: 4374731433197906021}
-  m_SR: {fileID: 255970010378388807}
-  m_MoveHorizontalParam:
-    m_Param: MOVE_HORIZ
-    m_ParamType: 3
-    m_SetUsingCode: 1
-    m_FloatDefaultValue: 0
-    m_IntDefaultValue: 0
-    m_BoolDefaultValue: 0
-    m_TriggerDefaultValue: 0
-  m_MoveUpParam:
-    m_Param: MOVE_UP
-    m_ParamType: 3
-    m_SetUsingCode: 1
-    m_FloatDefaultValue: 0
-    m_IntDefaultValue: 0
-    m_BoolDefaultValue: 0
-    m_TriggerDefaultValue: 0
-  m_MoveDownParam:
-    m_Param: MOVE_DOWN
-    m_ParamType: 3
-    m_SetUsingCode: 1
-    m_FloatDefaultValue: 0
-    m_IntDefaultValue: 0
-    m_BoolDefaultValue: 0
-    m_TriggerDefaultValue: 0
 --- !u!95 &7469808110095944267
 Animator:
   serializedVersion: 5
@@ -242,7 +203,7 @@ Animator:
   m_GameObject: {fileID: 6248029682347318356}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: aabfe8d7776560e438983f14504f4ae5, type: 2}
+  m_Controller: {fileID: 9100000, guid: 01d95f94548824d3b9befbc65ab05766, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -265,3 +226,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db7830f731e94c8fab4e49c67b305ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6773696968032746571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6248029682347318356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b85908c54ba1e248a8bcc158374c5f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RB: {fileID: 4752134285541945563}
+  m_PlayerAnimator: {fileID: 4374731433197906021}
+  m_SR: {fileID: 255970010378388807}
+  m_StartRunParam:
+    m_Param: IsRunning
+    m_ParamType: 3
+    m_SetUsingCode: 0
+    m_FloatDefaultValue: 0
+    m_IntDefaultValue: 0
+    m_BoolDefaultValue: 1
+    m_TriggerDefaultValue: 0
+  m_StopRunParam:
+    m_Param: IsRunning
+    m_ParamType: 3
+    m_SetUsingCode: 0
+    m_FloatDefaultValue: 0
+    m_IntDefaultValue: 0
+    m_BoolDefaultValue: 0
+    m_TriggerDefaultValue: 0

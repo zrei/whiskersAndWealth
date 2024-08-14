@@ -126,7 +126,7 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 1f;
             if (TransitionManager.IsReady && !TransitionManager.Instance.IsTransitioning && TransitionManager.Instance.CurrScene != SceneEnum.MAIN_MENU)
             {
-                InputManager.Instance.SwitchToInputMap(InputManager.PLAYER_ACTION_MAP_NAME);
+                InputManager.Instance.SwitchToCurrInputMap();
             }
         }
     }

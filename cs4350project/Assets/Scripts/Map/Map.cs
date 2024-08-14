@@ -13,6 +13,7 @@ public abstract class Map : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Transform m_PlayerStartPosition;
+    [SerializeField] PlayerController m_Player;
 
     [Header("Camera")]
     [SerializeField] CameraController m_MapCamera;
@@ -20,8 +21,11 @@ public abstract class Map : MonoBehaviour
     [Header("Spawned UI")]
     [SerializeField] List<GameObject> m_UIElements;
 
-    [Header("Allowed Player Inputs")]
-    [SerializeField] List<InputType> m_AllowedInputs;
+    [Header("Player Inputs")]
+    [Tooltip("The input map that will be used for this map")]
+    // TODO: Find a more fool-proof way to indicate the map name (ENUM it too?)
+    [SerializeField] string m_InputMapName;
+    [SerializeField] InputType[] m_BlockedInputs;
 
     public string MapName => m_MapName;
 
@@ -32,8 +36,9 @@ public abstract class Map : MonoBehaviour
     public virtual void Load()
     {
         SpawnUIElements();
-        PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
-        m_MapCamera.SetFollow(PlayerMovement.Instance.transform, true);
+        m_Player.transform.position = m_PlayerStartPosition.position;
+        m_MapCamera.SetFollow(m_Player.transform, true);
+        InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
     }
 
     public virtual void Unload() {
@@ -59,11 +64,12 @@ public abstract class Map : MonoBehaviour
     }
     #endregion
 
+    /*
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        foreach (InputType inputType in m_AllowedInputs)
+        foreach (InputType inputType in m_BlockedInputs)
         {
             if (inputType.ToString().Split("_")[0].Equals("UI"))
             {
@@ -73,4 +79,5 @@ public abstract class Map : MonoBehaviour
     }
 #endif
     #endregion
+    */
 }
