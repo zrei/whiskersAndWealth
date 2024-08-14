@@ -13,6 +13,7 @@ public abstract class Map : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Transform m_PlayerStartPosition;
+    [SerializeField] PlayerController m_Player;
 
     [Header("Camera")]
     [SerializeField] CameraController m_MapCamera;
@@ -34,8 +35,8 @@ public abstract class Map : MonoBehaviour
     public virtual void Load()
     {
         SpawnUIElements();
-        PlayerMovement.Instance.transform.position = m_PlayerStartPosition.position;
-        m_MapCamera.SetFollow(PlayerMovement.Instance.transform, true);
+        m_Player.transform.position = m_PlayerStartPosition.position;
+        m_MapCamera.SetFollow(m_Player.transform, true);
     }
 
     public virtual void Unload() {
