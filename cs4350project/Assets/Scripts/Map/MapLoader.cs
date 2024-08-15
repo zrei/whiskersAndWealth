@@ -31,15 +31,12 @@ public class MapLoader : Singleton<MapLoader>
     {
         base.HandleAwake();
 
-        GlobalEvents.Time.AdvanceTimePeriodEvent += OnAdvanceTimePeriod;
         LoadInitialMap();
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
-
-        GlobalEvents.Time.AdvanceTimePeriodEvent -= OnAdvanceTimePeriod;
     }
 
     private void LoadInitialMap()
@@ -58,7 +55,25 @@ public class MapLoader : Singleton<MapLoader>
     #endregion
 
     #region Load Map
-    private IEnumerator LoadMap(MapSO mapSO)
+    public void TransitToMap(MapTransit mapTransit)
+    {
+        StartCoroutine(LoadMap(mapTransit.m_Map, mapTransit.m_AdvanceTime));
+    }
+
+    public void TriggerCurrentMapTransition()
+    {
+        GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
+        yield return null;
+
+        TimeManager.Instance.AdvanceTimePeriod();
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
+        yield return null;
+
+        GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
+    }
+
+    private IEnumerator LoadMap(MapSO mapSO, bool advanceTime = false)
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
 
@@ -88,6 +103,9 @@ public class MapLoader : Singleton<MapLoader>
             Destroy(m_CurrMapInstance.gameObject);
             m_CurrMapInstance = null;
         }
+
+        if (advanceTime)
+            TimeManager.Instance.AdvanceTimePeriod();
 
         currLoadProgress = 0.7f;
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
@@ -132,14 +150,6 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
-    }
-    #endregion
-
-    #region Event Callbacks
-    private void OnAdvanceTimePeriod(TimePeriod _)
-    {
-        // TODO: THIS IS TEMP, HAVE NOT DONE IN BETWEEN MAP TRANSITIONS AND TIME ADVANCING FLAGS
-        StartCoroutine(LoadMap(RetrieveMap("MinigameMap")));
     }
     #endregion
 
