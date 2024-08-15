@@ -78,10 +78,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MapParent: {fileID: 3714494756237686024}
-  m_StartingMap: {fileID: 3872264741955314271, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
+  m_StartingMap: {fileID: 11400000, guid: b7820619d8f1f430eb6afc5ab6f386ec, type: 2}
   m_Maps:
-  - {fileID: 3872264741955314271, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
-  - {fileID: 5852518756612419077, guid: 820e134069a432e4cb56b9f591de75a0, type: 3}
+  - {fileID: 11400000, guid: b7820619d8f1f430eb6afc5ab6f386ec, type: 2}
+  - {fileID: 11400000, guid: 2f2d1b8a7f8604a51bc79d76154c5651, type: 2}
 --- !u!114 &5564996292171924280
 MonoBehaviour:
   m_ObjectHideFlags: 0

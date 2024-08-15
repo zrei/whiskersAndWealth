@@ -2,6 +2,13 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct MapTransit
+{
+    public MapSO m_Map;
+    public bool m_AdvanceTime;
+}
+
 /// <summary>
 /// Handles loading the current map instance and deloading the previous map instance
 /// </summary>
@@ -11,12 +18,13 @@ public class MapLoader : Singleton<MapLoader>
     [SerializeField] private Transform m_MapParent;
 
     [Header("Starting Data")]
-    [SerializeField] private Map m_StartingMap;
+    [SerializeField] private MapSO m_StartingMap;
 
     [Header("Data")]
-    [SerializeField] private List<Map> m_Maps;
+    [SerializeField] private List<MapSO> m_Maps;
 
     private Map m_CurrMapInstance = null;
+    private string m_CurrMapName = string.Empty;
 
     #region Initialisation
     protected override void HandleAwake()
@@ -38,7 +46,7 @@ public class MapLoader : Singleton<MapLoader>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            SaveManager.Instance.SetCurrentMap(m_StartingMap.MapName);
+            SaveManager.Instance.SetCurrentMap(m_StartingMap.m_MapName);
             StartCoroutine(LoadMap(m_StartingMap));
         }
         else
@@ -50,7 +58,7 @@ public class MapLoader : Singleton<MapLoader>
     #endregion
 
     #region Load Map
-    private IEnumerator LoadMap(Map mapObj)
+    private IEnumerator LoadMap(MapSO mapSO)
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
 
@@ -69,9 +77,9 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         // unload previous map if needed
-        if (m_CurrMapInstance != null && m_CurrMapInstance.MapName != mapObj.MapName)
+        if (m_CurrMapInstance != null && m_CurrMapName != mapSO.m_MapName)
         {
-            GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, false);
+            GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapName, false);
             m_CurrMapInstance.Unload();
             currLoadProgress += 0.05f;
             GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
@@ -87,7 +95,7 @@ public class MapLoader : Singleton<MapLoader>
 
         if (m_CurrMapInstance == null)
         {
-            AsyncInstantiateOperation<Map> asyncMapInstantiateOperation = InstantiateAsync(mapObj); /*, m_MapParent, Vector3.zero, Quaternion.identity);*/
+            AsyncInstantiateOperation<Map> asyncMapInstantiateOperation = InstantiateAsync(mapSO.m_Map); /*, m_MapParent, Vector3.zero, Quaternion.identity);*/
             while (!asyncMapInstantiateOperation.isDone)
             {
                 if (currLoadProgress < 0.8f)
@@ -103,6 +111,8 @@ public class MapLoader : Singleton<MapLoader>
             m_CurrMapInstance.gameObject.transform.parent = m_MapParent;
             m_CurrMapInstance.gameObject.transform.rotation = Quaternion.identity;
             m_CurrMapInstance.gameObject.transform.localScale = Vector3.one;
+    
+            m_CurrMapName = mapSO.m_MapName;
         }
 
         if (currLoadProgress != 0.8f)
@@ -111,7 +121,7 @@ public class MapLoader : Singleton<MapLoader>
             yield return null;
         }
 
-        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapInstance.MapName, true);
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrMapName, true);
         m_CurrMapInstance.Load();
         currLoadProgress += 0.1f;
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
@@ -134,11 +144,11 @@ public class MapLoader : Singleton<MapLoader>
     #endregion
 
     #region Helper
-    private Map RetrieveMap(string mapName)
+    private MapSO RetrieveMap(string mapName)
     {
-        foreach (Map map in m_Maps)
+        foreach (MapSO map in m_Maps)
         {
-            if (map.MapName == mapName)
+            if (map.m_MapName == mapName)
                 return map;
         }
 

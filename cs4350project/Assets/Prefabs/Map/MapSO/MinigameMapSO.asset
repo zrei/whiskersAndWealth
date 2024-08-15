@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af5c431d8cc204fc98d6047579edb840, type: 3}
+  m_Name: MinigameMapSO
+  m_EditorClassIdentifier: 
+  m_Map: {fileID: 5852518756612419077, guid: 820e134069a432e4cb56b9f591de75a0, type: 3}
+  m_MapName: MINIGAME_MAP

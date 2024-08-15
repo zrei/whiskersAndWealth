@@ -8,9 +8,6 @@ using System.Collections;
 /// </summary>
 public abstract class Map : MonoBehaviour
 {
-    [Header("Data")]
-    [SerializeField] string m_MapName;
-
     [Header("References")]
     [SerializeField] Transform m_PlayerStartPosition;
     [SerializeField] PlayerController m_Player;
@@ -27,7 +24,6 @@ public abstract class Map : MonoBehaviour
     [SerializeField] string m_InputMapName;
     [SerializeField] InputType[] m_BlockedInputs;
 
-    public string MapName => m_MapName;
 
     // UI
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
