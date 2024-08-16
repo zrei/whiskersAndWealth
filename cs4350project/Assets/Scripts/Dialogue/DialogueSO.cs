@@ -14,12 +14,18 @@ public struct DialogueLine
 public class DialogueSO : ScriptableObject
 {
     public string m_DialogueName;
+    public int m_Priority;
     [Tooltip("Flags that must be met for this dialogue to be triggered")]
     public List<string> m_Flags;
-    [Tooltip("Can auto play (e.g. a cutscene) when all flag conditions are met")]
+    [Tooltip("Dialogue can be seen multiple times")]
     public bool m_Repeatable;
     public List<DialogueLine> m_DialogueLines;
+
+    [Header("After Completion")]
     [Tooltip("Flags that will be triggered after this dialogue is completed")]
-    public List<string> m_CompleteFlags;
-    public int m_Priority;
+    public List<string> m_FlagsToTurnOn;
+    [Tooltip("Flags that will be set to false after this dialogue completes")]
+    public List<string> m_FlagsToTurnOff;
+    [Tooltip("Whether to advance time after this dialogue has completed")]
+    public bool m_AdvanceTime;
 }

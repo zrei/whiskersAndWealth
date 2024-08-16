@@ -62,6 +62,11 @@ public class MapLoader : Singleton<MapLoader>
 
     public void TriggerCurrentMapTransition()
     {
+        StartCoroutine(TransitionCurrMap());
+    }
+
+    private IEnumerator TransitionCurrMap()
+    {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
         yield return null;

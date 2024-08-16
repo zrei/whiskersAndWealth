@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d7246f97ba9c4c969abc816a0752249, type: 3}
   m_Name: TestDialogueSO
   m_EditorClassIdentifier: 
-  m_DialogueName: 
+  m_DialogueName: CONVO_1
+  m_Priority: 0
   m_Flags: []
   m_Repeatable: 0
   m_DialogueLines:
@@ -24,6 +25,6 @@ MonoBehaviour:
     m_CharacterName: NPC
     m_TextLine: YOOO
     m_IsLeft: 0
-  m_CompleteFlags:
-  - REEEEE
-  m_Priority: 0
+  m_FlagsToTurnOn: []
+  m_FlagsToTurnOff: []
+  m_AdvanceTime: 1

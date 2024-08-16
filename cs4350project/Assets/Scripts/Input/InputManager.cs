@@ -274,7 +274,7 @@ public class InputManager : Singleton<InputManager>
     #region Debug
     private void DebugAction(InputAction.CallbackContext context)
     {
-        TimeManager.Instance.AdvanceTimePeriod();
+        MapLoader.Instance.TriggerCurrentMapTransition();
     }
     #endregion
 
