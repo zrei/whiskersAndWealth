@@ -8,9 +8,6 @@ using System.Collections;
 /// </summary>
 public abstract class Map : MonoBehaviour
 {
-    [Header("Data")]
-    [SerializeField] string m_MapName;
-
     [Header("References")]
     [SerializeField] Transform m_PlayerStartPosition;
     [SerializeField] PlayerController m_Player;
@@ -27,17 +24,21 @@ public abstract class Map : MonoBehaviour
     [SerializeField] string m_InputMapName;
     [SerializeField] InputType[] m_BlockedInputs;
 
-    public string MapName => m_MapName;
 
     // UI
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
     #region Loading
-    public virtual void Load()
+    public virtual void Load(bool repositionPlayer = true)
     {
         SpawnUIElements();
-        m_Player.transform.position = m_PlayerStartPosition.position;
-        m_MapCamera.SetFollow(m_Player.transform, true);
+
+        if (repositionPlayer)
+        {
+            m_Player.transform.position = m_PlayerStartPosition.position;
+            m_MapCamera.SetFollow(m_Player.transform, true);
+        }
+
         InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
     }
 

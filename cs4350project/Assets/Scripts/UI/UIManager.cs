@@ -157,6 +157,7 @@ public class UIManager : Singleton<UIManager>
     public void RemoveUIElement(GameObject elementObj)
     {
         m_OpenHUD.Remove(elementObj);
+        Destroy(elementObj);
     }
     #endregion
 

@@ -42,7 +42,8 @@ public class NPCSpawner : Singleton<NPCSpawner>
 
     private void SpawnNPC(Transform spawnPoint, GameObject NPC)
     {
-        Instantiate(NPC, spawnPoint);
+        GameObject NPCInstance = Instantiate(NPC, spawnPoint);
+        Logger.Log(this.GetType().Name, NPCInstance.name, "Spawn " + NPC.name + " at: " + spawnPoint.name, NPCInstance, LogLevel.LOG);
     }
     #endregion
 

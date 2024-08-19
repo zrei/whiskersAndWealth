@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 639d4453a9af54aeaa61087a93c17aac, type: 3}
-  m_Name: Test_SpawnSO
+  m_Script: {fileID: 11500000, guid: af5c431d8cc204fc98d6047579edb840, type: 3}
+  m_Name: TownMapSO
   m_EditorClassIdentifier: 
-  m_SpawnPoints:
-  - Flags:
-    - MORNING
-    Priority: 0
-    SpawnPointName: TownMap_SpawnPointA
-  m_NPC: {fileID: 8953702529116321677, guid: 1f8b92c7a26af40099ec5a6e08252a24, type: 3}
+  m_Map: {fileID: 3872264741955314271, guid: 7703151ee940e48f6a9eadf2c98723ba, type: 3}
+  m_MapName: TOWN_MAP

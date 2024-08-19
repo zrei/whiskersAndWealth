@@ -18,9 +18,12 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private Queue<DialogueSO> m_QueuedCutscenes = new Queue<DialogueSO>();
 
+    private bool m_ToAdvanceTime = false;
+
     #region Start Dialogue
     public void PlayDialogue(DialogueSO dialogueSO)
     {
+        m_ToAdvanceTime = m_ToAdvanceTime || dialogueSO.m_AdvanceTime;
         if (!m_CurrPlaying)
         {
             m_CurrDialogue = dialogueSO;
@@ -64,9 +67,13 @@ public class DialogueManager : Singleton<DialogueManager>
     private void FinishDialogue()
     {
         GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrDialogue.m_DialogueName, true);
-        foreach (string flag in m_CurrDialogue.m_CompleteFlags)
+        foreach (string flag in m_CurrDialogue.m_FlagsToTurnOn)
         {
             GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(flag, true);
+        }
+        foreach (string flag in m_CurrDialogue.m_FlagsToTurnOff)
+        {
+            GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(flag, false);
         }
 
         if (m_QueuedCutscenes.Count > 0)
@@ -74,7 +81,14 @@ public class DialogueManager : Singleton<DialogueManager>
         else
         {
             UIManager.Instance.CloseLayer();
+
+            if (m_ToAdvanceTime)
+            {
+                MapLoader.Instance.TriggerCurrentMapTransition();
+            }
+
             m_CurrPlaying = false;
+            m_ToAdvanceTime = false;
             m_CurrDialogue = null;
             m_DialogueInstance = null;
         }
