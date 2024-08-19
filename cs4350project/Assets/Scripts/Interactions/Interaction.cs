@@ -74,7 +74,6 @@ public abstract class Interaction : MonoBehaviour
 
     protected virtual void HandleTriggerEnter()
     {
-        Debug.Log("trigger enter");
         InputManager.SubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
     }
 
@@ -104,8 +103,6 @@ public abstract class Interaction : MonoBehaviour
             FireInteraction();
             return;
         }
-
-        Debug.Log("!!!! BEGIN HOLD");
 
         m_IsHolding = true;
     }

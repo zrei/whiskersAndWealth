@@ -29,11 +29,16 @@ public abstract class Map : MonoBehaviour
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
     #region Loading
-    public virtual void Load()
+    public virtual void Load(bool repositionPlayer = true)
     {
         SpawnUIElements();
-        m_Player.transform.position = m_PlayerStartPosition.position;
-        m_MapCamera.SetFollow(m_Player.transform, true);
+
+        if (repositionPlayer)
+        {
+            m_Player.transform.position = m_PlayerStartPosition.position;
+            m_MapCamera.SetFollow(m_Player.transform, true);
+        }
+
         InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
     }
 

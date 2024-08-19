@@ -68,10 +68,17 @@ public class MapLoader : Singleton<MapLoader>
     private IEnumerator TransitionCurrMap()
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
-        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.3f);
         yield return null;
 
         TimeManager.Instance.AdvanceTimePeriod();
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.5f);
+        yield return null;
+
+        m_CurrMapInstance.Load();
+        GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.8f);
+        yield return new WaitForSecondsRealtime(1f);
+
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 

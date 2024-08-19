@@ -8,11 +8,11 @@ public class TownMap : Map
     [SerializeField] Transform m_NPCSpawnPointsParent;
 
     #region Loading
-    public override void Load()
+    public override void Load(bool repositionPlayer = true)
     {
         base.Load();
-        SpawnNPCs();
         DespawnNPCs();
+        SpawnNPCs();
     }
     #endregion
 
