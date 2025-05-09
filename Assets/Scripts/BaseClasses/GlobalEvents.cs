@@ -45,4 +45,10 @@ public static class GlobalEvents {
         public static FloatEvent StarvationChangeEvent;
         public static VoidEvent PlayerStarveEvent;
     }
+
+    public static class Minigame {
+        public static class LaneMinigame {
+            public static IntEvent ScoreChangeEvent;
+        }
+    }
 }
