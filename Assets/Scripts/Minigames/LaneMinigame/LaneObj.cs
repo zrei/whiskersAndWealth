@@ -1,26 +1,30 @@
 using UnityEngine;
 using TMPro;
 
+public delegate void LaneEvent(LaneObj _);
+
 [RequireComponent(typeof(Collider2D))]
 public class LaneObj : MonoBehaviour
 {
-    private GameObject m_PositionIndicator;
+    [SerializeField] private GameObject m_PositionIndicator;
 
     [Header("Left Door")]
-    private SpriteRenderer m_LeftDoorRenderer;
-    private TextMeshProUGUI m_LeftDoorText;
+    [SerializeField] private SpriteRenderer m_LeftDoorRenderer;
+    [SerializeField] private TextMeshProUGUI m_LeftDoorText;
 
     [Header("Right Door")]
-    private SpriteRenderer m_RightDoorRenderer;
-    private TextMeshProUGUI m_RightDoorText;
+    [SerializeField] private SpriteRenderer m_RightDoorRenderer;
+    [SerializeField] private TextMeshProUGUI m_RightDoorText;
 
     private LaneSO m_LaneSO;
+    private float m_LaneSpeed;
 
-    public VoidEvent OnPlayerInteractionComplete;
+    public LaneEvent OnPlayerInteractionComplete;
 
-    public void Setup(LaneSO laneSO, Color negativeColor, Color positiveColor, Sprite doorSprite)
+    public void Setup(LaneSO laneSO, Color negativeColor, Color positiveColor, Sprite doorSprite, float laneSpeed)
     {
         m_LaneSO = laneSO;
+        m_LaneSpeed = laneSpeed;
         
         m_LeftDoorRenderer.gameObject.SetActive(laneSO.LeftLaneValueChange != 0);
         m_RightDoorRenderer.gameObject.SetActive(laneSO.RightLaneValueChange != 0);
@@ -36,7 +40,7 @@ public class LaneObj : MonoBehaviour
         {
             m_LeftDoorRenderer.color = negativeColor;
         }
-        m_LeftDoorText.text = m_LaneSO.LeftLaneValueChange;
+        m_LeftDoorText.text = m_LaneSO.LeftLaneValueChange.ToString();
 
         if (m_LaneSO.RightLaneValueChange > 0)
         {
@@ -46,7 +50,7 @@ public class LaneObj : MonoBehaviour
         {
             m_RightDoorRenderer.color = negativeColor;
         }
-        m_RightDoorText.text = m_LaneSO.RightLaneValueChange;
+        m_RightDoorText.text = m_LaneSO.RightLaneValueChange.ToString();
     }
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
@@ -72,11 +76,16 @@ public class LaneObj : MonoBehaviour
             }
         }
 
-        OnPlayerInteractionComplete?.Invoke();
+        OnPlayerInteractionComplete?.Invoke(this);
     }
 
-    private void GetDoorPosition(Vector3 position)
+    private float GetDoorPosition(Vector3 position)
     {
         return position.z;
+    }
+
+    private void Update()
+    {
+        transform.position = new Vector3(transform.position.x, transform.position.y - m_LaneSpeed);   
     }
 }

@@ -1,4 +1,4 @@
-public abstract class MinigameManager : Singleton<MinigameManager>
+public abstract class MinigameManager<T> : Singleton<MinigameManager<T>> where T : MinigameSO
 {
-    protected abstract void BeginMinigame(MinigameSO minigameSO);
+    protected abstract void BeginMinigame(T minigameSO);
 }

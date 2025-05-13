@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 // UI layer manager separate from this element
-public namespace UI 
+namespace UI 
 {
     public class LaneMinigameUI : MonoBehaviour
     {
