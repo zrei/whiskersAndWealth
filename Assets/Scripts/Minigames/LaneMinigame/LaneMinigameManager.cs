@@ -120,6 +120,8 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         LaneObj newLaneObj = GetLaneObj();
         newLaneObj.Setup(m_CurrentWaveSO.Lanes[m_NumGatesCreated], m_CurrentWaveSO.NegativeColor, m_CurrentWaveSO.PositiveColor, m_CurrentWaveSO.DoorSprite, m_CurrentWaveSO.LaneSpeed);
         ResetLanePosition(newLaneObj);
+        newLaneObj.OnPlayerInteractionComplete += OnPlayerInteractionComplete;
+        m_InUseLaneObjs.Enqueue(newLaneObj);
         newLaneObj.gameObject.SetActive(true);
         m_NumGatesCreated++;
     }
@@ -164,6 +166,6 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
 
     private void OnScoreChange(int scoreChangeAmount)
     {
-        m_CurrentScore = Mathf.Min(0, m_CurrentScore += scoreChangeAmount);
+        m_CurrentScore = Mathf.Max(0, m_CurrentScore + scoreChangeAmount);
     }
 }

@@ -317,7 +317,7 @@
             ]
         },
         {
-            "name": "Minigame",
+            "name": "LaneMinigame",
             "id": "f44c317a-90db-4661-a236-f22d587265f7",
             "actions": [
                 {
