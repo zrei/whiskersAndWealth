@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "LaneWaveSO", menuName = "ScriptableObject/Minigame/LaneMinigame/LaneWaveSO")]
+[CreateAssetMenu(fileName = "LaneWaveSO", menuName = "ScriptableObjects/Minigame/LaneMinigame/LaneWaveSO")]
 public class LaneWaveSO : WaveSO
 {
     public int RequiredEndWaveNumber;

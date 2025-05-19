@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LaneSO", menuName = "ScriptableObject/Minigame/LaneMinigame/LaneSO")]
+[CreateAssetMenu(fileName = "LaneSO", menuName = "ScriptableObjects/Minigame/LaneMinigame/LaneSO")]
 public class LaneSO : ScriptableObject
 {
     // a value of 0 means no door

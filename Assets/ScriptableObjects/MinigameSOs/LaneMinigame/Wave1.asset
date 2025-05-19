@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c0c481d1163451e9fc248dbd47e178, type: 3}
+  m_Name: Wave1
+  m_EditorClassIdentifier: 
+  RequiredEndWaveNumber: 5
+  LaneSpeed: 0.01
+  LaneInterval: 2
+  Lanes:
+  - {fileID: 11400000, guid: 253b8b07ae49b4d838fa092d43b590bf, type: 2}
+  - {fileID: 11400000, guid: a4194445f528047bd8dac2a9d345b6cc, type: 2}
+  - {fileID: 11400000, guid: afeb0a768e93b4af8a6c1dfb14ad30bf, type: 2}
+  - {fileID: 11400000, guid: 988004f41f6ec46138a615bce49b99ac, type: 2}
+  - {fileID: 11400000, guid: 4facb2f7182a04c199e7b07fca624049, type: 2}
+  PositiveColor: {r: 0.023584902, g: 1, b: 0.1680536, a: 0}
+  NegativeColor: {r: 1, g: 0, b: 0, a: 0}
+  DoorSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}

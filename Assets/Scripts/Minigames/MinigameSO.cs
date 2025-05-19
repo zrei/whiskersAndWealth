@@ -14,7 +14,6 @@ public struct MinigameRewards
     public ScoreReward Tier3Reward;
 }
 
-[CreateAssetMenu(fileName = "MinigameSO")]
 public abstract class MinigameSO : ScriptableObject
 {
     [Header("General Minigame Configuration")]

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29dc7492e67d641b498c09d0ae72023f, type: 3}
+  m_Name: LaneMinigameSO
+  m_EditorClassIdentifier: 
+  MinigameTitle: Lane Bronze
+  Waves:
+  - {fileID: 11400000, guid: 7bdc45d3c4b384a7dbecb3db90d5ad7f, type: 2}
