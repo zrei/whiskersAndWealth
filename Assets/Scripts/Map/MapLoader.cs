@@ -166,6 +166,7 @@ public class MapLoader : Singleton<MapLoader>
     #endregion
 
     #region Helper
+    // can throw the maps into a dictionary at startup if required
     private MapSO RetrieveMap(string mapName)
     {
         foreach (MapSO map in m_Maps)

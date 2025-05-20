@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
 {
+    [Header("References")]
     [SerializeField] private LaneObj m_LaneObjPrefab;
     [SerializeField] private Transform m_LaneSpawnPosition;
 
@@ -27,7 +28,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
     {
         base.HandleAwake();
 
-        GlobalEvents.Minigame.LaneMinigame.ScoreChangeEvent += OnScoreChange; 
+        GlobalEvents.Minigame.LaneMinigame.ScoreChangeEvent += OnScoreChange;
         BeginMinigame(m_TestSO);
     }
 
@@ -87,6 +88,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
             LaneObj laneObj = Instantiate<LaneObj>(m_LaneObjPrefab);
             laneObj.transform.localScale = Vector3.one;
             laneObj.transform.rotation = Quaternion.identity;
+            laneObj.transform.parent = m_LaneSpawnPosition;
             laneObj.gameObject.SetActive(false);
             return laneObj;
         }
@@ -162,6 +164,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         // go back to the other map
 
         Debug.Log("End game");
+         MapLoader.Instance.TransitToMap(m_ReturnMap);
     }
 
     private void OnScoreChange(int scoreChangeAmount)

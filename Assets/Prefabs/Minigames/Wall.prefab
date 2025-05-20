@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4125078011242366295}
   - component: {fileID: 6944429411720815056}
   - component: {fileID: 9070237677393927437}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1875767295
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6944429411720815056
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 6971027185121575411}
   - component: {fileID: 2293759750782710070}
   - component: {fileID: 4166260749028002307}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TEXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 8421115751266550606}
   - component: {fileID: 2897565298642247546}
   - component: {fileID: 1825932162803648823}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 118781471301033874}
   - component: {fileID: 8636101394918918149}
   - component: {fileID: 6815797920807646999}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TEXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -478,7 +478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1026388741455417630}
   - component: {fileID: 8879985641248854110}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeftDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -539,8 +539,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1875767295
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
@@ -563,7 +563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7283293103152896647}
   - component: {fileID: 6303045598287156851}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RightDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -624,8 +624,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1875767295
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.148332, g: 1, b: 0, a: 1}
@@ -650,7 +650,7 @@ GameObject:
   - component: {fileID: 4169604513430263403}
   - component: {fileID: 5423095973760649820}
   - component: {fileID: 8690965315446227102}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -697,7 +697,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1875767295
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5423095973760649820
@@ -749,7 +749,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1662198948113806929}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PositionIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

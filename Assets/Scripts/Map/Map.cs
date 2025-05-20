@@ -14,6 +14,7 @@ public abstract class Map : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] CameraController m_MapCamera;
+    [SerializeField] bool m_CameraWillFollowPlayer = true;
 
     [Header("Spawned UI")]
     [SerializeField] List<GameObject> m_UIElements;
@@ -36,7 +37,8 @@ public abstract class Map : MonoBehaviour
         if (repositionPlayer)
         {
             m_Player.transform.position = m_PlayerStartPosition.position;
-            m_MapCamera.SetFollow(m_Player.transform, true);
+            if (m_CameraWillFollowPlayer)
+                m_MapCamera.SetFollow(m_Player.transform, true);
         }
 
         InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
