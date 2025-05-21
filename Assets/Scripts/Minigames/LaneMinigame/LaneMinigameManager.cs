@@ -8,6 +8,9 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
     [SerializeField] private LaneObj m_LaneObjPrefab;
     [SerializeField] private Transform m_LaneSpawnPosition;
 
+    [Header("UI")]
+    [SerializeField] private UI_LaneMinigame_Result m_LaneMinigame_ResultUI;
+
     [Header("Debug")]
     [SerializeField] private LaneMinigameSO m_TestSO;
 
@@ -164,7 +167,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         // go back to the other map
 
         Debug.Log("End game");
-         MapLoader.Instance.TransitToMap(m_ReturnMap);
+        UIManager.Instance.OpenLayer(m_LaneMinigame_ResultUI);
     }
 
     private void OnScoreChange(int scoreChangeAmount)

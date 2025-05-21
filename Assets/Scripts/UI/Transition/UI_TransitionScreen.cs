@@ -31,7 +31,7 @@ public class UI_TransitionScene : UILayer
         
     }
 
-    public override void HandleOpen()
+    public override void HandleOpen(params object[] arguments)
     {
         
     }

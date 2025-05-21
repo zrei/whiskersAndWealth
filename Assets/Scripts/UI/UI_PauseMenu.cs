@@ -15,7 +15,7 @@ public class UI_PauseMenu : UILayer
         m_SaveBtn.onClick.RemoveListener(B_SaveGame);
     }
 
-    public override void HandleOpen()
+    public override void HandleOpen(params object[] arguments)
     {
         m_MainMenuBtn.onClick.AddListener(B_GoToMainMenu);
         m_SaveBtn.onClick.AddListener(B_SaveGame);
