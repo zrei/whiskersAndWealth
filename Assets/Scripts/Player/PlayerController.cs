@@ -23,12 +23,12 @@ public abstract class PlayerController : MonoBehaviour, IControlleable
     #endregion
 
     #region Initialisation
-    private void Awake()
+    protected virtual void Awake()
     {
         SubscribeToInputs();
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         UnsubscribeToInputs();
     }

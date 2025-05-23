@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
 
     private const int LANE_LENGTH = 10;
 
+    #region Initialisation
     protected override void HandleAwake()
     {
         base.HandleAwake();
@@ -41,20 +43,28 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
 
         GlobalEvents.Minigame.LaneMinigame.ScoreChangeEvent -= OnScoreChange;
     }
-
+    
     protected override void BeginMinigame(LaneMinigameSO minigameSO)
     {
         m_MinigameSO = minigameSO;
         m_CurrentWaveNumber = 0;
 
-        BeginWave(minigameSO.Waves.First());
+        StartCoroutine(BeginMinigameCoroutine());
     }
 
+    private IEnumerator BeginMinigameCoroutine()
+    {
+        yield return null;
+        BeginWave(m_MinigameSO.Waves.First());
+    }
+    #endregion
+
+    #region Wave
     private void BeginWave(LaneWaveSO waveSO)
     {
         m_NumGatesCreated = CalculateNumGatesRequired(waveSO);
         m_CurrentWaveSO = waveSO;
-        
+
         for (int i = 0; i < m_NumGatesCreated; i++)
         {
             LaneObj laneObj = GetLaneObj();
@@ -64,19 +74,25 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
             laneObj.transform.position = new Vector3(laneObj.transform.position.x, laneObj.transform.position.y + GetInterval(waveSO) * i, laneObj.transform.position.z);
             laneObj.gameObject.SetActive(true);
             m_InUseLaneObjs.Enqueue(laneObj);
-        }        
-    }
+        }
 
+        GlobalEvents.Minigame.LaneMinigame.BeginLaneMinigameWaveEvent?.Invoke(waveSO, m_CurrentWaveNumber + 1);
+    }
+    #endregion
+
+    #region Helper
     private int CalculateNumGatesRequired(LaneWaveSO waveSO)
     {
-        return (int) (LANE_LENGTH / waveSO.LaneInterval);
+        return (int)(LANE_LENGTH / waveSO.LaneInterval);
     }
 
     private float GetInterval(LaneWaveSO waveSO)
     {
         return waveSO.LaneInterval;
     }
+    #endregion
 
+    #region Lane Pool
     private LaneObj GetLaneObj()
     {
         if (m_FreeLaneObjs.Count > 0)
@@ -102,6 +118,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         laneObj.gameObject.SetActive(false);
         m_FreeLaneObjs.Add(laneObj);
     }
+    #endregion
 
     private void ResetLanePosition(LaneObj laneObj)
     {
@@ -138,12 +155,17 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         ReturnAllGatesToPool();
 
         if (m_CurrentScore < m_MinigameSO.Waves[m_CurrentWaveNumber - 1].RequiredEndWaveNumber)
+        {
             // end game
             Debug.Log("Failed wave");
+            OnEndMinigame(false, m_CurrentWaveNumber);
+            return;
+        }
+            
 
         if (m_CurrentWaveNumber >= m_MinigameSO.Waves.Count)
         {
-            OnEndMinigame();
+            OnEndMinigame(true, m_CurrentWaveNumber);
             return;
         }
             
@@ -161,17 +183,19 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         }
     }
 
-    private void OnEndMinigame()
+    private void OnEndMinigame(bool wonGame, int waveReached)
     {
         // perform results
         // go back to the other map
 
         Debug.Log("End game");
-        UIManager.Instance.OpenLayer(m_LaneMinigame_ResultUI);
+        UIManager.Instance.OpenLayer(m_LaneMinigame_ResultUI, new MinigameResult(wonGame, waveReached, m_ReturnMap));
+        GlobalEvents.Minigame.LaneMinigame.EndMinigameEvent?.Invoke();
     }
 
     private void OnScoreChange(int scoreChangeAmount)
     {
         m_CurrentScore = Mathf.Max(0, m_CurrentScore + scoreChangeAmount);
+        GlobalEvents.Minigame.LaneMinigame.ScoreSetEvent?.Invoke(m_CurrentScore);
     }
 }

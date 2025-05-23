@@ -126,6 +126,7 @@ MonoBehaviour:
     m_AdvanceTime: 1
   m_LaneObjPrefab: {fileID: 1825932162803648823, guid: bbee2d6dde49f4d7db054f2f727399c7, type: 3}
   m_LaneSpawnPosition: {fileID: 2362281020921932435}
+  m_LaneMinigame_ResultUI: {fileID: 5513199046970229549, guid: 4a6a0580b14b14e638032b9147e43dda, type: 3}
   m_TestSO: {fileID: 11400000, guid: 938cb29d00dea48649112a3f2cb1b00e, type: 2}
 --- !u!1 &2165003407902603429
 GameObject:
@@ -360,7 +361,9 @@ MonoBehaviour:
   m_Player: {fileID: 3985828712005077328}
   m_MapCamera: {fileID: 4800478534629041873}
   m_CameraWillFollowPlayer: 0
-  m_UIElements: []
+  m_UIElements:
+  - {fileID: 3510400930349583924, guid: e4136df4f73464e88a2f79d4b4aa2cf4, type: 3}
+  - {fileID: 8559977556547780041, guid: 9f811deca64e0482088f5baf8260e157, type: 3}
   m_InputMapName: LANEMINIGAME
   m_BlockedInputs: 
 --- !u!1 &5847627898380853637

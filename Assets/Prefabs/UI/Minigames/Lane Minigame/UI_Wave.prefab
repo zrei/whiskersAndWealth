@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 262d00f730ae74a99a09353787fbea55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsEscClosable: 0
   m_WaveText: {fileID: 4549537268107867622}
-  m_Animation: {fileID: 4977147758003739346}
+  m_CanvasGroup: {fileID: 9211084584132727440}
+  m_FadeTime: 6
 --- !u!1 &9144244199363932699
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,6 +64,7 @@ GameObject:
   - component: {fileID: 6642998445502350985}
   - component: {fileID: 4549537268107867622}
   - component: {fileID: 4977147758003739346}
+  - component: {fileID: 9211084584132727440}
   m_Layer: 0
   m_Name: Wave
   m_TagString: Untagged
@@ -194,7 +195,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9144244199363932699}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: 0}
   m_Animations:
@@ -203,3 +204,15 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!225 &9211084584132727440
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9144244199363932699}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

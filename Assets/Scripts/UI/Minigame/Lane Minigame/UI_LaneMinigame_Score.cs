@@ -5,18 +5,32 @@ public class UI_LaneMinigame_Score : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI m_ScoreText;
 
-    public const string SCORE_TEXT = "Score: {0}\nGoal: {1}";
+    public const string SCORE_TEXT = "Wave: {0}\nGoal: {1}\nScore: {2}";
 
     private int m_RequiredGoal = 0;
+    private int m_WaveNumber = 0;
 
-    private void OnBeginWave(LaneWaveSO waveSO)
+    private void Start()
     {
-        m_ScoreText.text = string.Format(SCORE_TEXT, 0, waveSO.RequiredEndWaveNumber);
-        m_RequiredGoal = waveSO.RequiredEndWaveNumber;
+        GlobalEvents.Minigame.LaneMinigame.BeginLaneMinigameWaveEvent += OnBeginWave;
+        GlobalEvents.Minigame.LaneMinigame.ScoreSetEvent += OnScoreSet;
     }
 
-    private void OnScoreChange(int currentScore)
+    private void OnDestroy()
     {
-        m_ScoreText.text = string.Format(SCORE_TEXT, currentScore, m_RequiredGoal);
+        GlobalEvents.Minigame.LaneMinigame.BeginLaneMinigameWaveEvent -= OnBeginWave;
+        GlobalEvents.Minigame.LaneMinigame.ScoreSetEvent -= OnScoreSet;
+    }
+
+    private void OnBeginWave(LaneWaveSO waveSO, int waveNumber)
+    {
+        m_ScoreText.text = string.Format(SCORE_TEXT, waveNumber, waveSO.RequiredEndWaveNumber, 0);
+        m_RequiredGoal = waveSO.RequiredEndWaveNumber;
+        m_WaveNumber = waveNumber;
+    }
+
+    private void OnScoreSet(int currentScore)
+    {
+        m_ScoreText.text = string.Format(SCORE_TEXT, m_WaveNumber, m_RequiredGoal, currentScore);
     }
 }

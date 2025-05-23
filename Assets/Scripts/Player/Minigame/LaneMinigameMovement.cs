@@ -6,32 +6,51 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class LaneMinigameMovement : PlayerMovementController
 {
-    [Header("Animator Params")]    
+    [Header("Animator Params")]
     [SerializeField] private AnimatorParam m_StartRunParam;
     [SerializeField] private AnimatorParam m_StopRunParam;
-    
+
     private float m_MovementInput = 0f;
 
     #region Initialisation
+    protected override void Awake()
+    {
+        base.Awake();
+
+        GlobalEvents.Minigame.LaneMinigame.EndMinigameEvent += OnEndMinigame;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        GlobalEvents.Minigame.LaneMinigame.EndMinigameEvent -= OnEndMinigame;
+    }
+
     protected override void SubscribeToInputs()
     {
-        InputManager.SubscribeToAction(InputType.LANEMINIGAME_MOVE, OnMove, OnMoveCancel);
+        InputManager.SubscribeToAction(InputType.LANEMINIGAME_MOVE, OnMovementInput, OnMovementInputCancelled);
     }
 
     protected override void UnsubscribeToInputs()
     {
-        InputManager.UnsubscribeToAction(InputType.LANEMINIGAME_MOVE, OnMove, OnMoveCancel);
+        InputManager.UnsubscribeToAction(InputType.LANEMINIGAME_MOVE, OnMovementInput, OnMovementInputCancelled);
     }
     #endregion
 
     #region Movement
-    private void OnMove(InputAction.CallbackContext context)
+    private void OnMovementInput(InputAction.CallbackContext context)
     {
         m_MovementInput = context.ReadValue<float>();
         ToggleRunAnim(true);
     }
 
-    private void OnMoveCancel(InputAction.CallbackContext context)
+    private void OnMovementInputCancelled(InputAction.CallbackContext context)
+    {
+        CancelMovement();
+    }
+
+    private void CancelMovement()
     {
         m_MovementInput = 0f;
         ToggleRunAnim(false);
@@ -54,6 +73,14 @@ public class LaneMinigameMovement : PlayerMovementController
     public void ToggleRunAnim(bool isRunning)
     {
         m_PlayerAnimator.SetParam(isRunning ? m_StartRunParam : m_StopRunParam);
+    }
+    #endregion
+
+    #region Events
+    private void OnEndMinigame()
+    {
+        UnsubscribeToInputs();
+        CancelMovement();
     }
     #endregion
 }

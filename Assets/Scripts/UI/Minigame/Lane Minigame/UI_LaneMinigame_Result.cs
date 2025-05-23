@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class UI_LaneMinigame_Result : UILayer
 {
-    [Header("Return Map")]
-    [SerializeField] private MapTransit m_ReturnMap;
-
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI m_ResultText;
     [SerializeField] private Button m_ReturnToTownBtn;
+
+    private MinigameResult m_MinigameResult;
 
     public override void HandleClose()
     {
@@ -18,8 +17,8 @@ public class UI_LaneMinigame_Result : UILayer
 
     public override void HandleOpen(params object[] arguments)
     {
-        MinigameResult minigameResult = (MinigameResult)arguments[0];
-        m_ResultText.text = minigameResult.WonMinigame ? "Success!" : "Failed...";
+        m_MinigameResult = (MinigameResult)arguments[0];
+        m_ResultText.text = m_MinigameResult.WonMinigame ? "Success!" : "Failed...";
         m_ReturnToTownBtn.onClick.AddListener(ReturnToTownButton);
     }
 
@@ -30,7 +29,7 @@ public class UI_LaneMinigame_Result : UILayer
 
     private void ReturnToTownButton()
     {
-        MapLoader.Instance.TransitToMap(m_ReturnMap);
+        MapLoader.Instance.TransitToMap(m_MinigameResult.MapTransit);
         CloseLayer();
     }
 }
