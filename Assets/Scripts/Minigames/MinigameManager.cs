@@ -5,5 +5,5 @@ public abstract class MinigameManager<T> : Singleton<MinigameManager<T>> where T
     [Header("Return Map")]
     [SerializeField] protected MapTransit m_ReturnMap;
 
-    protected abstract void BeginMinigame(T minigameSO);
+    public abstract void BeginMinigame(T minigameSO);
 }

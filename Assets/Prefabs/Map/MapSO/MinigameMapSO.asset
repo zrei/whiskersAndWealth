@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af5c431d8cc204fc98d6047579edb840, type: 3}
   m_Name: MinigameMapSO
   m_EditorClassIdentifier: 
-  m_Map: {fileID: 5852518756612419077, guid: 820e134069a432e4cb56b9f591de75a0, type: 3}
+  m_Map: {fileID: 5952925203521528737, guid: 820e134069a432e4cb56b9f591de75a0, type: 3}
   m_MapName: MINIGAME_MAP

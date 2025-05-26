@@ -12,9 +12,6 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
     [Header("UI")]
     [SerializeField] private UI_LaneMinigame_Result m_LaneMinigame_ResultUI;
 
-    [Header("Debug")]
-    [SerializeField] private LaneMinigameSO m_TestSO;
-
     private Queue<LaneObj> m_InUseLaneObjs = new();
     private HashSet<LaneObj> m_FreeLaneObjs = new();
 
@@ -34,7 +31,6 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         base.HandleAwake();
 
         GlobalEvents.Minigame.LaneMinigame.ScoreChangeEvent += OnScoreChange;
-        BeginMinigame(m_TestSO);
     }
 
     protected override void HandleDestroy()
@@ -44,7 +40,7 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         GlobalEvents.Minigame.LaneMinigame.ScoreChangeEvent -= OnScoreChange;
     }
     
-    protected override void BeginMinigame(LaneMinigameSO minigameSO)
+    public override void BeginMinigame(LaneMinigameSO minigameSO)
     {
         m_MinigameSO = minigameSO;
         m_CurrentWaveNumber = 0;

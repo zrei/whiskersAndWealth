@@ -1,0 +1,1 @@
+public class LaneMinigameMap : MinigameMap<LaneMinigameSO, LaneMinigameManager> { }

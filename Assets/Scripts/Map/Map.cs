@@ -30,7 +30,7 @@ public abstract class Map : MonoBehaviour
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
     #region Loading
-    public virtual void Load(bool repositionPlayer = true)
+    public void Load(bool repositionPlayer = true)
     {
         SpawnUIElements();
 
@@ -42,11 +42,20 @@ public abstract class Map : MonoBehaviour
         }
 
         InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
+
+        OnCompleteLoad();
     }
 
-    public virtual void Unload() {
+    public virtual void Unload()
+    {
         DespawnUIElements();
+
+        OnCompleteUnload();
     }
+
+    protected virtual void OnCompleteLoad() { }
+
+    protected virtual void OnCompleteUnload() { }
     #endregion
 
     #region UI Elements

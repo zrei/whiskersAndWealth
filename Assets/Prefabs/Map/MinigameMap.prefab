@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6755508630988340773}
   - component: {fileID: 7414380204316686818}
+  - component: {fileID: 1774748017825127059}
+  - component: {fileID: 2265181204432533443}
   m_Layer: 8
   m_Name: Right Wall
   m_TagString: Untagged
@@ -77,6 +79,45 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0931606, y: 56.8431}
   m_EdgeRadius: 0
+--- !u!114 &1774748017825127059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10335589892437448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e4b6a9048c44eb2a6559f9a7f827be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &2265181204432533443
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10335589892437448}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1265301226283887243
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +168,6 @@ MonoBehaviour:
   m_LaneObjPrefab: {fileID: 1825932162803648823, guid: bbee2d6dde49f4d7db054f2f727399c7, type: 3}
   m_LaneSpawnPosition: {fileID: 2362281020921932435}
   m_LaneMinigame_ResultUI: {fileID: 5513199046970229549, guid: 4a6a0580b14b14e638032b9147e43dda, type: 3}
-  m_TestSO: {fileID: 11400000, guid: 938cb29d00dea48649112a3f2cb1b00e, type: 2}
 --- !u!1 &2165003407902603429
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4094777952270811087}
-  - component: {fileID: 5852518756612419077}
+  - component: {fileID: 5952925203521528737}
   m_Layer: 0
   m_Name: MinigameMap
   m_TagString: Untagged
@@ -345,7 +385,7 @@ Transform:
   - {fileID: 5407382264817256810}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5852518756612419077
+--- !u!114 &5952925203521528737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -354,7 +394,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5754254072676219966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 056bad3b5d141bf4499a4725c495add4, type: 3}
+  m_Script: {fileID: 11500000, guid: 5423650b64cfa4981a60323674b6fe55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlayerStartPosition: {fileID: 5407382264817256810}
@@ -366,6 +406,7 @@ MonoBehaviour:
   - {fileID: 8559977556547780041, guid: 9f811deca64e0482088f5baf8260e157, type: 3}
   m_InputMapName: LANEMINIGAME
   m_BlockedInputs: 
+  m_TestSO: {fileID: 11400000, guid: 938cb29d00dea48649112a3f2cb1b00e, type: 2}
 --- !u!1 &5847627898380853637
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +517,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8419912904026816598}
   - component: {fileID: 205595305110199806}
+  - component: {fileID: 7051128208161409934}
+  - component: {fileID: 5129669283471621518}
   m_Layer: 8
   m_Name: Left Wall
   m_TagString: Untagged
@@ -543,6 +586,45 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0931606, y: 56.8431}
   m_EdgeRadius: 0
+--- !u!114 &7051128208161409934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883080865422332448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e4b6a9048c44eb2a6559f9a7f827be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &5129669283471621518
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883080865422332448}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &5936472509144821322
 GameObject:
   m_ObjectHideFlags: 0

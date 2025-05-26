@@ -6,6 +6,7 @@ public delegate void LaneEvent(LaneObj _);
 [RequireComponent(typeof(Collider2D))]
 public class LaneObj : MonoBehaviour
 {
+    [Header("Collision")]
     [SerializeField] private GameObject m_PositionIndicator;
 
     [Header("Left Door")]
@@ -81,7 +82,7 @@ public class LaneObj : MonoBehaviour
 
     private float GetDoorPosition(Vector3 position)
     {
-        return position.z;
+        return position.x;
     }
 
     private void Update()
