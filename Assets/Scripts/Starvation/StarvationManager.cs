@@ -38,7 +38,7 @@ public class StarvationManager : Singleton<StarvationManager>
     {
         InitStarvation();
     }
-    
+
     private void InitStarvation()
     {
         if (SaveManager.Instance.IsNewSave)
@@ -62,6 +62,14 @@ public class StarvationManager : Singleton<StarvationManager>
         {
             GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
         }
+    }
+    #endregion
+
+    #region Restoration
+    public void RestoreStarvationAmount(int amount)
+    {
+        m_StarvationAmount = Mathf.Min(GlobalSettings.MaxStarvationLevel, m_StarvationAmount + amount);
+        GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
     }
     #endregion
 }
