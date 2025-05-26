@@ -11,7 +11,7 @@ public abstract class UILayer : MonoBehaviour
     public bool IsEscClosable => m_IsEscClosable;
 
     #region Interactions
-    public abstract void HandleOpen();
+    public abstract void HandleOpen(params object[] args);
 
     public abstract void HandleClose();
 

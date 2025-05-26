@@ -10,7 +10,7 @@ public class Layer_Test : UILayer
         _closeButton.onClick.RemoveAllListeners();
     }
 
-    public override void HandleOpen() {
+    public override void HandleOpen(params object[] arguments) {
         Logger.Log(this.GetType().Name, name, "Opened", gameObject, LogLevel.LOG);
         _closeButton.onClick.AddListener(CloseLayer);
     }

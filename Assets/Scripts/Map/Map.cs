@@ -14,6 +14,7 @@ public abstract class Map : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] CameraController m_MapCamera;
+    [SerializeField] bool m_CameraWillFollowPlayer = true;
 
     [Header("Spawned UI")]
     [SerializeField] List<GameObject> m_UIElements;
@@ -29,22 +30,32 @@ public abstract class Map : MonoBehaviour
     private List<GameObject> m_UIElementInstances = new List<GameObject>();
 
     #region Loading
-    public virtual void Load(bool repositionPlayer = true)
+    public void Load(bool repositionPlayer = true)
     {
         SpawnUIElements();
 
         if (repositionPlayer)
         {
             m_Player.transform.position = m_PlayerStartPosition.position;
-            m_MapCamera.SetFollow(m_Player.transform, true);
+            if (m_CameraWillFollowPlayer)
+                m_MapCamera.SetFollow(m_Player.transform, true);
         }
 
         InputManager.Instance.SetCurrInputMap(m_InputMapName, m_BlockedInputs);
+
+        OnCompleteLoad();
     }
 
-    public virtual void Unload() {
+    public virtual void Unload()
+    {
         DespawnUIElements();
+
+        OnCompleteUnload();
     }
+
+    protected virtual void OnCompleteLoad() { }
+
+    protected virtual void OnCompleteUnload() { }
     #endregion
 
     #region UI Elements

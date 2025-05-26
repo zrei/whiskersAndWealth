@@ -20,7 +20,7 @@ public enum InputType
     UI_MOVE_LEFT,
     UI_MOVE_RIGHT,
     UI_CLOSE,
-    MINIGAME_MOVE
+    LANEMINIGAME_MOVE
 }
 
 /// <summary>
@@ -53,7 +53,7 @@ public class InputManager : Singleton<InputManager>
     // TODO: Better way to do this?
     public const string UI_ACTION_MAP_NAME = "UI";
     public const string PLAYER_ACTION_MAP_NAME = "PLAYER";
-    public const string MINIGAME_ACTION_MAP_NAME = "MINIGAME";
+    public const string MINIGAME_ACTION_MAP_NAME = "LANEMINIGAME";
 
     private static List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)> m_CachedList = new List<(InputType, Action<InputAction.CallbackContext>, Action<InputAction.CallbackContext>)>();
 

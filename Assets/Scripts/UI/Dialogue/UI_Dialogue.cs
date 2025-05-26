@@ -30,7 +30,7 @@ public class UI_Dialogue : UILayer
     {
     }
 
-    public override void HandleOpen()
+    public override void HandleOpen(params object[] arguments)
     {
     }
 

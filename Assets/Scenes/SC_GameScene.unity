@@ -216,8 +216,8 @@ Camera:
   m_GameObject: {fileID: 752638510}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.4745098, g: 0.3892292, b: 0.19215688, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -242,7 +242,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 28.451717
+  orthographic size: 31.52
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -267,7 +267,7 @@ Transform:
   m_GameObject: {fileID: 752638510}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.915399, y: -7.612675, z: -67.06671}
+  m_LocalPosition: {x: 3, y: -7, z: -464.09552}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -408,6 +408,83 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc8479920868d4c959f9ddfc432e92e9, type: 3}
+--- !u!1 &1291577222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1291577224}
+  - component: {fileID: 1291577223}
+  - component: {fileID: 1291577225}
+  - component: {fileID: 1291577226}
+  m_Layer: 0
+  m_Name: DebugInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1291577223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291577222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8e38312dbf14b55b4815fd6494fef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InputActionAsset: {fileID: -944628639613478452, guid: 760e510fc23bb48a4851b4fdcea9db2e, type: 3}
+  m_DoDebug: 0
+--- !u!4 &1291577224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291577222}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.1679196, y: -22.329767, z: -0.28606382}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1291577225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291577222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ff50c6602664df49987fb811124c8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputMapName: LANEMINIGAME
+--- !u!114 &1291577226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291577222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0948226342e8440b6835ac78cb60664b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_DoDebug: 0
+  m_PlayerVelocity: 2
+  m_MaxStarvationLevel: 5
+  m_StartingVolume: 100
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -415,3 +492,4 @@ SceneRoots:
   - {fileID: 752638513}
   - {fileID: 460744795}
   - {fileID: 1118954706}
+  - {fileID: 1291577224}

@@ -99,11 +99,11 @@ public class UIManager : Singleton<UIManager>
     /// <summary>
     /// Instantiates the game object prefab and opens its UI layer
     /// </summary>
-    public UILayer OpenLayer(UILayer layerObject)
+    public UILayer OpenLayer(UILayer layerObject, params object[] arguments)
     {
         UILayer layerInstance = Instantiate(layerObject, m_MenuCanvas.transform);
 
-        layerInstance.HandleOpen();
+        layerInstance.HandleOpen(arguments);
         m_OpenLayers.Push(layerInstance);
 
         if (m_OpenLayers.Count == 1)
