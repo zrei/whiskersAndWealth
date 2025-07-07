@@ -77,4 +77,9 @@ public class InventoryManager : Singleton<InventoryManager>
         itemStack = m_Items[index];
         return true;
     }
+
+    public bool HasQuantityOfItem(ItemSO itemSO, int quantity)
+    {
+        return FindItemInInventory(itemSO, out int ownedQuantity, out int _) & ownedQuantity >= quantity;
+    }
 }

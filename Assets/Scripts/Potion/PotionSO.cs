@@ -9,9 +9,10 @@ public struct PotionIngredient
     public int m_Quantity;
 }
 
-[CreateAssetMenu(fileName="PotionSO", menuName="ScriptableObjects/PotionSO")]
+[CreateAssetMenu(fileName = "PotionSO", menuName = "ScriptableObjects/PotionSO")]
 public class PotionSO : ScriptableObject
 {
     public List<PotionIngredient> m_Ingredients;
     public int m_Price;
+    public string Description;
 }

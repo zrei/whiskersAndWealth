@@ -4,6 +4,7 @@ public abstract class ItemSO : ScriptableObject
 {
     public Sprite ItemSprite;
     public string ItemName;
+    public string Description;
 
     public abstract void ConsumeItem(int numItem);
 }
