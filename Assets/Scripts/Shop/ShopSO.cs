@@ -1,31 +1,95 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
-public struct ShopItem
+public struct PeriodOfTimeStock
 {
-    public ItemSO m_Item;
-    // is this stock? might not be needed and if so it shouldn't be here I think
-    public int m_Quantity;
-    public int m_Price;
-    // flags required for this shop item to be unlocked
-    public List<string> m_UnlockFlags;
-    // add any other conditions down here
+    public TimePeriod TimePeriod;
+    public int StockLimit;
+}
 
-    public bool CanBuyItem()
+public class ShopItemStockInstance : ITransaction
+{
+    private ShopItemSO m_ShopItemSO;
+    private List<int> m_TimePeriodPurchaseAmt;
+
+    public ShopItemStockInstance(ShopItemSO shopItemSO)
     {
-        foreach (string flag in m_UnlockFlags)
+        m_ShopItemSO = shopItemSO;
+
+        foreach (TimePeriod timePeriod in Enum.GetValues(typeof(TimePeriod)))
         {
-            if (!NarrativeManager.Instance.GetFlagValue(flag))
-                return false;
+            m_TimePeriodPurchaseAmt.Add(0);
+        }
+    }
+
+    public bool HasStock()
+    {
+        if (m_ShopItemSO.LimitTotalDayStock && GetTotalPurchasedToday() >= m_ShopItemSO.TotalDayStock)
+            return false;
+
+        return HasTimePeriodStock();
+    }
+
+    private bool HasTimePeriodStock()
+    {
+        TimePeriod timePeriod = TimeManager.Instance.CurrTimePeriod;
+
+        if (!m_ShopItemSO.TryGetTimePeriodStock(timePeriod, out int stockLimit))
+            return true;
+
+        return m_TimePeriodPurchaseAmt[(int) timePeriod] < stockLimit;
+    }
+
+    private int GetTotalPurchasedToday()
+    {
+        return m_TimePeriodPurchaseAmt.Sum();
+    }
+
+    public bool TransactionCanBeMade()
+    {
+        return m_ShopItemSO.TransactionCanBeMade() && HasStock();
+    }
+
+    public void OnPurchase()
+    {
+        m_TimePeriodPurchaseAmt[(int)TimeManager.Instance.CurrTimePeriod] += 1;
+    }
+}
+
+public class ShopItemSO : FlagUnlockable, ITransaction
+{
+    public ItemSO Item;
+    public bool LimitTotalDayStock;
+    public int TotalDayStock;
+    public List<PeriodOfTimeStock> PeriodOfTimeStocks;
+    public int Price;
+
+    public bool TryGetTimePeriodStock(TimePeriod timePeriod, out int stock)
+    {
+        foreach (PeriodOfTimeStock periodOfTimeStock in PeriodOfTimeStocks)
+        {
+            if (periodOfTimeStock.TimePeriod == timePeriod)
+            {
+                stock = periodOfTimeStock.StockLimit;
+                return true;
+            }
         }
 
-        return true;
+        stock = -1;
+        return false;
+    }
+
+    public bool TransactionCanBeMade()
+    {
+        return !IsLocked() && CoinManager.Instance.CanPurchase(Price);
     }
 }
 
 [CreateAssetMenu(fileName = "ShopSO", menuName = "ScriptableObjects/ShopSO")]
-public class ShopSO : ScriptableObject
+public class ShopSO : FlagUnlockable
 {
-    // this is very simple, does not account for items being unlocked etc. or seeling different stuff at different times of day or whether it'll even be open during certain times of the day
-    public List<ShopItem> m_ShopItems;
+    public List<ShopItemSO> m_ShopItems;
+    public UI_BaseShopScreen m_ShopUI;
 }

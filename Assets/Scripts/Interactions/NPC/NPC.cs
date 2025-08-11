@@ -8,6 +8,22 @@ public class NPC : Interaction
     [Header("Data")]
     [SerializeField] private NPC_SO m_NPCData;
 
+    #region State
+    protected override void CheckEnabledState()
+    {
+        base.CheckEnabledState();
+
+        if (m_IsEnabled && !HasValidDialogues())
+            ToggleEnabled(false);
+        else if (!m_IsEnabled && HasValidDialogues())
+            ToggleEnabled(true);
+    }
+    #endregion
+
+    #region Flags
+
+    #endregion
+
     #region Interaction
     protected override void HandleInteraction()
     {
@@ -31,6 +47,18 @@ public class NPC : Interaction
             }
         }
         dialogueSOReturn = null;
+        return false;
+    }
+
+    private bool HasValidDialogues()
+    {
+        foreach (DialogueSO dialogueSO in m_NPCData.m_Dialogues)
+        {
+            if (DialogueConditionsMet(dialogueSO))
+            {
+                return true;
+            }
+        }
         return false;
     }
 

@@ -5,13 +5,13 @@ public class UI_Inventory : UILayer
         
     }
 
-    public override void HandleOpen()
+    public override void HandleOpen(params object[] args)
     {
         
     }
 
     public override void HandleUISelect()
     {
-        
+
     }
 }

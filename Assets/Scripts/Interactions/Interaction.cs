@@ -25,15 +25,22 @@ public abstract class Interaction : MonoBehaviour
     private bool m_IsHolding = false;
 
     // state
-    private bool m_IsEnabled = true;
+    protected bool m_IsEnabled = true;
 
     #region Initialization
-    private void Awake()
+    protected virtual void Awake()
     {
         m_IsEnabled = true;
         ResetHold();
+        CheckEnabledState();
 
         // TODO: can add a bunch of events + conditions under which it is disabled...
+        GlobalEvents.Narrative.SetFlagValueEvent += OnFlagValueChange;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        GlobalEvents.Narrative.SetFlagValueEvent -= OnFlagValueChange;
     }
 
     private void OnEnable()
@@ -59,12 +66,20 @@ public abstract class Interaction : MonoBehaviour
     }
     #endregion
 
+    #region Flag
+    protected virtual void OnFlagValueChange(string flag, bool value)
+    {
+        CheckEnabledState();
+    }
+
+    #endregion
+
     #region State
-    private void ToggleEnabled(bool isEnabled)
+    protected void ToggleEnabled(bool isEnabled)
     {
         m_IsEnabled = isEnabled;
         m_InteractionCollider.enabled = m_IsEnabled;
-        
+
         if (m_IndicatorInstance)
             m_IndicatorInstance.SetActive(isEnabled);
 
@@ -81,6 +96,12 @@ public abstract class Interaction : MonoBehaviour
     {
         InputManager.UnsubscribeToAction(InputType.PLAYER_INTERACT, HandleInput, HandleInputCancelled);
         ResetHold();
+    }
+
+    // override if need to
+    protected virtual void CheckEnabledState()
+    {
+
     }
     #endregion
 
@@ -136,7 +157,7 @@ public abstract class Interaction : MonoBehaviour
     #region Indicator
     private void UpdateIndicatorPosition()
     {
-        if (m_IndicatorInstance)
+        if (m_IndicatorInstance && m_IsEnabled)
         {
             UIManager.Instance.UpdateIndicatorPosition(m_IndicatorInstance.transform, m_IndicatorLocation.position);
         }
@@ -146,7 +167,8 @@ public abstract class Interaction : MonoBehaviour
     #region Interaction
     private void FireInteraction()
     {
-        HandleInteraction();
+        if (m_IsEnabled)
+            HandleInteraction();
         ResetHold();
     }
 

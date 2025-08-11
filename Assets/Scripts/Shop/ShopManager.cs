@@ -1,25 +1,48 @@
-using UnityEngine;
+using System.Collections.Generic;
 
-public class ShopManager : MonoBehaviour
+public class ShopManager : IUnlockable
 {
-    // if you can indicate quantity on the shop screen then it must be passed into this function
-    // can likely be split into an actual buy item private function
-    public bool TryBuyItem(ShopItem shopItem)
+    private ShopSO m_ShopSO;
+    private List<ShopItemStockInstance> m_ShopItemStockInstances;
+    private Dictionary<ShopItemSO, ShopItemStockInstance> m_Map;
+
+    public ShopManager(ShopSO shopSO)
     {
-        // TODO: show some error message
-        if (!shopItem.CanBuyItem())
-            return false;
-
-        if (!CoinManager.Instance.CanPurchase(shopItem.m_Price))
-            return false;
-
-        InventoryManager.Instance.ObtainItem(new ItemStack(shopItem.itemSO, 1));
-        return true;
+        m_ShopSO = shopSO;
     }
 
-    // get description of item for display
-    public string GetItemDescription(ShopItem shopItem)
+    public void ResetShopStock()
     {
-        return shopItem.itemSO.Description;
+        m_ShopItemStockInstances = new();
+        m_Map = new();
+
+        foreach (ShopItemSO shopItemSO in m_ShopSO.m_ShopItems)
+        {
+            if (shopItemSO.IsLocked())
+                continue;
+
+            ShopItemStockInstance shopStock = new ShopItemStockInstance(shopItemSO);
+            m_ShopItemStockInstances.Add(shopStock);
+            m_Map.Add(shopItemSO, shopStock);
+        }
+    }
+
+    public bool IsLocked()
+    {
+        return m_ShopSO.IsLocked();
+    }
+
+    public bool TryBuyItem(ShopItemSO shopItemSO)
+    {
+        ShopItemStockInstance shopItemStockInstance = m_Map[shopItemSO];
+
+        // TODO: show some error message
+        if (!shopItemStockInstance.TransactionCanBeMade())
+            return false;
+
+        InventoryManager.Instance.ObtainItem(new ItemStack(shopItemSO.Item, 1));
+        CoinManager.Instance.ConsumeCoin(shopItemSO.Price);
+        shopItemStockInstance.OnPurchase();
+        return true;
     }
 }

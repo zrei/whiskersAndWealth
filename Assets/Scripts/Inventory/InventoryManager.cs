@@ -78,8 +78,18 @@ public class InventoryManager : Singleton<InventoryManager>
         return true;
     }
 
-    public bool HasQuantityOfItem(ItemSO itemSO, int quantity)
+    public bool HasQuantityOfItem(ItemStack item)
     {
-        return FindItemInInventory(itemSO, out int ownedQuantity, out int _) & ownedQuantity >= quantity;
+        return FindItemInInventory(item.Item, out int ownedQuantity, out int _) & ownedQuantity >= item.NumItem;
+    }
+
+    public bool HasQuantityOfItems(List<ItemStack> items)
+    {
+        foreach (ItemStack itemStack in items)
+        {
+            if (!HasQuantityOfItem(itemStack))
+                return false;
+        }
+        return true;
     }
 }
