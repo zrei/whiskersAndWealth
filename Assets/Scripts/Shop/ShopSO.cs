@@ -91,4 +91,5 @@ public class ShopItemSO : FlagUnlockable, ITransaction
 public class ShopSO : FlagUnlockable
 {
     public List<ShopItemSO> m_ShopItems;
+    public UI_BaseShopScreen m_ShopUI;
 }
