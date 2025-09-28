@@ -92,4 +92,15 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         return true;
     }
+
+    public List<ItemInfo> GetItemInfos()
+    {
+        List<ItemInfo> itemInfos = new();
+        foreach (ItemStack itemStack in m_Items)
+        {
+            if (!itemStack.IsEmpty)
+                itemInfos.Add(itemStack.GetItemInfo());
+        }
+        return itemInfos;
+    }
 }

@@ -33,4 +33,9 @@ public struct ItemStack
     }
 
     public bool IsEmpty => NumItem == 0;
+
+    public ItemInfo GetItemInfo()
+    {
+        return new ItemInfo(Item.ItemSprite, Item.ItemName, Item.Description, NumItem);
+    }
 }
