@@ -23,6 +23,9 @@ public class UIManager : Singleton<UIManager>
     [Header("Pause Menu")]
     [SerializeField] private UILayer m_PauseMenuPrefab;
 
+    [Header("Inventory")]
+    [SerializeField] private UI_Inventory m_InventoryPrefab;
+
     private HashSet<GameObject> m_OpenHUD;
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
@@ -48,6 +51,7 @@ public class UIManager : Singleton<UIManager>
         InputManager.SubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
         InputManager.SubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
         InputManager.SubscribeToAction(InputType.UI_SELECT, OnLayerSelect);
+        InputManager.SubscribeToAction(InputType.PLAYER_INVENTORY, OpenInventory);
     }
 
     // unsubscribe to events and cleanup
@@ -166,6 +170,14 @@ public class UIManager : Singleton<UIManager>
     {
         if (TransitionManager.IsReady && !TransitionManager.Instance.IsTransitioning)
             OpenLayer(m_PauseMenuPrefab);
+    }
+    #endregion
+
+    #region Inventory
+    // could be moved to the inventory manager? Hm...
+    private void OpenInventory(InputAction.CallbackContext _)
+    {
+        OpenLayer(m_InventoryPrefab);
     }
     #endregion
 

@@ -20,7 +20,8 @@ public enum InputType
     UI_MOVE_LEFT,
     UI_MOVE_RIGHT,
     UI_CLOSE,
-    LANEMINIGAME_MOVE
+    LANEMINIGAME_MOVE,
+    PLAYER_INVENTORY
 }
 
 /// <summary>
