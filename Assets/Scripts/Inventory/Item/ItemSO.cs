@@ -9,6 +9,7 @@ public abstract class ItemSO : ScriptableObject
     public abstract void ConsumeItem(int numItem);
 }
 
+[System.Serializable]
 public struct ItemStack
 {
     public ItemSO Item;

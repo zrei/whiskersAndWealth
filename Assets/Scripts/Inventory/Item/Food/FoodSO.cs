@@ -1,3 +1,6 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "FoodSO", menuName = "ScriptableObjects/Items/FoodSO")]
 public class FoodSO : ItemSO
 {
     public int NumHealthRestored;

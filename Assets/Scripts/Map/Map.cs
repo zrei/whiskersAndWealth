@@ -25,6 +25,7 @@ public abstract class Map : MonoBehaviour
     [SerializeField] string m_InputMapName;
     [SerializeField] InputType[] m_BlockedInputs;
 
+    public string InputMapName => m_InputMapName;
 
     // UI
     private List<GameObject> m_UIElementInstances = new List<GameObject>();

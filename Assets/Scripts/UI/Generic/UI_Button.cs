@@ -1,4 +1,3 @@
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_Button : Button
@@ -9,7 +8,10 @@ public class UI_Button : Button
     public VoidEvent OnHeld;
     public VoidEvent OnReleased;
 
+    private bool m_WasPressed;
+    private bool m_WasSelected;
 
+    /*
     public override void OnSelect(BaseEventData eventData)
     {
         base.OnSelect(eventData);
@@ -64,5 +66,36 @@ public class UI_Button : Button
         base.OnPointerDown(eventData);
 
         OnHeld?.Invoke();
+    }
+    */
+
+    protected override void DoStateTransition(SelectionState state, bool instant)
+    {
+        base.DoStateTransition(state, instant);
+
+        switch (state)
+        {
+            case SelectionState.Pressed:
+                m_WasPressed = true;
+                OnSubmitted?.Invoke();
+                OnHeld?.Invoke();
+                return;
+            case SelectionState.Highlighted:
+                m_WasSelected = true;
+                OnSelected?.Invoke();
+                return;
+            case SelectionState.Selected:
+                m_WasSelected = true;
+                OnSelected?.Invoke();
+                return;
+            case SelectionState.Normal:
+                if (m_WasPressed)
+                    OnReleased?.Invoke();
+                if (m_WasSelected)
+                    OnUnselected?.Invoke();
+                m_WasPressed = false;
+                m_WasSelected = false;
+                return;
+        }
     }
 }

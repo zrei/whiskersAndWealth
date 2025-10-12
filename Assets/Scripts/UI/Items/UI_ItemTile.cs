@@ -29,7 +29,7 @@ public class UI_ItemTile : MonoBehaviour
 
     public void ToggleSelectionEnabled(bool enabled)
     {
-        m_Button.enabled = !enabled;
+        m_Button.enabled = enabled;
     }
 
     public void SetTileContents(ItemBoxData itemBoxData, bool selectionEnabled = true)

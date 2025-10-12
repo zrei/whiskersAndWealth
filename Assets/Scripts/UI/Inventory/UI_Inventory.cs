@@ -1,15 +1,10 @@
 public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
 {
-    public override void HandleClose()
-    {
-
-    }
-
     public override void HandleOpen(params object[] args)
     {
         m_CachedItemInfos = InventoryManager.Instance.GetItemInfos();
 
-        m_ItemTileGrid.SetupItems(m_CachedItemInfos);
+        base.HandleOpen();
     }
 
     public override void HandleUISelect()
@@ -24,6 +19,7 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
 
     protected override void OnItemSelected(int row, int col)
     {
-        m_ItemDescription.SetItemDescription(m_CachedItemInfos[GetItemListIndex(row, col)]);
+        int arrayIndex = GetItemListIndex(row, col);
+        m_ItemDescription.SetItemDescription(m_CachedItemInfos[arrayIndex]);
     }
 }

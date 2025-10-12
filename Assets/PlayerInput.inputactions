@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "INVENTORY",
+                    "type": "Button",
+                    "id": "9163cbee-e54e-4035-83e4-552d71524def",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -178,11 +187,22 @@
                 {
                     "name": "",
                     "id": "b0e85f9d-4b48-4cc1-aaf5-bd2789505b57",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "DEBUG",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5176da2f-3f18-4660-aede-ef5a4d4818de",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "INVENTORY",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

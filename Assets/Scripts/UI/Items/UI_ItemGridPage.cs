@@ -9,6 +9,21 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
 
     protected List<ItemInfo> m_CachedItemInfos;
 
+    public override void HandleOpen(params object[] args)
+    {
+        m_ItemTileGrid.SetupItems(m_CachedItemInfos);
+        m_ItemDescription.ToggleEmpty(true);
+        m_ItemTileGrid.OnTileSelected += OnItemSelected;
+        m_ItemTileGrid.OnTilePressed += OnItemPressed;
+    }
+
+    public override void HandleClose()
+    {
+        m_CachedItemInfos.Clear();
+        m_ItemTileGrid.OnTileSelected -= OnItemSelected;
+        m_ItemTileGrid.OnTilePressed -= OnItemPressed;
+    }
+
     protected abstract void OnItemPressed(int row, int col);
 
     protected abstract void OnItemSelected(int row, int col);

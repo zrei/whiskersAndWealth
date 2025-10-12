@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
@@ -8,10 +9,16 @@ public class InventoryManager : Singleton<InventoryManager>
     public int StackLimit { get; private set; } = 50;
     public int NumStacksInInventory => m_Items.Count;
 
+    [Header("Debug")]
+    [SerializeField] private List<ItemStack> m_DebugBeginnerItems;
+
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
         base.HandleAwake();
+
+        if (GlobalSettings.DoDebug)
+            m_Items = m_DebugBeginnerItems;
     }
 
     // unsubscribe to events and cleanup

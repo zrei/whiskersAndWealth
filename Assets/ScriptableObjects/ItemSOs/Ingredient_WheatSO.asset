@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8695bc48a58d947bebcdd78887d9d70e, type: 3}
+  m_Name: Ingredient_WheatSO
+  m_EditorClassIdentifier: 
+  ItemSprite: {fileID: 858120148, guid: 83cd9f7ff1a314e419ec3ee7e47c63b2, type: 3}
+  ItemName: Wheat
+  Description: Lovable, reliable carb.
