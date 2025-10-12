@@ -7,6 +7,8 @@ public abstract class UILayer : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private bool m_IsEscClosable;
+    [SerializeField] private bool m_HidePreviousLayers = false;
+    [SerializeField] private bool m_HideHUD = false;
 
     public bool IsEscClosable => m_IsEscClosable;
 
