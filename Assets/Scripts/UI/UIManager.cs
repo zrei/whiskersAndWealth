@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,6 +32,11 @@ public class UIManager : Singleton<UIManager>
     private Stack<UILayer> m_OpenLayers;
 
     public bool HasLayersOpen => m_OpenLayers.Count > 0;
+
+    #region State
+    private bool m_IsHUDHidden = false;
+    private bool m_HasPreviousLayersHidden = false;
+    #endregion
 
     #region Initialisation
     // subscribe to events and handle dependencies here
@@ -114,6 +120,13 @@ public class UIManager : Singleton<UIManager>
         {
             Time.timeScale = 0f;
             InputManager.Instance.SwitchToInputMap(InputManager.UI_ACTION_MAP_NAME);
+            m_IndicatorCanvas.gameObject.SetActive(false);
+        }
+
+        if (!m_IsHUDHidden && ShouldHideHud())
+        {
+            m_HUDCanvas.gameObject.SetActive(false);
+            m_IsHUDHidden = true;
         }
 
         return layerInstance;
@@ -132,6 +145,13 @@ public class UIManager : Singleton<UIManager>
             {
                 InputManager.Instance.SwitchToInputMap(MapLoader.Instance.GetMapInput());
             }
+            m_IndicatorCanvas.gameObject.SetActive(true);
+        }
+
+        if (m_IsHUDHidden && !ShouldHideHud())
+        {
+            m_HUDCanvas.gameObject.SetActive(true);
+            m_IsHUDHidden = false;
         }
     }
 
@@ -192,6 +212,19 @@ public class UIManager : Singleton<UIManager>
             }
             m_OpenHUD.Clear();
         }
+    }
+    #endregion
+
+    #region Helper
+    private bool ShouldHideHud()
+    {
+        return m_OpenLayers.Count != 0 && m_OpenLayers.Any(x => x.HideHUD);
+    }
+
+    private bool ShouldHidePreviousLayers()
+    {
+        // TODO: Refine this check
+        return m_OpenLayers.Count != 0 && m_OpenLayers.Last().HidePreviousLayers;
     }
     #endregion
 }

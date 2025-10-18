@@ -40,7 +40,7 @@ public class ShopManager : IUnlockable
         if (!shopItemStockInstance.TransactionCanBeMade())
             return false;
 
-        InventoryManager.Instance.ObtainItem(new ItemStack(shopItemSO.Item, 1));
+        InventoryManager.Instance.TryObtainItem(new ItemStack(shopItemSO.Item, 1));
         CoinManager.Instance.ConsumeCoin(shopItemSO.Price);
         shopItemStockInstance.OnPurchase();
         return true;

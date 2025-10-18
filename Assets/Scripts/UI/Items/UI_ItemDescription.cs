@@ -12,12 +12,12 @@ public abstract class UI_ItemDescription : MonoBehaviour
     [SerializeField] private CanvasGroup m_Cg;
     [SerializeField] private Transform m_FilledSelection;
 
-    public virtual void SetItemDescription(ItemInfo itemInfo)
+    public virtual void SetItemDescription(ItemDescriptionData itemInfo)
     {
         ToggleEmpty(false);
         m_ItemName.text = itemInfo.ItemName;
         m_ItemDescription.text = itemInfo.ItemDescription;
-        m_ItemBox.SetItemBox(new ItemBoxData(itemInfo.Sprite, 0, false));
+        m_ItemBox.SetItemBox(itemInfo.ItemBoxData);
         ToggleVisible(true);
     }
 

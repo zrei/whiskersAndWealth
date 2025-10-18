@@ -12,6 +12,7 @@ public class InventoryManager : Singleton<InventoryManager>
     [Header("Debug")]
     [SerializeField] private List<ItemStack> m_DebugBeginnerItems;
 
+    #region Init
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
@@ -26,29 +27,93 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         base.HandleDestroy();
     }
+    #endregion
 
-    public void ObtainItem(ItemStack item)
+    #region Inventory Management
+    public bool TryObtainItem(ItemStack itemObtainStack)
     {
-        if (FindItemInInventory(item.Item, out int _, out int index))
-        {
-            m_Items[index].AddToStack(item.NumItem);
-        }
-    }
-
-    public void ConsumeItem(ItemStack item)
-    {
-        if (FindItemInInventory(item.Item, out int _, out int index))
-        {
-            item.ConsumeFromStack(item.NumItem);
-        }
-    }
-
-    public bool CanObtainItem(ItemSO item)
-    {
-        if (m_Items.Count == InventoryLimit)
+        if (!CanObtainItem(itemObtainStack.Item, out int existingItemIndex))
             return false;
 
-        if (FindItemInInventory(item, out int numberOfItem, out int _) && numberOfItem == StackLimit)
+        ObtainItem(itemObtainStack, existingItemIndex);
+
+        return true;
+    }
+
+    private void ObtainItem(ItemStack itemObtainStack, int existingItemIndex)
+    {
+        if (existingItemIndex == -1)
+        {
+            m_Items.Add(itemObtainStack);
+        }
+        else
+        {
+            m_Items[existingItemIndex].AddToStack(itemObtainStack.NumItem);
+        }
+    }
+
+    public bool TryConsumeItemQuantity(ItemStack itemConsumptionStack)
+    {
+        if (!HasQuantityOfItem(itemConsumptionStack, out int existingItemIndex))
+            return false;
+
+        ConsumeItemQuantity(itemConsumptionStack, existingItemIndex);
+        return true;
+    }
+
+    public bool TryConsumeItemAtIndexWithQuantity(int index, int amount)
+    {
+        if (m_Items.Count >= index)
+            return false;
+
+        return TryConsumeItemQuantity(new ItemStack(m_Items[index].Item, amount));
+    }
+
+    private void ConsumeItemQuantity(ItemStack itemConsumptionStack, int existingItemIndex)
+    {
+        ItemStack itemInInventory = m_Items[existingItemIndex];
+        itemInInventory.ConsumeFromStack(itemConsumptionStack.NumItem);
+        GlobalEvents.Inventory.ItemConsumedEvent?.Invoke(itemInInventory);
+        if (itemInInventory.IsEmpty)
+            m_Items.Remove(itemInInventory);
+    }
+    #endregion
+
+    #region Helper
+    // passed by value
+    private bool TryGetItemAtIndex(int index, out ItemStack itemStack)
+    {
+        if (index >= NumStacksInInventory)
+        {
+            itemStack = new ItemStack(null, 0);
+            return false;
+        }
+
+        itemStack = m_Items[index];
+        return true;
+    }
+
+    public bool HasQuantityOfItem(ItemStack itemStackToCheck, out int index)
+    {
+        return FindItemInInventory(itemStackToCheck.Item, out int ownedQuantity, out index) & ownedQuantity >= itemStackToCheck.NumItem;
+    }
+
+    public bool HasQuantityOfItems(List<ItemStack> itemsToCheck)
+    {
+        foreach (ItemStack itemStack in itemsToCheck)
+        {
+            if (!HasQuantityOfItem(itemStack, out int _))
+                return false;
+        }
+        return true;
+    }
+
+    public bool CanObtainItem(ItemSO itemToObtain, out int existingItemIndex)
+    {
+        if (FindItemInInventory(itemToObtain, out int numberOfItem, out existingItemIndex) && numberOfItem == StackLimit)
+            return false;
+
+        if (m_Items.Count == InventoryLimit)
             return false;
 
         return true;
@@ -71,43 +136,18 @@ public class InventoryManager : Singleton<InventoryManager>
         index = -1;
         return false;
     }
+    #endregion
 
-    // passed by value
-    public bool TryGetItemAtIndex(int index, out ItemStack itemStack)
+    #region UI
+    public List<ItemStack> GetItemInfos()
     {
-        if (index >= NumStacksInInventory)
-        {
-            itemStack = new ItemStack(null, 0);
-            return false;
-        }
-
-        itemStack = m_Items[index];
-        return true;
-    }
-
-    public bool HasQuantityOfItem(ItemStack item)
-    {
-        return FindItemInInventory(item.Item, out int ownedQuantity, out int _) & ownedQuantity >= item.NumItem;
-    }
-
-    public bool HasQuantityOfItems(List<ItemStack> items)
-    {
-        foreach (ItemStack itemStack in items)
-        {
-            if (!HasQuantityOfItem(itemStack))
-                return false;
-        }
-        return true;
-    }
-
-    public List<ItemInfo> GetItemInfos()
-    {
-        List<ItemInfo> itemInfos = new();
+        List<ItemStack> itemInfos = new();
         foreach (ItemStack itemStack in m_Items)
         {
             if (!itemStack.IsEmpty)
-                itemInfos.Add(itemStack.GetItemInfo());
+                itemInfos.Add(itemStack);
         }
         return itemInfos;
     }
+    #endregion
 }

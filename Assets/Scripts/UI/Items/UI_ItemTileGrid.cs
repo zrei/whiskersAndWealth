@@ -4,22 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.UI;
 
-public struct ItemInfo
-{
-    public Sprite Sprite;
-    public string ItemName;
-    public string ItemDescription;
-    public int ItemNumber;
-
-    public ItemInfo(Sprite sprite, string itemName, string itemDescription, int itemNumber)
-    {
-        Sprite = sprite;
-        ItemName = itemName;
-        ItemDescription = itemDescription;
-        ItemNumber = itemNumber;
-    }
-}
-
 [RequireComponent(typeof(RectTransform))]
 public class UI_ItemTileGrid : MonoBehaviour
 {
@@ -41,7 +25,7 @@ public class UI_ItemTileGrid : MonoBehaviour
     public TileEvent OnTilePressed;
     public TileEvent OnTileSelected;
 
-    public void SetupItems(List<ItemInfo> itemInfos)
+    public void SetupItems(List<ItemStack> itemInfos)
     {
         ResetGrid();
 
@@ -70,8 +54,8 @@ public class UI_ItemTileGrid : MonoBehaviour
 
         for (int i = 0; i < itemInfos.Count; ++i)
         {
-            ItemInfo itemInfo = itemInfos[i];
-            m_VisibleItemTileObjs[i].SetTileContents(new ItemBoxData(itemInfo.Sprite, itemInfo.ItemNumber));
+            ItemStack itemInfo = itemInfos[i];
+            m_VisibleItemTileObjs[i].SetTileContents(new ItemBoxData(itemInfo));
         }
 
         // set remainder of visible item boxes to be empty
@@ -81,6 +65,29 @@ public class UI_ItemTileGrid : MonoBehaviour
         }
 
         ResizeGrid();
+    }
+
+    public void RefreshMultipleTiles(int startRow, int startCol, List<ItemStack> updatedItemInfos)
+    {
+        for (int i = startRow * NumRows + startCol; i < updatedItemInfos.Count; i++)
+        {
+            ItemStack updatedItemInfo = updatedItemInfos[i];
+            m_VisibleItemTileObjs[i].SetTileContents(new ItemBoxData(updatedItemInfo));
+        }
+
+        if (!m_ShowEmptyBoxes)
+        {
+            ReturnItemTileToPool(m_VisibleItemTileObjs[updatedItemInfos.Count]);
+        }
+        else
+        {
+            m_VisibleItemTileObjs[updatedItemInfos.Count].SetEmpty();
+        }
+    }
+
+    public void RefreshSingleTile(int row, int col, ItemStack newItemInfo)
+    {
+        m_VisibleItemTileObjs[row * NumRows + col].SetTileContents(new ItemBoxData(newItemInfo));
     }
 
     private void ResetGrid()

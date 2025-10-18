@@ -15,6 +15,8 @@ public struct ItemStack
     public ItemSO Item;
     public int NumItem;
 
+    public bool IsEmpty => NumItem == 0;
+
     public ItemStack(ItemSO itemSO, int numItem)
     {
         Item = itemSO;
@@ -33,10 +35,17 @@ public struct ItemStack
         Item.ConsumeItem(numConsumed);
     }
 
-    public bool IsEmpty => NumItem == 0;
+    #region Helper
+    public override string ToString()
+    {
+        return string.Format("[{0}, Quantity of {1}]", Item.ItemName, NumItem);
+    }
+    #endregion
 
+    /*
     public ItemInfo GetItemInfo()
     {
         return new ItemInfo(Item.ItemSprite, Item.ItemName, Item.Description, NumItem);
     }
+    */
 }

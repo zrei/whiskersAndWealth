@@ -7,7 +7,10 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
     [SerializeField] protected T m_ItemDescription;
     [SerializeField] protected UI_ItemTileGrid m_ItemTileGrid;
 
-    protected List<ItemInfo> m_CachedItemInfos;
+    protected List<ItemStack> m_CachedItemInfos;
+
+    protected int m_SelectedRow;
+    protected int m_SelectedCol;
 
     public override void HandleOpen(params object[] args)
     {
@@ -15,6 +18,9 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         m_ItemDescription.ToggleEmpty(true);
         m_ItemTileGrid.OnTileSelected += OnItemSelected;
         m_ItemTileGrid.OnTilePressed += OnItemPressed;
+
+        m_SelectedRow = -1;
+        m_SelectedCol = -1;
     }
 
     public override void HandleClose()
@@ -24,9 +30,20 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         m_ItemTileGrid.OnTilePressed -= OnItemPressed;
     }
 
-    protected abstract void OnItemPressed(int row, int col);
+    protected virtual void OnItemPressed(int row, int col)
+    {
+        OnItemSelected(row, col);
+    }
 
-    protected abstract void OnItemSelected(int row, int col);
+    protected virtual void OnItemSelected(int row, int col)
+    {
+        m_SelectedRow = row;
+        m_SelectedCol = col;
+        int arrayIndex = GetItemListIndex(row, col);
+        ItemStack itemInfoAtIndex = m_CachedItemInfos[arrayIndex];
+        Logger.Log(GetType().Name, name, "Select " + itemInfoAtIndex, this, LogLevel.LOG);
+        m_ItemDescription.SetItemDescription(new ItemDescriptionData(m_CachedItemInfos[arrayIndex]));
+    }
 
     protected (int, int) GetTileGridIndex(int itemIndex)
     {

@@ -11,6 +11,8 @@ public abstract class UILayer : MonoBehaviour
     [SerializeField] private bool m_HideHUD = false;
 
     public bool IsEscClosable => m_IsEscClosable;
+    public bool HideHUD => m_HideHUD;
+    public bool HidePreviousLayers => m_HidePreviousLayers;
 
     #region Interactions
     public abstract void HandleOpen(params object[] args);

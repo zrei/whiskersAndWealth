@@ -16,7 +16,7 @@ public class PotionShopManager : Singleton<PotionShopManager>
         CoinManager.Instance.ObtainCoin(potion.m_Price);
 
         foreach (ItemStack potionIngredient in potion.m_Ingredients)
-            InventoryManager.Instance.ConsumeItem(potionIngredient);
+            InventoryManager.Instance.TryConsumeItemQuantity(potionIngredient);
 
         return true;
     }

@@ -10,13 +10,23 @@ public class UI_InventoryItemDescription : UI_ItemDescription
 
     private void OnEnable()
     {
-        m_UseButton.OnSubmitted += OnTryUseButton;
-        m_DiscardButton.OnSubmitted += OnTryDiscardButton;
+        m_UseButton.OnSubmitted += OnSubmitUseButton;
+        m_DiscardButton.OnSubmitted += OnSubmitDiscardButton;
     }
 
     private void OnDisable()
     {
-        m_UseButton.OnSubmitted -= OnTryUseButton;
-        m_DiscardButton.OnSubmitted -= OnTryDiscardButton;
+        m_UseButton.OnSubmitted -= OnSubmitUseButton;
+        m_DiscardButton.OnSubmitted -= OnSubmitDiscardButton;
+    }
+
+    private void OnSubmitUseButton()
+    {
+        OnTryUseButton?.Invoke();
+    }
+
+    private void OnSubmitDiscardButton()
+    {
+        OnTryDiscardButton?.Invoke();
     }
 }

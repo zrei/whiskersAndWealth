@@ -46,7 +46,8 @@ public static class GlobalEvents {
         public static VoidEvent PlayerStarveEvent;
     }
 
-    public static class Minigame {
+    public static class Minigame
+    {
         public static class LaneMinigame
         {
             public delegate void LaneMinigameEvent(LaneWaveSO _, int waveNumber);
@@ -55,5 +56,11 @@ public static class GlobalEvents {
             public static LaneMinigameEvent BeginLaneMinigameWaveEvent;
             public static VoidEvent EndMinigameEvent;
         }
+    }
+
+    public static class Inventory
+    {
+        public delegate void ItemStackEvent(ItemStack _);
+        public static ItemStackEvent ItemConsumedEvent;
     }
 }

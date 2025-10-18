@@ -247,6 +247,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsEscClosable: 1
+  m_HidePreviousLayers: 0
+  m_HideHUD: 1
   m_ItemDescription: {fileID: 638948886307058895}
   m_ItemTileGrid: {fileID: 6580259400913788910}
 --- !u!222 &5255814085318778200
