@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InventoryManager : Singleton<InventoryManager>
@@ -45,11 +46,15 @@ public class InventoryManager : Singleton<InventoryManager>
         if (existingItemIndex == -1)
         {
             m_Items.Add(itemObtainStack);
+            GlobalEvents.Inventory.ItemAddedToInventoryEvent?.Invoke(m_Items.Last());
         }
         else
         {
+            int initialAmount = m_Items[existingItemIndex].NumItem;
             m_Items[existingItemIndex].AddToStack(itemObtainStack.NumItem);
+            GlobalEvents.Inventory.ItemAddedToInventoryEvent?.Invoke(new ItemStack(itemObtainStack.Item, m_Items[existingItemIndex].NumItem - initialAmount));
         }
+
     }
 
     public bool TryConsumeItemQuantity(ItemStack itemConsumptionStack)
@@ -76,6 +81,22 @@ public class InventoryManager : Singleton<InventoryManager>
         GlobalEvents.Inventory.ItemConsumedEvent?.Invoke(itemInInventory);
         if (itemInInventory.IsEmpty)
             m_Items.Remove(itemInInventory);
+    }
+
+    public bool TryDiscardItem(ItemSO itemToDiscard)
+    {
+        if (!FindItemInInventory(itemToDiscard, out int numItem, out int itemIndex) || numItem <= 0)
+            return false;
+
+        DiscardItem(itemIndex);
+        return true;
+    }
+    
+    private void DiscardItem(int itemIndex)
+    {
+        ItemStack itemStack = m_Items[itemIndex];
+        m_Items.RemoveAt(itemIndex);
+        GlobalEvents.Inventory.ItemDiscardedEvent?.Invoke(itemStack);
     }
     #endregion
 

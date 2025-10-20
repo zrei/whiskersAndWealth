@@ -7,6 +7,7 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         base.HandleOpen();
 
         GlobalEvents.Inventory.ItemConsumedEvent += OnItemConsumed;
+        GlobalEvents.Inventory.ItemDiscardedEvent += OnItemDiscarded;
         m_ItemDescription.OnTryDiscardButton += OnTryDiscardItem;
         m_ItemDescription.OnTryUseButton += OnTryUseItem;
     }
@@ -21,6 +22,7 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         base.HandleClose();
 
         GlobalEvents.Inventory.ItemConsumedEvent -= OnItemConsumed;
+        GlobalEvents.Inventory.ItemDiscardedEvent -= OnItemDiscarded;
         m_ItemDescription.OnTryDiscardButton -= OnTryDiscardItem;
         m_ItemDescription.OnTryUseButton -= OnTryUseItem;
     }
@@ -41,7 +43,14 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
             m_CachedItemInfos[listIndex] = updatedItemStack;
             m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, m_CachedItemInfos[listIndex]);
         }
+    }
 
+    private void OnItemDiscarded(ItemStack discardedItemStack)
+    {
+        int listIndex = GetItemListIndex(m_SelectedRow, m_SelectedCol);
+        m_CachedItemInfos.RemoveAt(listIndex);
+        m_ItemTileGrid.RefreshMultipleTiles(m_SelectedRow, m_SelectedCol, m_CachedItemInfos);
+        m_ItemDescription.ToggleEmpty(true);
     }
 
     private void OnTryUseItem()
@@ -54,6 +63,8 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
     
     private void OnTryDiscardItem()
     {
-        
+        ItemStack itemAtIndex = m_CachedItemInfos[GetItemListIndex(m_SelectedRow, m_SelectedCol)];
+        Logger.Log(GetType().Name, name, "Try discard " + itemAtIndex, this, LogLevel.LOG);
+        InventoryManager.Instance.TryDiscardItem(itemAtIndex.Item);
     }
 }

@@ -62,5 +62,7 @@ public static class GlobalEvents {
     {
         public delegate void ItemStackEvent(ItemStack _);
         public static ItemStackEvent ItemConsumedEvent;
+        public static ItemStackEvent ItemAddedToInventoryEvent;
+        public static ItemStackEvent ItemDiscardedEvent;
     }
 }
