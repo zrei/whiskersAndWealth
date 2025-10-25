@@ -29,4 +29,9 @@ public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
     {
         throw new System.NotImplementedException();
     }
+
+    protected override void SetupCachedItems()
+    {
+        throw new System.NotImplementedException();
+    }
 }

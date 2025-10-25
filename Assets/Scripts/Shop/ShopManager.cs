@@ -45,4 +45,9 @@ public class ShopManager : IUnlockable
         shopItemStockInstance.OnPurchase();
         return true;
     }
+
+    public List<ItemStack> GetShopStock()
+    {
+        return new();
+    }
 }

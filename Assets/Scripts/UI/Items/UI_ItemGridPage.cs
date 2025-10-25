@@ -12,8 +12,12 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
     protected int m_SelectedRow;
     protected int m_SelectedCol;
 
+    protected abstract void SetupCachedItems();
+
     public override void HandleOpen(params object[] args)
     {
+        SetupCachedItems();
+
         m_ItemTileGrid.SetupItems(m_CachedItemInfos);
         m_ItemDescription.ToggleEmpty(true);
         m_ItemTileGrid.OnTileSelected += OnItemSelected;
@@ -42,7 +46,7 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         int arrayIndex = GetItemListIndex(row, col);
         ItemStack itemInfoAtIndex = m_CachedItemInfos[arrayIndex];
         Logger.Log(GetType().Name, name, "Select " + itemInfoAtIndex, this, LogLevel.LOG);
-        m_ItemDescription.SetItemDescription(new ItemDescriptionData(m_CachedItemInfos[arrayIndex]));
+        m_ItemDescription.SetItemDescription(GetItemDescriptionData(arrayIndex));
     }
 
     protected (int, int) GetTileGridIndex(int itemIndex)
@@ -55,5 +59,10 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
     protected int GetItemListIndex(int row, int col)
     {
         return row * m_ItemTileGrid.NumCols + col;
+    }
+
+    protected virtual ItemDescriptionData GetItemDescriptionData(int arrayIndex)
+    {
+        return new ItemDescriptionData(m_CachedItemInfos[arrayIndex]);
     }
 }

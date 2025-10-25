@@ -21,7 +21,7 @@ public struct ItemBoxData
     }
 }
 
-public struct ItemDescriptionData
+public class ItemDescriptionData
 {
     public ItemBoxData ItemBoxData;
     public string ItemName;
@@ -39,6 +39,13 @@ public struct ItemDescriptionData
         ItemBoxData = new ItemBoxData(itemStack, showItemNumber);
         ItemName = itemStack.Item.ItemName;
         ItemDescription = itemStack.Item.Description;
+    }
+
+    public ItemDescriptionData(ItemDescriptionData toCopy)
+    {
+        ItemBoxData = toCopy.ItemBoxData;
+        ItemName = toCopy.ItemName;
+        ItemDescription = toCopy.ItemDescription;
     }
 }
 

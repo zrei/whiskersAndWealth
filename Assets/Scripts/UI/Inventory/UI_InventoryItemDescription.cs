@@ -29,4 +29,12 @@ public class UI_InventoryItemDescription : UI_ItemDescription
     {
         OnTryDiscardButton?.Invoke();
     }
+
+    public override void SetItemDescription(ItemDescriptionData itemInfo)
+    {
+        base.SetItemDescription(itemInfo);
+        InventoryItemDescriptionData inventoryItemDescriptionData = (InventoryItemDescriptionData)itemInfo;
+        m_UseButton.enabled = inventoryItemDescriptionData.CanUse;
+        m_DiscardButton.enabled = inventoryItemDescriptionData.CanDiscard;
+    }
 }

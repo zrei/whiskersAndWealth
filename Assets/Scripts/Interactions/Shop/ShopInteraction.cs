@@ -19,7 +19,7 @@ public class ShopInteraction : Interaction
     #region Interaction
     protected override void HandleInteraction()
     {
-        UIManager.Instance.OpenLayer(m_ShopSO.m_ShopUI);
+        ShopSystemManager.Instance.SetCurrentActiveShop(m_ShopSO);
     }
     #endregion
 }

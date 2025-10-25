@@ -1,9 +1,12 @@
 public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
 {
-    public override void HandleOpen(params object[] args)
+    protected override void SetupCachedItems()
     {
         m_CachedItemInfos = InventoryManager.Instance.GetItemInfos();
+    }
 
+    public override void HandleOpen(params object[] args)
+    {
         base.HandleOpen();
 
         GlobalEvents.Inventory.ItemConsumedEvent += OnItemConsumed;
@@ -60,11 +63,17 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         Logger.Log(GetType().Name, name, "Try consume " + itemAtIndex, this, LogLevel.LOG);
         InventoryManager.Instance.TryConsumeItemQuantity(consumedItem);
     }
-    
+
     private void OnTryDiscardItem()
     {
         ItemStack itemAtIndex = m_CachedItemInfos[GetItemListIndex(m_SelectedRow, m_SelectedCol)];
         Logger.Log(GetType().Name, name, "Try discard " + itemAtIndex, this, LogLevel.LOG);
         InventoryManager.Instance.TryDiscardItem(itemAtIndex.Item);
+    }
+
+    protected override ItemDescriptionData GetItemDescriptionData(int arrayIndex)
+    {
+        ItemStack item = m_CachedItemInfos[arrayIndex];
+        return new InventoryItemDescriptionData(base.GetItemDescriptionData(arrayIndex), item.CanUse, item.CanDiscard);
     }
 }

@@ -8,9 +8,13 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
     private List<ShopManager> m_IndividualShopManagers;
     private Dictionary<ShopSO, ShopManager> m_Map;
 
+    private ShopSO m_CurrentActiveShop;
+
     protected override void HandleAwake()
     {
         base.HandleAwake();
+
+        HandleDependencies();
     }
 
     protected override void HandleDestroy()
@@ -34,5 +38,16 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
     public bool CanInteractWithStore(ShopSO shopSO)
     {
         return !m_Map[shopSO].IsLocked();
+    }
+
+    public void SetCurrentActiveShop(ShopSO shopSO)
+    {
+        m_CurrentActiveShop = shopSO;
+        UIManager.Instance.OpenLayer(m_CurrentActiveShop.m_ShopUI);
+    }
+
+    public List<ItemStack> GetShopStock()
+    {
+        return new();
     }
 }

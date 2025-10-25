@@ -8,11 +8,23 @@ public class UI_ShopItemDescription : UI_ItemDescription
 
     private void OnEnable()
     {
-        m_BuyButton.OnSubmitted += OnTryBuyItemEvent;
+        m_BuyButton.OnSubmitted += OnSubmitBuyButton;
     }
 
     private void OnDisable()
     {
-        m_BuyButton.OnSubmitted -= OnTryBuyItemEvent;
+        m_BuyButton.OnSubmitted -= OnSubmitBuyButton;
+    }
+
+    private void OnSubmitBuyButton()
+    {
+        OnTryBuyItemEvent?.Invoke();
+    }
+
+    public override void SetItemDescription(ItemDescriptionData itemInfo)
+    {
+        base.SetItemDescription(itemInfo);
+        ShopItemDescriptionData shopItemDescriptionData = (ShopItemDescriptionData)itemInfo;
+        m_BuyButton.enabled = shopItemDescriptionData.CanBuy;
     }
 }
