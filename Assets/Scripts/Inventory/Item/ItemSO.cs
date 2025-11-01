@@ -12,7 +12,7 @@ public abstract class ItemSO : ScriptableObject
 }
 
 [System.Serializable]
-public struct ItemStack
+public class ItemStack
 {
     public ItemSO Item;
     public int NumItem;

@@ -1,8 +1,10 @@
+using TMPro;
 using UnityEngine;
 
 public class UI_ShopItemDescription : UI_ItemDescription
 {
     [SerializeField] private UI_Button m_BuyButton;
+    [SerializeField] private TextMeshProUGUI m_PriceText;
 
     public VoidEvent OnTryBuyItemEvent;
 
@@ -21,10 +23,11 @@ public class UI_ShopItemDescription : UI_ItemDescription
         OnTryBuyItemEvent?.Invoke();
     }
 
-    public override void SetItemDescription(ItemDescriptionData itemInfo)
+    public override void SetItem(ItemDescriptionData itemInfo)
     {
-        base.SetItemDescription(itemInfo);
+        base.SetItem(itemInfo);
         ShopItemDescriptionData shopItemDescriptionData = (ShopItemDescriptionData)itemInfo;
         m_BuyButton.enabled = shopItemDescriptionData.CanBuy;
+        m_PriceText.text = shopItemDescriptionData.Price.ToString();
     }
 }

@@ -45,6 +45,7 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         {
             m_CachedItemInfos[listIndex] = updatedItemStack;
             m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, m_CachedItemInfos[listIndex]);
+            m_ItemDescription.SetItem(GetItemDescriptionData(listIndex));
         }
     }
 

@@ -46,7 +46,7 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         int arrayIndex = GetItemListIndex(row, col);
         ItemStack itemInfoAtIndex = m_CachedItemInfos[arrayIndex];
         Logger.Log(GetType().Name, name, "Select " + itemInfoAtIndex, this, LogLevel.LOG);
-        m_ItemDescription.SetItemDescription(GetItemDescriptionData(arrayIndex));
+        m_ItemDescription.SetItem(GetItemDescriptionData(arrayIndex));
     }
 
     protected (int, int) GetTileGridIndex(int itemIndex)

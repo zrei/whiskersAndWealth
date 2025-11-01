@@ -24,6 +24,14 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
 
     private void HandleDependencies()
     {
+        if (!NarrativeManager.IsReady)
+        {
+            NarrativeManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        NarrativeManager.OnReady -= HandleDependencies;
+
         m_IndividualShopManagers = new();
         m_Map = new();
 
@@ -32,6 +40,7 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
             ShopManager shopInstance = new ShopManager(shopSO);
             m_IndividualShopManagers.Add(shopInstance);
             m_Map.Add(shopSO, shopInstance);
+            shopInstance.ResetShopStock(); // TODO: Link it to saves + subscribe to time of day?
         }
     }
 
@@ -46,8 +55,22 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
         UIManager.Instance.OpenLayer(m_CurrentActiveShop.m_ShopUI);
     }
 
-    public List<ItemStack> GetShopStock()
+    private ShopManager CurrentShopManager => m_Map[m_CurrentActiveShop];
+
+    public List<ItemStack> GetCurrentShopStock()
     {
-        return new();
+        return CurrentShopManager.GetShopStock();
     }
+
+    public void TryBuyItemFromCurrentShop(ItemSO itemSO, out BuyResult buyResult)
+    {
+        CurrentShopManager.TryBuyItem(itemSO, out buyResult);
+    }
+
+    #region Helper
+    public string GetCurrentShopName()
+    {
+        return CurrentShopManager.GetShopName();
+    }
+    #endregion
 }

@@ -65,4 +65,9 @@ public static class GlobalEvents {
         public static ItemStackEvent ItemAddedToInventoryEvent;
         public static ItemStackEvent ItemDiscardedEvent;
     }
+
+    public static class Shop
+    {
+        public static Inventory.ItemStackEvent ItemBoughtEvent;
+    }
 }

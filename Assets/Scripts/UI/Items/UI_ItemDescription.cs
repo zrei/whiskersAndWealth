@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.IO.LowLevel.Unsafe;
 
 /// <summary>
 /// Override as required to add more fields
@@ -12,7 +13,7 @@ public abstract class UI_ItemDescription : MonoBehaviour
     [SerializeField] private CanvasGroup m_Cg;
     [SerializeField] private Transform m_FilledSelection;
 
-    public virtual void SetItemDescription(ItemDescriptionData itemInfo)
+    public virtual void SetItem(ItemDescriptionData itemInfo)
     {
         ToggleEmpty(false);
         m_ItemName.text = itemInfo.ItemName;
