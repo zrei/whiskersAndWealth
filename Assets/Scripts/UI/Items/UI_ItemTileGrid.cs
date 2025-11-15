@@ -7,25 +7,31 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class UI_ItemTileGrid : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private UI_ItemTile m_ItemTile;
+    [SerializeField] private GridLayoutGroup m_GridLayout;
+
+    [Header("Config")]
     [SerializeField] private int m_NumRows;
     [SerializeField] private int m_NumCols;
     [SerializeField] private bool m_ShowEmptyBoxes;
-    [SerializeField] private GridLayoutGroup m_GridLayout;
 
     public int NumRows => m_NumRows;
     public int NumCols => m_NumCols;
 
-    // store the grid sizer here
-
+    #region State
     private List<UI_ItemTile> m_VisibleItemTileObjs = new();
     private HashSet<UI_ItemTile> m_HiddenTileObjs = new();
+    #endregion
 
+    #region Events
     public delegate void TileEvent(int row, int col);
     public TileEvent OnTilePressed;
     public TileEvent OnTileSelected;
+    #endregion
 
-    public void SetupItems(List<ItemStack> itemInfos)
+    #region Display
+    public void SetupItems(List<ItemBoxData> itemInfos)
     {
         ResetGrid();
 
@@ -54,8 +60,7 @@ public class UI_ItemTileGrid : MonoBehaviour
 
         for (int i = 0; i < itemInfos.Count; ++i)
         {
-            ItemStack itemInfo = itemInfos[i];
-            m_VisibleItemTileObjs[i].SetTileContents(new ItemBoxData(itemInfo));
+            m_VisibleItemTileObjs[i].SetTileContents(itemInfos[i]);
         }
 
         // set remainder of visible item boxes to be empty
@@ -67,12 +72,11 @@ public class UI_ItemTileGrid : MonoBehaviour
         ResizeGrid();
     }
 
-    public void RefreshMultipleTiles(int startRow, int startCol, List<ItemStack> updatedItemInfos)
+    public void RefreshMultipleTiles(int startRow, int startCol, List<ItemBoxData> updatedItemInfos)
     {
         for (int i = startRow * NumRows + startCol; i < updatedItemInfos.Count; i++)
         {
-            ItemStack updatedItemInfo = updatedItemInfos[i];
-            m_VisibleItemTileObjs[i].SetTileContents(new ItemBoxData(updatedItemInfo));
+            m_VisibleItemTileObjs[i].SetTileContents(updatedItemInfos[i]);
         }
 
         if (!m_ShowEmptyBoxes)
@@ -85,9 +89,9 @@ public class UI_ItemTileGrid : MonoBehaviour
         }
     }
 
-    public void RefreshSingleTile(int row, int col, ItemStack newItemInfo)
+    public void RefreshSingleTile(int row, int col, ItemBoxData newItemInfo)
     {
-        m_VisibleItemTileObjs[row * NumRows + col].SetTileContents(new ItemBoxData(newItemInfo));
+        m_VisibleItemTileObjs[row * NumRows + col].SetTileContents(newItemInfo);
     }
 
     private void ResetGrid()
@@ -102,7 +106,9 @@ public class UI_ItemTileGrid : MonoBehaviour
         }
         m_VisibleItemTileObjs.Clear();
     }
+    #endregion
 
+    #region Item Tile Pool
     private UI_ItemTile GetItemTile()
     {
         if (m_HiddenTileObjs.Count == 0)
@@ -137,7 +143,9 @@ public class UI_ItemTileGrid : MonoBehaviour
         itemTile.gameObject.SetActive(false);
         m_HiddenTileObjs.Add(itemTile);
     }
+    #endregion
 
+    #region Helper
     public void ResizeGrid()
     {
         m_GridLayout.cellSize = new Vector2(GetSingleCellWidth(), GetSingleCellHeight());
@@ -152,6 +160,7 @@ public class UI_ItemTileGrid : MonoBehaviour
     {
         return GetComponent<RectTransform>().rect.height / m_NumRows;
     }
+    #endregion
 }
 
 

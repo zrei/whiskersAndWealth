@@ -8,6 +8,7 @@ public class PotionShopUpgradeSO : FlagUnlockable, ITransaction
 {
     public int RequiredCoin;
     public List<ItemStack> RequiredItems;
+    public List<PotionSO> UnlockedPotions; 
 
     // checks through ALL conditions including flags
     public bool TransactionCanBeMade()

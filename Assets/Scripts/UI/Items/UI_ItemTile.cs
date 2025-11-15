@@ -1,20 +1,21 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class UI_ItemTile : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private UI_ItemBox m_ItemBox;
     [SerializeField] private UI_Button m_Button;
 
-    #region Selection
+    [Header("Selection")]
     [SerializeField] private RectTransform m_EmptySelection;
     [SerializeField] private RectTransform m_FilledSelection;
-    #endregion
 
+    #region Events
     public VoidEvent OnTilePressedEvent;
     public VoidEvent OnTileSelectedEvent;
+    #endregion
 
+    #region Initialisation
     private void OnEnable()
     {
         m_Button.OnSelected += OnTileSelectedEvent;
@@ -26,7 +27,9 @@ public class UI_ItemTile : MonoBehaviour
         m_Button.OnSelected -= OnTileSelectedEvent;
         m_Button.OnSubmitted -= OnTilePressedEvent;
     }
+    #endregion
 
+    #region Display
     public void ToggleSelectionEnabled(bool enabled)
     {
         m_Button.enabled = enabled;
@@ -50,4 +53,5 @@ public class UI_ItemTile : MonoBehaviour
         m_EmptySelection.gameObject.SetActive(isEmpty);
         m_FilledSelection.gameObject.SetActive(!isEmpty);
     }
+    #endregion
 }

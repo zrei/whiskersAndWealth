@@ -2,12 +2,15 @@ using UnityEngine.UI;
 
 public class UI_Button : Button
 {
+    #region Events
     public VoidEvent OnSelected;
     public VoidEvent OnUnselected;
     public VoidEvent OnSubmitted;
     public VoidEvent OnHeld;
     public VoidEvent OnReleased;
+    #endregion
 
+    #region State
     private bool m_WasPressed;
     private bool m_WasSelected;
 
@@ -98,4 +101,5 @@ public class UI_Button : Button
                 return;
         }
     }
+    #endregion
 }

@@ -3,22 +3,25 @@ using UnityEngine;
 
 public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
 {
-    // have placed the item infos further downstream so it should be possible to just handle item pressed and item selected here
+    [Header("Base Item References")]
     [SerializeField] protected T m_ItemDescription;
     [SerializeField] protected UI_ItemTileGrid m_ItemTileGrid;
 
+    #region Item Data
     protected List<ItemStack> m_CachedItemInfos;
+    #endregion
 
+    #region State
     protected int m_SelectedRow;
     protected int m_SelectedCol;
+    #endregion
 
-    protected abstract void SetupCachedItems();
-
+    #region Initialisation
     public override void HandleOpen(params object[] args)
     {
         SetupCachedItems();
 
-        m_ItemTileGrid.SetupItems(m_CachedItemInfos);
+        m_ItemTileGrid.SetupItems(GetItemInfos());
         m_ItemDescription.ToggleEmpty(true);
         m_ItemTileGrid.OnTileSelected += OnItemSelected;
         m_ItemTileGrid.OnTilePressed += OnItemPressed;
@@ -34,6 +37,10 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         m_ItemTileGrid.OnTilePressed -= OnItemPressed;
     }
 
+    protected abstract void SetupCachedItems();
+    #endregion
+
+    #region Events
     protected virtual void OnItemPressed(int row, int col)
     {
         OnItemSelected(row, col);
@@ -48,7 +55,9 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
         Logger.Log(GetType().Name, name, "Select " + itemInfoAtIndex, this, LogLevel.LOG);
         m_ItemDescription.SetItem(GetItemDescriptionData(arrayIndex));
     }
+    #endregion
 
+    #region Helper
     protected (int, int) GetTileGridIndex(int itemIndex)
     {
         int row = itemIndex / m_ItemTileGrid.NumCols;
@@ -65,4 +74,15 @@ public abstract class UI_ItemGridPage<T> : UILayer where T : UI_ItemDescription
     {
         return new ItemDescriptionData(m_CachedItemInfos[arrayIndex]);
     }
+
+    protected List<ItemBoxData> GetItemInfos()
+    {
+        List<ItemBoxData> itemInfos = new();
+
+        foreach (ItemStack itemStack in m_CachedItemInfos)
+            itemInfos.Add(new ItemBoxData(itemStack));
+
+        return itemInfos;
+    }
+    #endregion
 }

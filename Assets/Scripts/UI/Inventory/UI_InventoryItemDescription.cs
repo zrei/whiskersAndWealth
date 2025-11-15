@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class UI_InventoryItemDescription : UI_ItemDescription
 {
+    [Header("Inventory Buttons")]
     [SerializeField] private UI_Button m_UseButton;
     [SerializeField] private UI_Button m_DiscardButton;
 

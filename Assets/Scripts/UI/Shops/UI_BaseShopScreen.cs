@@ -1,5 +1,6 @@
 public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
 {
+    #region Initialisation
     public override void HandleOpen(params object[] args)
     {
     base.HandleOpen(args);
@@ -13,14 +14,18 @@ public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
 
         m_ItemDescription.OnTryBuyItemEvent -= OnTryBuyItem;
     }
+    #endregion
 
+    #region Input
     public override void HandleUISelect() { }
+    #endregion
 
+    #region Helper
     // note: need to check whether can buy, which is just has remaining stock
     // other cases should play some kinda animation, e.g. no space in inventory to add or no money
     protected override ItemDescriptionData GetItemDescriptionData(int arrayIndex)
     {
-        ShopItemStack shopItemStack = (ShopItemStack) m_CachedItemInfos[arrayIndex];
+        ShopItemStack shopItemStack = (ShopItemStack)m_CachedItemInfos[arrayIndex];
         return new ShopItemDescriptionData(base.GetItemDescriptionData(arrayIndex), shopItemStack.NumItem > 0, shopItemStack.Price);
     }
 
@@ -28,7 +33,9 @@ public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
     {
         m_CachedItemInfos = ShopSystemManager.Instance.GetCurrentShopStock();
     }
+    #endregion
 
+    #region Events
     private void OnTryBuyItem()
     {
         int itemListIndex = GetItemListIndex(m_SelectedRow, m_SelectedCol);
@@ -40,7 +47,7 @@ public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
         {
             case BuyResult.SUCCESS:
                 m_CachedItemInfos[itemListIndex] = new ShopItemStack(existingItemStack.Item, existingItemStack.NumItem - 1, existingItemStack.Price);
-                m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, m_CachedItemInfos[itemListIndex]);
+                m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, new ItemBoxData(m_CachedItemInfos[itemListIndex]));
                 m_ItemDescription.SetItem(GetItemDescriptionData(itemListIndex));
                 break;
             case BuyResult.INSUFFICIENT_FUNDS:
@@ -55,4 +62,5 @@ public class UI_BaseShopScreen : UI_ItemGridPage<UI_ShopItemDescription>
                 break;
         }
     }
+    #endregion
 }

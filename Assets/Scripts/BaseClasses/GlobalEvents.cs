@@ -70,4 +70,10 @@ public static class GlobalEvents {
     {
         public static Inventory.ItemStackEvent ItemBoughtEvent;
     }
+
+    public static class PotionShop
+    {
+        public static VoidEvent PotionShopUpgradedEvent;
+        public static VoidEvent OnPotionMadeEvent;
+    }
 }

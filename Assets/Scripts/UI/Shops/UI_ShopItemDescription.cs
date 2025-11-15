@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class UI_ShopItemDescription : UI_ItemDescription
 {
-    [SerializeField] private UI_Button m_BuyButton;
+    [Header("Shop References")]
     [SerializeField] private TextMeshProUGUI m_PriceText;
+    
+    [Header("Shop Buttons")]
+    [SerializeField] private UI_Button m_BuyButton;
 
-    public VoidEvent OnTryBuyItemEvent;
-
+    #region Initialisation
     private void OnEnable()
     {
         m_BuyButton.OnSubmitted += OnSubmitBuyButton;
@@ -17,12 +19,19 @@ public class UI_ShopItemDescription : UI_ItemDescription
     {
         m_BuyButton.OnSubmitted -= OnSubmitBuyButton;
     }
+    #endregion
+
+
+    #region Events
+    public VoidEvent OnTryBuyItemEvent;
 
     private void OnSubmitBuyButton()
     {
         OnTryBuyItemEvent?.Invoke();
     }
+    #endregion
 
+    #region Display
     public override void SetItem(ItemDescriptionData itemInfo)
     {
         base.SetItem(itemInfo);
@@ -30,4 +39,5 @@ public class UI_ShopItemDescription : UI_ItemDescription
         m_BuyButton.enabled = shopItemDescriptionData.CanBuy;
         m_PriceText.text = shopItemDescriptionData.Price.ToString();
     }
+    #endregion
 }

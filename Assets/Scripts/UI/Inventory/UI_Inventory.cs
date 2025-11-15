@@ -1,10 +1,6 @@
 public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
 {
-    protected override void SetupCachedItems()
-    {
-        m_CachedItemInfos = InventoryManager.Instance.GetItemInfos();
-    }
-
+    #region Initialisation
     public override void HandleOpen(params object[] args)
     {
         base.HandleOpen();
@@ -13,11 +9,6 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         GlobalEvents.Inventory.ItemDiscardedEvent += OnItemDiscarded;
         m_ItemDescription.OnTryDiscardButton += OnTryDiscardItem;
         m_ItemDescription.OnTryUseButton += OnTryUseItem;
-    }
-
-    public override void HandleUISelect()
-    {
-
     }
 
     public override void HandleClose()
@@ -30,6 +21,17 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         m_ItemDescription.OnTryUseButton -= OnTryUseItem;
     }
 
+    protected override void SetupCachedItems()
+    {
+        m_CachedItemInfos = InventoryManager.Instance.GetItemInfos();
+    }
+    #endregion
+
+    #region Input
+    public override void HandleUISelect() { }
+    #endregion
+
+    #region Events
     private void OnItemConsumed(ItemStack updatedItemStack)
     {
         int listIndex = GetItemListIndex(m_SelectedRow, m_SelectedCol);
@@ -38,13 +40,13 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         if (updatedNumber <= 0)
         {
             m_CachedItemInfos.RemoveAt(listIndex);
-            m_ItemTileGrid.RefreshMultipleTiles(m_SelectedRow, m_SelectedCol, m_CachedItemInfos);
+            m_ItemTileGrid.RefreshMultipleTiles(m_SelectedRow, m_SelectedCol, GetItemInfos());
             m_ItemDescription.ToggleEmpty(true);
         }
         else
         {
             m_CachedItemInfos[listIndex] = updatedItemStack;
-            m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, m_CachedItemInfos[listIndex]);
+            m_ItemTileGrid.RefreshSingleTile(m_SelectedRow, m_SelectedCol, new ItemBoxData(m_CachedItemInfos[listIndex]));
             m_ItemDescription.SetItem(GetItemDescriptionData(listIndex));
         }
     }
@@ -53,7 +55,7 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
     {
         int listIndex = GetItemListIndex(m_SelectedRow, m_SelectedCol);
         m_CachedItemInfos.RemoveAt(listIndex);
-        m_ItemTileGrid.RefreshMultipleTiles(m_SelectedRow, m_SelectedCol, m_CachedItemInfos);
+        m_ItemTileGrid.RefreshMultipleTiles(m_SelectedRow, m_SelectedCol, GetItemInfos());
         m_ItemDescription.ToggleEmpty(true);
     }
 
@@ -71,10 +73,13 @@ public class UI_Inventory : UI_ItemGridPage<UI_InventoryItemDescription>
         Logger.Log(GetType().Name, name, "Try discard " + itemAtIndex, this, LogLevel.LOG);
         InventoryManager.Instance.TryDiscardItem(itemAtIndex.Item);
     }
+    #endregion
 
+    #region Helper
     protected override ItemDescriptionData GetItemDescriptionData(int arrayIndex)
     {
         ItemStack item = m_CachedItemInfos[arrayIndex];
         return new InventoryItemDescriptionData(base.GetItemDescriptionData(arrayIndex), item.CanUse, item.CanDiscard);
     }
+    #endregion
 }

@@ -1,18 +1,23 @@
 using UnityEngine;
 using TMPro;
-using Unity.IO.LowLevel.Unsafe;
 
 /// <summary>
 /// Override as required to add more fields
 /// </summary>
 public abstract class UI_ItemDescription : MonoBehaviour
 {
+    [Header("Base Item Description")]
     [SerializeField] private TextMeshProUGUI m_ItemName;
     [SerializeField] private TextMeshProUGUI m_ItemDescription;
     [SerializeField] private UI_ItemBox m_ItemBox;
+
+    [Header("Base Item References")]
     [SerializeField] private CanvasGroup m_Cg;
+
+    [Header("Base Item Selections")]
     [SerializeField] private Transform m_FilledSelection;
 
+    #region Display
     public virtual void SetItem(ItemDescriptionData itemInfo)
     {
         ToggleEmpty(false);
@@ -32,4 +37,5 @@ public abstract class UI_ItemDescription : MonoBehaviour
     {
         m_FilledSelection.gameObject.SetActive(!isEmpty);
     }
+    #endregion
 }
