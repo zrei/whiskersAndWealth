@@ -1,6 +1,24 @@
+using UnityEngine;
+
 public class CoinManager : Singleton<CoinManager>
 {
-    private int m_CoinAmount;
+    [Header("Debug")]
+    [SerializeField] private int m_DebugStartingCoin = 10;
+
+    private int m_CoinAmount = 0;
+
+    protected override void HandleAwake()
+    {
+        base.HandleAwake();
+
+        if (GlobalSettings.DoDebug)
+            m_CoinAmount = m_DebugStartingCoin;
+    }
+
+    protected override void HandleDestroy()
+    {
+        base.HandleDestroy();
+    }
 
     public bool CanPurchase(int purchaseAmt)
     {

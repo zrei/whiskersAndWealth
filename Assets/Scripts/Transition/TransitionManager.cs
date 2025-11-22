@@ -63,7 +63,7 @@ public class TransitionManager : Singleton<TransitionManager>
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return null;
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int) scene); 
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)scene);
 
         while (!asyncLoad.isDone)
         {

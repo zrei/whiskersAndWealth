@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class UI_Wave : MonoBehaviour
 {
-    private const string WAVE_TEXT = "Wave {0}";
-
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI m_WaveText;
     // [SerializeField] private Animation m_Animation;
@@ -14,6 +12,9 @@ public class UI_Wave : MonoBehaviour
     [Header("Config")]
     [SerializeField] private float m_FadeTime = 3f;
 
+    private const string WAVE_TEXT = "Wave {0}";
+
+    #region Initialisation
     private void Start()
     {
         m_CanvasGroup.alpha = 0f;
@@ -23,10 +24,12 @@ public class UI_Wave : MonoBehaviour
     }
 
     private void OnDestroy()
-    {   
+    {
         GlobalEvents.Minigame.LaneMinigame.BeginLaneMinigameWaveEvent -= OnBeginWave;
     }
+    #endregion
 
+    #region Events
     private void OnBeginWave(LaneWaveSO _, int waveNumber)
     {
         StopAllCoroutines();
@@ -34,7 +37,9 @@ public class UI_Wave : MonoBehaviour
         m_WaveText.text = string.Format(WAVE_TEXT, waveNumber);
         StartCoroutine(FadeWaveText());
     }
+    #endregion
 
+    #region Display
     private IEnumerator FadeWaveText()
     {
         m_CanvasGroup.alpha = 1f;
@@ -47,4 +52,5 @@ public class UI_Wave : MonoBehaviour
         }
         m_CanvasGroup.alpha = 0f;
     }
+    #endregion
 }

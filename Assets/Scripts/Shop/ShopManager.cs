@@ -1,4 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+
+public enum BuyResult
+{
+    SUCCESS,
+    INSUFFICIENT_FUNDS,
+    INSUFFICIENT_INVENTORY_SPACE,
+    ITEM_NOT_FOUND
+}
 
 public class ShopManager : IUnlockable
 {
@@ -32,17 +41,60 @@ public class ShopManager : IUnlockable
         return m_ShopSO.IsLocked();
     }
 
-    public bool TryBuyItem(ShopItemSO shopItemSO)
+    public bool TryBuyItem(ItemSO itemSO, out BuyResult buyResult)
     {
-        ShopItemStockInstance shopItemStockInstance = m_Map[shopItemSO];
+        List<ShopItemSO> shopItemSOs = m_Map.Keys.ToList();
+
+        foreach (ShopItemSO shopItemSO in shopItemSOs)
+        {
+            if (shopItemSO.Item == itemSO)
+                return TryBuyItem(shopItemSO, out buyResult);
+        }
+
+        buyResult = BuyResult.ITEM_NOT_FOUND;
+        return false;
+    }
+
+    public bool TryBuyItem(ShopItemSO shopItemSO, out BuyResult buyResult)
+    {
+        if (!m_Map.TryGetValue(shopItemSO, out ShopItemStockInstance shopItemStockInstance))
+        {
+            buyResult = BuyResult.ITEM_NOT_FOUND;
+            return false;
+        }
 
         // TODO: show some error message
         if (!shopItemStockInstance.TransactionCanBeMade())
+        {
+            buyResult = BuyResult.INSUFFICIENT_FUNDS;
             return false;
+        }
 
-        InventoryManager.Instance.ObtainItem(new ItemStack(shopItemSO.Item, 1));
+        if (!InventoryManager.Instance.TryObtainItem(new ItemStack(shopItemSO.Item, 1)))
+        {
+            buyResult = BuyResult.INSUFFICIENT_INVENTORY_SPACE;
+            return false;
+        }
+
+        buyResult = BuyResult.SUCCESS;
         CoinManager.Instance.ConsumeCoin(shopItemSO.Price);
         shopItemStockInstance.OnPurchase();
         return true;
+    }
+
+    public List<ItemStack> GetShopStock()
+    {
+        List<ItemStack> unlockedShopStock = new();
+        foreach (ShopItemStockInstance shopItemStockInstance in m_ShopItemStockInstances)
+        {
+            if (shopItemStockInstance.UnlockConditionsMet)
+                unlockedShopStock.Add(new ShopItemStack(shopItemStockInstance));
+        }
+        return unlockedShopStock;
+    }
+
+    public string GetShopName()
+    {
+        return m_ShopSO.m_ShopName;
     }
 }

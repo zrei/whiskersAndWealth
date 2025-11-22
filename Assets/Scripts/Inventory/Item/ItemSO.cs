@@ -5,14 +5,21 @@ public abstract class ItemSO : ScriptableObject
     public Sprite ItemSprite;
     public string ItemName;
     public string Description;
+    public abstract bool CanUse { get; }
+    public abstract bool CanDiscard { get; }
 
     public abstract void ConsumeItem(int numItem);
 }
 
-public struct ItemStack
+[System.Serializable]
+public class ItemStack
 {
     public ItemSO Item;
     public int NumItem;
+
+    public bool IsEmpty => NumItem == 0;
+    public bool CanUse => Item.CanUse;
+    public bool CanDiscard => Item.CanDiscard;
 
     public ItemStack(ItemSO itemSO, int numItem)
     {
@@ -32,5 +39,17 @@ public struct ItemStack
         Item.ConsumeItem(numConsumed);
     }
 
-    public bool IsEmpty => NumItem == 0;
+    #region Helper
+    public override string ToString()
+    {
+        return string.Format("[{0}, Quantity of {1}]", Item.ItemName, NumItem);
+    }
+    #endregion
+
+    /*
+    public ItemInfo GetItemInfo()
+    {
+        return new ItemInfo(Item.ItemSprite, Item.ItemName, Item.Description, NumItem);
+    }
+    */
 }

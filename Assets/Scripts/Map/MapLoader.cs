@@ -90,7 +90,7 @@ public class MapLoader : Singleton<MapLoader>
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
 
         yield return new WaitUntil(() => NarrativeManager.IsReady);
-        
+
         float currLoadProgress = 0.4f;
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return new WaitUntil(() => TimeManager.IsReady);
@@ -141,7 +141,7 @@ public class MapLoader : Singleton<MapLoader>
             m_CurrMapInstance.gameObject.transform.parent = m_MapParent;
             m_CurrMapInstance.gameObject.transform.rotation = Quaternion.identity;
             m_CurrMapInstance.gameObject.transform.localScale = Vector3.one;
-    
+
             m_CurrMapName = mapSO.m_MapName;
         }
 
@@ -162,6 +162,13 @@ public class MapLoader : Singleton<MapLoader>
         yield return null;
 
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
+    }
+    #endregion
+    
+    #region Map Details
+    public string GetMapInput()
+    {
+        return m_CurrMapInstance.InputMapName;
     }
     #endregion
 

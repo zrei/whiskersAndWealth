@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,11 +24,19 @@ public class UIManager : Singleton<UIManager>
     [Header("Pause Menu")]
     [SerializeField] private UILayer m_PauseMenuPrefab;
 
+    [Header("Inventory")]
+    [SerializeField] private UI_Inventory m_InventoryPrefab;
+
     private HashSet<GameObject> m_OpenHUD;
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
 
     public bool HasLayersOpen => m_OpenLayers.Count > 0;
+
+    #region State
+    private bool m_IsHUDHidden = false;
+    private bool m_HasPreviousLayersHidden = false;
+    #endregion
 
     #region Initialisation
     // subscribe to events and handle dependencies here
@@ -48,6 +57,7 @@ public class UIManager : Singleton<UIManager>
         InputManager.SubscribeToAction(InputType.PLAYER_PAUSE, OpenPauseMenu);
         InputManager.SubscribeToAction(InputType.UI_CLOSE, OnLayerClosed);
         InputManager.SubscribeToAction(InputType.UI_SELECT, OnLayerSelect);
+        InputManager.SubscribeToAction(InputType.PLAYER_INVENTORY, OpenInventory);
     }
 
     // unsubscribe to events and cleanup
@@ -110,6 +120,13 @@ public class UIManager : Singleton<UIManager>
         {
             Time.timeScale = 0f;
             InputManager.Instance.SwitchToInputMap(InputManager.UI_ACTION_MAP_NAME);
+            m_IndicatorCanvas.gameObject.SetActive(false);
+        }
+
+        if (!m_IsHUDHidden && ShouldHideHud())
+        {
+            m_HUDCanvas.gameObject.SetActive(false);
+            m_IsHUDHidden = true;
         }
 
         return layerInstance;
@@ -126,9 +143,21 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 1f;
             if (TransitionManager.IsReady && !TransitionManager.Instance.IsTransitioning && TransitionManager.Instance.CurrScene != SceneEnum.MAIN_MENU)
             {
-                InputManager.Instance.SwitchToCurrInputMap();
+                InputManager.Instance.SwitchToInputMap(MapLoader.Instance.GetMapInput());
             }
+            m_IndicatorCanvas.gameObject.SetActive(true);
         }
+
+        if (m_IsHUDHidden && !ShouldHideHud())
+        {
+            m_HUDCanvas.gameObject.SetActive(true);
+            m_IsHUDHidden = false;
+        }
+    }
+
+    public bool IsLayerOpen(UILayer layerObject)
+    {
+        return m_OpenLayers.Contains(layerObject);
     }
 
     private void OnLayerClosed(InputAction.CallbackContext _)
@@ -169,6 +198,14 @@ public class UIManager : Singleton<UIManager>
     }
     #endregion
 
+    #region Inventory
+    // could be moved to the inventory manager? Hm...
+    private void OpenInventory(InputAction.CallbackContext _)
+    {
+        OpenLayer(m_InventoryPrefab);
+    }
+    #endregion
+
     #region Event Callbacks
     private void HandleSceneChange(SceneEnum scene)
     {
@@ -180,6 +217,19 @@ public class UIManager : Singleton<UIManager>
             }
             m_OpenHUD.Clear();
         }
+    }
+    #endregion
+
+    #region Helper
+    private bool ShouldHideHud()
+    {
+        return m_OpenLayers.Count != 0 && m_OpenLayers.Any(x => x.HideHUD);
+    }
+
+    private bool ShouldHidePreviousLayers()
+    {
+        // TODO: Refine this check
+        return m_OpenLayers.Count != 0 && m_OpenLayers.Last().HidePreviousLayers;
     }
     #endregion
 }

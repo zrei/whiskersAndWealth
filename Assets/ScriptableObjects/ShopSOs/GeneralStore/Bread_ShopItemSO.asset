@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 352c5612a88ec4e8389be0f33941f18f, type: 3}
+  m_Name: Bread_ShopItemSO
+  m_EditorClassIdentifier: 
+  UnlockFlags: []
+  Item: {fileID: 11400000, guid: f20866477da7548e9984ccbbf170db85, type: 2}
+  LimitTotalDayStock: 0
+  TotalDayStock: 0
+  PeriodOfTimeStocks:
+  - TimePeriod: 0
+    StockLimit: 3
+  - TimePeriod: 1
+    StockLimit: 3
+  Price: 3

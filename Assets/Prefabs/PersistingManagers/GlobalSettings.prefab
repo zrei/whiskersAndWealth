@@ -44,8 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0948226342e8440b6835ac78cb60664b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DoDebug: 0
+  m_DoDebug: 1
   m_PlayerVelocity: 10
   m_MaxStarvationLevel: 5
-  m_StartingStarvationValue: 5
   m_StartingVolume: 100
