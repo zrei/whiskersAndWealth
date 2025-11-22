@@ -20,6 +20,8 @@ public class UI_PotionShopScreen : UILayer
     private int m_SelectedCol;
     #endregion
 
+    private UILayer m_UpgradeScreenInstance;
+
     #region Initialisation
     public override void HandleOpen(params object[] arguments)
     {
@@ -32,6 +34,7 @@ public class UI_PotionShopScreen : UILayer
         m_UpgradeButton.OnSubmitted += OpenUpgradeScreen;
 
         RefreshAvailablePotions();
+        m_PotionDescription.ToggleEmpty(true);
     }
 
     public override void HandleClose()
@@ -75,6 +78,7 @@ public class UI_PotionShopScreen : UILayer
     {
         m_AvailablePotions = PotionShopManager.Instance.GetAvailablePotions();
         m_PotionTileGrid.SetupItems(GetPotionInfos());
+        RefreshCurrentlySelectedPotion();
     }
 
     private void RefreshCurrentlySelectedPotion()
@@ -86,7 +90,8 @@ public class UI_PotionShopScreen : UILayer
 
     private void OpenUpgradeScreen()
     {
-        UIManager.Instance.OpenLayer(m_UpgradeScreen);
+        if (!UIManager.Instance.IsLayerOpen(m_UpgradeScreenInstance))
+            m_UpgradeScreenInstance = UIManager.Instance.OpenLayer(m_UpgradeScreen);
     }
     #endregion
 

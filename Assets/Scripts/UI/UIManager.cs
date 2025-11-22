@@ -155,6 +155,11 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    public bool IsLayerOpen(UILayer layerObject)
+    {
+        return m_OpenLayers.Contains(layerObject);
+    }
+
     private void OnLayerClosed(InputAction.CallbackContext _)
     {
         if (m_OpenLayers.Count > 0 && m_OpenLayers.Peek().IsEscClosable)

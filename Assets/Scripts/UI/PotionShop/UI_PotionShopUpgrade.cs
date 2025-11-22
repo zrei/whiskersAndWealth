@@ -60,14 +60,22 @@ public class UI_PotionShopUpgrade : UILayer
         ToggleUpgradeSections(true);
         m_UpgradeBtn.OnSubmitted += OnSubmitUpgradeBtn;
 
-        m_UpgradeLvlText.text = string.Format(NextLevelTextFormat, PotionShopManager.Instance.NextLevel);
+        m_UpgradeLvlText.text = string.Format(NextLevelTextFormat, PotionShopManager.Instance.NextLevel + 1);
 
         PotionShopUpgradeSO nextUpgrade = PotionShopManager.Instance.GetPotionShopUpgradeSO(PotionShopManager.Instance.NextLevel);
 
         StringBuilder itemRequirements = new StringBuilder();
         foreach (ItemStack itemRequired in nextUpgrade.RequiredItems)
         {
-            itemRequirements.Append(itemRequired.Item.ItemName + " x " + itemRequired.NumItem);
+            if (InventoryManager.Instance.HasQuantityOfItem(itemRequired, out int _))
+            {
+                itemRequirements.Append(itemRequired.Item.ItemName + " x " + "<color=" + PotionDescriptionData.SufficientColor + ">" + itemRequired.NumItem + "</color>");
+            }
+            else
+            {
+                itemRequirements.Append(itemRequired.Item.ItemName + " x " + "<color=" + PotionDescriptionData.InsufficientColor + ">" + itemRequired.NumItem + "</color>");
+            }
+
             itemRequirements.Append("\n");
         }
         m_RequirementText.text = string.Format(RequirementTextFormat, itemRequirements);

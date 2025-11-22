@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "PotionSO", menuName = "ScriptableObjects/PotionSO")]
+[CreateAssetMenu(fileName = "PotionSO", menuName = "ScriptableObjects/PotionShopSOs/PotionSO")]
 public class PotionSO : FlagUnlockable, ITransaction
 {
     public List<ItemStack> m_Ingredients;

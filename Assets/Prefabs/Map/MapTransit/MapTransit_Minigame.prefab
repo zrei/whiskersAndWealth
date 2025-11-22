@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_MapTransit.m_Map
       value: 
       objectReference: {fileID: 11400000, guid: 2f2d1b8a7f8604a51bc79d76154c5651, type: 2}
+    - target: {fileID: 6307630377860919720, guid: d9bbbe97cf15c5d4ea799f7272f58831, type: 3}
+      propertyPath: m_InteractionIndicator
+      value: 
+      objectReference: {fileID: 1873314201276151836, guid: ad066c9abbc9441b5b1f2ace276c62d5, type: 3}
     - target: {fileID: 7178171702986381400, guid: d9bbbe97cf15c5d4ea799f7272f58831, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
       value: 0.5

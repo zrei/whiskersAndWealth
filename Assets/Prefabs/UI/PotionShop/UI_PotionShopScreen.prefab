@@ -92,6 +92,7 @@ MonoBehaviour:
   m_PotionDescription: {fileID: 3098539891902566354}
   m_PotionTileGrid: {fileID: 4571296937397618843}
   m_UpgradeButton: {fileID: 6804527396882867850}
+  m_UpgradeScreen: {fileID: 4776361610246484494, guid: e5e2275d323a04f9188f886765f1ead4, type: 3}
 --- !u!1 &9102240802420780273
 GameObject:
   m_ObjectHideFlags: 0

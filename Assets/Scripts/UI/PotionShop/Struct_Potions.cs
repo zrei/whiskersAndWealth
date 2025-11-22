@@ -5,12 +5,12 @@ public class PotionDescriptionData : ItemDescriptionData
     public bool CanMake;
     public int SellPrice;
 
-    private const string InsufficientColor = "#d199de";
-    private const string SufficientColor = "#a1f0ae";
+    public static string InsufficientColor = "#d199de";
+    public static string SufficientColor = "#a1f0ae";
 
     public PotionDescriptionData(PotionSO potionSO) : base(new ItemBoxData(potionSO.PotionSprite, 0, false), potionSO.PotionName, FormatPotionDescription(potionSO))
     {
-        CanMake = potionSO.TransactionCanBeMade();
+        CanMake = !potionSO.IsLocked();
         SellPrice = potionSO.m_Price;
     }
 

@@ -47,8 +47,15 @@ public class PotionShopManager : Singleton<PotionShopManager>
         if (!HasNextUpgrade())
             return false;
 
-        if (!m_PotionShopUpgrades[NextLevel].TransactionCanBeMade())
+        PotionShopUpgradeSO potionShopUpgradeSO = m_PotionShopUpgrades[NextLevel];
+
+        if (!potionShopUpgradeSO.TransactionCanBeMade())
             return false;
+
+        CoinManager.Instance.ConsumeCoin(potionShopUpgradeSO.RequiredCoin);
+        
+        foreach (ItemStack upgradeIngredient in potionShopUpgradeSO.RequiredItems)
+            InventoryManager.Instance.TryConsumeItemQuantity(upgradeIngredient);
 
         m_CurrentUpgradeLevel += 1;
         GlobalEvents.PotionShop.PotionShopUpgradedEvent?.Invoke();
@@ -79,5 +86,10 @@ public class PotionShopManager : Singleton<PotionShopManager>
     public PotionShopUpgradeSO GetPotionShopUpgradeSO(int level)
     {
         return m_PotionShopUpgrades[level];
+    }
+
+    public bool CanInteractWithPotionShop()
+    {
+        return true;
     }
 }
