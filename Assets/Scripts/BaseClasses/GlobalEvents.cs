@@ -76,4 +76,11 @@ public static class GlobalEvents {
         public static VoidEvent PotionShopUpgradedEvent;
         public static VoidEvent OnPotionMadeEvent;
     }
+
+    public static class Coin
+    {
+        public static IntEvent OnConsumeCoin;
+        public static IntEvent OnAddCoin;
+        public static IntEvent OnUpdateCoin;        
+    }
 }

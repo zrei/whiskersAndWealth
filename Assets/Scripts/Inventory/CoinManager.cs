@@ -6,6 +6,7 @@ public class CoinManager : Singleton<CoinManager>
     [SerializeField] private int m_DebugStartingCoin = 10;
 
     private int m_CoinAmount = 0;
+    public int CoinAmount => m_CoinAmount;
 
     protected override void HandleAwake()
     {
@@ -31,13 +32,15 @@ public class CoinManager : Singleton<CoinManager>
 
         m_CoinAmount -= consumeAmt;
 
-        // call visuals
+        GlobalEvents.Coin.OnConsumeCoin(consumeAmt);
+        GlobalEvents.Coin.OnUpdateCoin(m_CoinAmount);
     }
 
     public void ObtainCoin(int coinAmt)
     {
         m_CoinAmount += coinAmt;
 
-        // call visuals
+        GlobalEvents.Coin.OnAddCoin(coinAmt);
+        GlobalEvents.Coin.OnUpdateCoin(m_CoinAmount);
     }
 }
