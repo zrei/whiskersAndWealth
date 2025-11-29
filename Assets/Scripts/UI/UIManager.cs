@@ -116,6 +116,8 @@ public class UIManager : Singleton<UIManager>
         layerInstance.HandleOpen(arguments);
         m_OpenLayers.Push(layerInstance);
 
+        GlobalEvents.UI.OnUILayerOpened?.Invoke();
+
         if (m_OpenLayers.Count == 1)
         {
             Time.timeScale = 0f;
@@ -137,6 +139,7 @@ public class UIManager : Singleton<UIManager>
         UILayer layer = m_OpenLayers.Pop();
         layer.HandleClose();
         Destroy(layer.gameObject);
+        GlobalEvents.UI.OnUILayerClosed?.Invoke();
 
         if (m_OpenLayers.Count == 0)
         {

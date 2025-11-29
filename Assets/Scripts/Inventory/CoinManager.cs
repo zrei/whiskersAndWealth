@@ -30,7 +30,7 @@ public class CoinManager : Singleton<CoinManager>
     {
         // do the check here or elsewhere?
 
-        m_CoinAmount -= consumeAmt;
+        m_CoinAmount = Mathf.Max(0, m_CoinAmount - consumeAmt);
 
         GlobalEvents.Coin.OnConsumeCoin(consumeAmt);
         GlobalEvents.Coin.OnUpdateCoin(m_CoinAmount);

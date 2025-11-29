@@ -54,14 +54,7 @@ public class StarvationManager : Singleton<StarvationManager>
     #region Event Callbacks
     private void HandleAdvanceTimePeriod(TimePeriod _)
     {
-        m_StarvationAmount -= 1;
-        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
-        GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
-
-        if (m_StarvationAmount == 0)
-        {
-            GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
-        }
+        ConsumeStarvationAmount(1);
     }
     #endregion
 
@@ -72,4 +65,16 @@ public class StarvationManager : Singleton<StarvationManager>
         GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
     }
     #endregion
+
+    public void ConsumeStarvationAmount(int amount)
+    {
+        m_StarvationAmount = Mathf.Max(0, m_StarvationAmount - amount);
+        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+        GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
+
+        if (m_StarvationAmount == 0)
+        {
+            GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
+        }
+    }
 }

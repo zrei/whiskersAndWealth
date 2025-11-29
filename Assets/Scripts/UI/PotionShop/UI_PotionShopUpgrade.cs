@@ -25,14 +25,14 @@ public class UI_PotionShopUpgrade : UILayer
     #region Initialisation
     public override void HandleOpen(params object[] args)
     {
-        m_BackBtn.OnSubmitted += OnSubmitBackBtn;
+        m_BackBtn.OnSubmitted += CloseLayer;
 
         InitialiseUpgradePage();
     }
 
     public override void HandleClose()
     {
-        m_BackBtn.OnSubmitted -= OnSubmitBackBtn;
+        m_BackBtn.OnSubmitted -= CloseLayer;
         m_UpgradeBtn.OnSubmitted -= OnSubmitUpgradeBtn;
     }
     #endregion
@@ -101,11 +101,6 @@ public class UI_PotionShopUpgrade : UILayer
 
         // refresh page
         InitialiseUpgradePage();
-    }
-
-    private void OnSubmitBackBtn()
-    {
-        UIManager.Instance.CloseLayer();
     }
     #endregion
 }

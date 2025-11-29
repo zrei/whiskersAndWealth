@@ -16,6 +16,7 @@ public class SaveManager : Singleton<SaveManager>
     private Dictionary<string, float> m_FloatSaveValues = new Dictionary<string, float>();
     private Dictionary<string, int> m_IntSaveValues = new Dictionary<string, int>();
     private Dictionary<string, string> m_StringSaveValues = new Dictionary<string, string>();
+    private string m_InventorySave;
     #endregion
 
     #region Initialisation
@@ -121,6 +122,18 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
 
+    #region Inventory
+    public void SetInventory(List<ItemStack> inventoryContents)
+    {
+        
+    }
+
+    public string GetInventory()
+    {
+        return "";
+    }
+    #endregion
+
     #region Managing Active Save
     /// <summary>
     /// Actually save the current values to the game file.
@@ -148,6 +161,7 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         NarrativeManager.Instance.SavePersistentFlags();
+        InventoryManager.Instance.SaveInventory();
 
         PlayerPrefs.Save();
     }

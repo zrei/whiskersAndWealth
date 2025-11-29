@@ -10,7 +10,8 @@ public delegate void Vector3Event(Vector3 _);
 public static class GlobalEvents {
 
     public static class UI {
-
+        public static VoidEvent OnUILayerOpened;
+        public static VoidEvent OnUILayerClosed;
     }
 
     public static class Player {

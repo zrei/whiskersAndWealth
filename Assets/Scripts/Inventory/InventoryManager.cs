@@ -171,4 +171,11 @@ public class InventoryManager : Singleton<InventoryManager>
         return itemInfos;
     }
     #endregion
+
+    #region Save
+    public void SaveInventory()
+    {
+        SaveManager.Instance.SetInventory(m_Items);
+    }
+    #endregion
 }
