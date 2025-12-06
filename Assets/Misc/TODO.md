@@ -5,4 +5,4 @@
 
 [] Add support for UI layers hiding other layers
 
-[] Add saving for inventory, shop stock, potion shop upgrade level, time of day, current map, current flags, starvation level, coin level, previous fired random event id
+[] Add saving for shop stock, potion shop upgrade level, coin level, previous fired random event id --> note to self: follow example in time manager

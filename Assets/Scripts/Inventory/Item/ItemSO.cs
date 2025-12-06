@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class ItemSO : ScriptableObject
 {
+    public int ItemId;
     public Sprite ItemSprite;
     public string ItemName;
     public string Description;
@@ -20,6 +21,7 @@ public class ItemStack
     public bool IsEmpty => NumItem == 0;
     public bool CanUse => Item.CanUse;
     public bool CanDiscard => Item.CanDiscard;
+    public int ItemID => Item.ItemId;
 
     public ItemStack(ItemSO itemSO, int numItem)
     {

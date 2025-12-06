@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
-    private List<ItemStack> m_Items;
+    private List<ItemStack> m_Items = new();
     // may be able to expand, may not
     public int InventoryLimit { get; private set; } = 10;
     public int StackLimit { get; private set; } = 50;
@@ -13,20 +14,35 @@ public class InventoryManager : Singleton<InventoryManager>
     [Header("Debug")]
     [SerializeField] private List<ItemStack> m_DebugBeginnerItems;
 
+    [Header("Database")]
+    [SerializeField] private ItemDatabase m_ItemDatabase;
+
     #region Init
     // subscribe to events and handle dependencies here
     protected override void HandleAwake()
     {
         base.HandleAwake();
 
-        if (GlobalSettings.DoDebug)
-            m_Items = m_DebugBeginnerItems;
+        HandleDependencies();
     }
 
     // unsubscribe to events and cleanup
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+            SaveManager.OnReady += HandleDependencies;
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (GlobalSettings.DoDebug)
+            m_Items = m_DebugBeginnerItems;
+        else
+            ReadSave();
     }
     #endregion
 
@@ -176,6 +192,16 @@ public class InventoryManager : Singleton<InventoryManager>
     public void SaveInventory()
     {
         SaveManager.Instance.SetInventory(m_Items);
+    }
+
+    private void ReadSave()
+    {
+        m_Items.Clear();
+        List<(int, int)> inventoryContents = SaveManager.Instance.GetInventory();
+        foreach ((int, int) item in inventoryContents)
+        {
+            m_Items.Add(new ItemStack(m_ItemDatabase.GetItemById(item.Item1), item.Item2));
+        }
     }
     #endregion
 }

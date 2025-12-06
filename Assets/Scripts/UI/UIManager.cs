@@ -131,6 +131,7 @@ public class UIManager : Singleton<UIManager>
             m_IsHUDHidden = true;
         }
 
+        layerInstance.OnLayerOpened?.Invoke();
         return layerInstance;
     }
 
@@ -138,6 +139,7 @@ public class UIManager : Singleton<UIManager>
     {
         UILayer layer = m_OpenLayers.Pop();
         layer.HandleClose();
+        layer.OnLayerClosed?.Invoke();
         Destroy(layer.gameObject);
         GlobalEvents.UI.OnUILayerClosed?.Invoke();
 

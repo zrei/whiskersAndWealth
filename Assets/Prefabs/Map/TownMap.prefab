@@ -202,6 +202,7 @@ MonoBehaviour:
   m_CameraWillFollowPlayer: 1
   m_UIElements:
   - {fileID: 8829221539429368305, guid: 5c5ec4824181f49c6b7b92e1753d3e56, type: 3}
+  - {fileID: 504750941395798981, guid: d08e45eb93d864f7296f2e6164c25d28, type: 3}
   m_InputMapName: PLAYER
   m_BlockedInputs: 
   m_NPCSpawnPointsParent: {fileID: 956544837862571608}

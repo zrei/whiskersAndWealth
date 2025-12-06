@@ -14,6 +14,9 @@ public abstract class UILayer : MonoBehaviour
     public bool HideHUD => m_HideHUD;
     public bool HidePreviousLayers => m_HidePreviousLayers;
 
+    public VoidEvent OnLayerOpened;
+    public VoidEvent OnLayerClosed;
+
     #region Interactions
     public abstract void HandleOpen(params object[] args);
 

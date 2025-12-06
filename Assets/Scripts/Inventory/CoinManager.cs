@@ -32,15 +32,15 @@ public class CoinManager : Singleton<CoinManager>
 
         m_CoinAmount = Mathf.Max(0, m_CoinAmount - consumeAmt);
 
-        GlobalEvents.Coin.OnConsumeCoin(consumeAmt);
-        GlobalEvents.Coin.OnUpdateCoin(m_CoinAmount);
+        GlobalEvents.Coin.OnConsumeCoin?.Invoke(consumeAmt);
+        GlobalEvents.Coin.OnUpdateCoin?.Invoke(m_CoinAmount);
     }
 
     public void ObtainCoin(int coinAmt)
     {
         m_CoinAmount += coinAmt;
 
-        GlobalEvents.Coin.OnAddCoin(coinAmt);
-        GlobalEvents.Coin.OnUpdateCoin(m_CoinAmount);
+        GlobalEvents.Coin.OnAddCoin?.Invoke(coinAmt);
+        GlobalEvents.Coin.OnUpdateCoin?.Invoke(m_CoinAmount);
     }
 }

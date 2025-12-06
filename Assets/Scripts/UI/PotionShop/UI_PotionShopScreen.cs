@@ -6,6 +6,7 @@ public class UI_PotionShopScreen : UILayer
     [Header("Potion Shop")]
     [SerializeField] private UI_PotionDescription m_PotionDescription;
     [SerializeField] private UI_ItemTileGrid m_PotionTileGrid;
+    [SerializeField] private UI_Coin m_CoinIndicator;
 
     [Header("Upgrades")]
     [SerializeField] private UI_Button m_UpgradeButton;
@@ -71,6 +72,12 @@ public class UI_PotionShopScreen : UILayer
         PotionShopManager.Instance.TryMakePotiion(m_AvailablePotions[GetPotionIndex(m_SelectedRow, m_SelectedCol)]);
         RefreshCurrentlySelectedPotion();
     }
+
+    private void OnUpgradeScreenClosed()
+    {
+        m_UpgradeScreenInstance.OnLayerClosed -= OnUpgradeScreenClosed;
+        m_CoinIndicator.gameObject.SetActive(true);
+    }
     #endregion
 
     #region Display
@@ -90,8 +97,12 @@ public class UI_PotionShopScreen : UILayer
 
     private void OpenUpgradeScreen()
     {
-        if (!UIManager.Instance.IsLayerOpen(m_UpgradeScreenInstance))
-            m_UpgradeScreenInstance = UIManager.Instance.OpenLayer(m_UpgradeScreen);
+        if (UIManager.Instance.IsLayerOpen(m_UpgradeScreenInstance))
+            return;
+            
+        m_UpgradeScreenInstance = UIManager.Instance.OpenLayer(m_UpgradeScreen);
+        m_UpgradeScreenInstance.OnLayerClosed += OnUpgradeScreenClosed;
+        m_CoinIndicator.gameObject.SetActive(false);
     }
     #endregion
 

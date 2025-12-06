@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
+using System;
 
 // TODO: Note that flags should be accessible by constant name from another file
 // to avoid errors and also have these flags be accessible globally
@@ -125,13 +127,55 @@ public class SaveManager : Singleton<SaveManager>
     #region Inventory
     public void SetInventory(List<ItemStack> inventoryContents)
     {
-        
+        StringBuilder inventorySaveString = new StringBuilder();
+        foreach (ItemStack itemStack in inventoryContents)
+        {
+            inventorySaveString.Append(itemStack.ItemID + "_" + itemStack.NumItem);
+            inventorySaveString.Append(",");
+        }
+        PlayerPrefs.SetString("INVENTORY", inventorySaveString.ToString());
     }
 
-    public string GetInventory()
+    public List<(int, int)> GetInventory()
     {
-        return "";
+        string inventoryContents = PlayerPrefs.GetString("INVENTORY");
+        List<(int, int)> inventory = new();
+        string[] individualItems = inventoryContents.Split(",");
+        foreach (string individualItem in individualItems)
+        {
+            string[] strings = individualItem.Split("_");
+            if (strings.Length == 2)
+                inventory.Add((Int32.Parse(strings[0]), Int32.Parse(strings[1])));
+        }
+        return inventory;
     }
+    #endregion
+
+    #region Coin
+    public void SetCurrentCoin(int coinAmount)
+    {
+        m_IntSaveValues["COIN"] = coinAmount;
+    }
+
+    public int GetCurrentCoin()
+    {
+        return PlayerPrefs.GetInt("COIN");
+    }
+    #endregion
+
+    #region Shop Stock
+    public void SetShopStock(string shopName)
+    {
+        
+    }
+    #endregion
+
+    #region Random Event
+
+    #endregion
+
+    #region Potion Shop Level
+
     #endregion
 
     #region Managing Active Save
