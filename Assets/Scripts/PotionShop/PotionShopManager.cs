@@ -16,12 +16,32 @@ public class PotionShopManager : Singleton<PotionShopManager>
     {
         base.HandleAwake();
 
-        m_CurrentUpgradeLevel = m_DebugShopStartingLevel;
+        HandleDependencies();
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            m_CurrentUpgradeLevel = AssetLoader.Instance.GetIntValue(ValueCollectionType.POTION_SHOP);
+        }
+        else
+        {
+            m_CurrentUpgradeLevel = SaveManager.Instance.GetShopLevel();
+        }
     }
 
     public bool TryMakePotiion(PotionSO potion)

@@ -7,6 +7,9 @@ public class StarvationManager : Singleton<StarvationManager>
 {
     [Header("Starting Data")]
     [SerializeField] private float m_StartingStarvationValue = 5;
+    
+    [Header("Debug")]
+    [SerializeField] private float m_DebugStartingStarvationValue = 0;
 
     private float m_StarvationAmount;
     public float StarvationAmount => m_StarvationAmount;
@@ -36,6 +39,14 @@ public class StarvationManager : Singleton<StarvationManager>
 
     private void HandleDependencies()
     {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
         InitStarvation();
     }
 
@@ -43,7 +54,7 @@ public class StarvationManager : Singleton<StarvationManager>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            m_StarvationAmount = m_StartingStarvationValue;
+            m_StarvationAmount = AssetLoader.Instance.GetIntValue(ValueCollectionType.STARVATION);
             SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
         }
         else

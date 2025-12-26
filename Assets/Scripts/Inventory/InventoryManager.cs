@@ -39,10 +39,14 @@ public class InventoryManager : Singleton<InventoryManager>
 
         SaveManager.OnReady -= HandleDependencies;
 
-        if (GlobalSettings.DoDebug)
-            m_Items = m_DebugBeginnerItems;
+        if (SaveManager.Instance.IsNewSave)
+        {
+            m_Items = AssetLoader.Instance.GetStartingItems();
+        }
         else
+        {
             ReadSave();
+        }
     }
     #endregion
 

@@ -43,8 +43,9 @@ public class MapLoader : Singleton<MapLoader>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            SaveManager.Instance.SetCurrentMap(m_StartingMap.m_MapName);
-            StartCoroutine(LoadMap(m_StartingMap));
+            MapSO startingMap = AssetLoader.Instance.GetStartingMap();
+            SaveManager.Instance.SetCurrentMap(startingMap.m_MapName);
+            StartCoroutine(LoadMap(startingMap));
         }
         else
         {

@@ -171,11 +171,27 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
 
     #region Random Event
+    public void SetPreviousRandomEvent(int randomEventId)
+    {
+        m_IntSaveValues["RANDOM_EVENT"] = randomEventId;
+    }
 
+    public int GetPreviousRandomEvent()
+    {
+        return PlayerPrefs.GetInt("RANDOM_EVENT");
+    }
     #endregion
 
     #region Potion Shop Level
+    public void SetShopLevel(int shopLevel)
+    {
+        m_IntSaveValues["POTION_SHOP"] = shopLevel;
+    }
 
+    public int GetShopLevel()
+    {
+        return PlayerPrefs.GetInt("POTION_SHOP");
+    }
     #endregion
 
     #region Managing Active Save

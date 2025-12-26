@@ -12,13 +12,29 @@ public class CoinManager : Singleton<CoinManager>
     {
         base.HandleAwake();
 
-        if (GlobalSettings.DoDebug)
-            m_CoinAmount = m_DebugStartingCoin;
+        HandleDependencies();
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+            SaveManager.OnReady += HandleDependencies;
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            m_CoinAmount = AssetLoader.Instance.GetIntValue(ValueCollectionType.COIN);
+        }
+        else
+        {
+            m_CoinAmount = SaveManager.Instance.GetCurrentCoin();
+        }
     }
 
     public bool CanPurchase(int purchaseAmt)

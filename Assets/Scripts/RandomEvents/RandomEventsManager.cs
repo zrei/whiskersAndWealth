@@ -16,6 +16,8 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
     {
         base.HandleAwake();
 
+        HandleDependencies();
+
         GlobalEvents.Time.AdvanceTimePeriodEvent += OnTimePeriodAdvance;
     }
 
@@ -24,6 +26,26 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
         base.HandleDestroy();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnTimePeriodAdvance;
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            m_PreviousRandomEventId = AssetLoader.Instance.GetIntValue(ValueCollectionType.RANDOM_EVENT);
+        }
+        else
+        {
+            m_PreviousRandomEventId = SaveManager.Instance.GetPreviousRandomEvent();
+        }
     }
 
     private bool TryFireEvent()

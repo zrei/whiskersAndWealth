@@ -52,7 +52,7 @@ public class TimeManager : Singleton<TimeManager>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            m_CurrTimePeriod = m_StartingPeriod;
+            m_CurrTimePeriod = (TimePeriod) AssetLoader.Instance.GetIntValue(ValueCollectionType.TIME_PERIOD);
             SaveManager.Instance.SetTimePeriod((int) m_CurrTimePeriod);
         }
         else
