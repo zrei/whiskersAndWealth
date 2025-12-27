@@ -31,7 +31,7 @@ public struct ValueCollectionString
     public string Value;
 }
 
-[CreateAssetMenu(fileName = "ValueCollection", menuName = "ScriptableObjects/ValueCollection")]
+[CreateAssetMenu(fileName = "ValueCollection", menuName = "Databases/ValueCollection")]
 public class ValueCollection : ScriptableObject
 {
     public List<ValueCollectionInt> ValueCollectionInts;

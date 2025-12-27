@@ -164,9 +164,37 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
 
     #region Shop Stock
-    public void SetShopStock(string shopName)
+    public void SetShopStock(int shopId, List<ShopItemStockInstance> shopItemStockInstances)
     {
-        
+        string shopKey = GetShopKey(shopId);
+        StringBuilder stockStringBuilder = new();
+        foreach (ShopItemStockInstance shopItemStockInstance in shopItemStockInstances)
+        {
+            stockStringBuilder.Append(shopItemStockInstance.GetSerialisedShopItemStockInstance());
+            stockStringBuilder.Append(",");  
+        }
+
+        m_StringSaveValues[shopKey] = stockStringBuilder.ToString();
+    }
+
+    public List<(int, string)> GetSerialisedShopStockFromSave(int shopId)
+    {
+        List<(int, string)> ret = new();
+        string shopKey = GetShopKey(shopId);
+        string allSerialisedShopStock = PlayerPrefs.GetString(shopKey, string.Empty);
+        string[] individualStocks = allSerialisedShopStock.Split(",");
+        foreach (string individualStock in individualStocks)
+        {
+            string[] splits = individualStock.Split("_");
+            if (splits.Length == 2)
+                ret.Add((Int32.Parse(splits[0]), splits[1]));
+        }
+        return ret;
+    }
+
+    private string GetShopKey(int shopId)
+    {
+        return "SHOP_" + shopId.ToString();
     }
     #endregion
 

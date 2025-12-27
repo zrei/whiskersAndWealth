@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class ItemSO : ScriptableObject
+public abstract class ItemSO : ScriptableObject, IIdentifiable
 {
     public int ItemId;
     public Sprite ItemSprite;
@@ -10,6 +10,7 @@ public abstract class ItemSO : ScriptableObject
     public abstract bool CanDiscard { get; }
 
     public abstract void ConsumeItem(int numItem);
+    public int GetId() { return ItemId; }
 }
 
 [System.Serializable]

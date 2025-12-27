@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class ShopSystemManager : Singleton<ShopSystemManager>
 {
     [SerializeField] private List<ShopSO> m_ShopSOs;
+    [SerializeField] private ShopItemDatabase m_ShopItemDatabase;
 
     private List<ShopManager> m_IndividualShopManagers;
     private Dictionary<ShopSO, ShopManager> m_Map;
@@ -65,6 +66,11 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
     public void TryBuyItemFromCurrentShop(ItemSO itemSO, out BuyResult buyResult)
     {
         CurrentShopManager.TryBuyItem(itemSO, out buyResult);
+    }
+
+    public ShopItemSO GetShopItemById(int id)
+    {
+        return m_ShopItemDatabase.GetItemById(id);
     }
 
     #region Helper
