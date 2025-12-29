@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8695bc48a58d947bebcdd78887d9d70e, type: 3}
-  m_Name: Ingredient_WheatSO
+  m_Script: {fileID: 11500000, guid: 53e91fbe957cf4fe99913c1edc0cc924, type: 3}
+  m_Name: ItemDatabase
   m_EditorClassIdentifier: 
-  ItemId: 1
-  ItemSprite: {fileID: 858120148, guid: 83cd9f7ff1a314e419ec3ee7e47c63b2, type: 3}
-  ItemName: Wheat
-  Description: Lovable, reliable carb.
+  AllItems:
+  - {fileID: 11400000, guid: f20866477da7548e9984ccbbf170db85, type: 2}
+  - {fileID: 11400000, guid: 53a017a32d4454306bd563a11147faf3, type: 2}

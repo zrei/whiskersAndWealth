@@ -11,9 +11,6 @@ public class InventoryManager : Singleton<InventoryManager>
     public int StackLimit { get; private set; } = 50;
     public int NumStacksInInventory => m_Items.Count;
 
-    [Header("Debug")]
-    [SerializeField] private List<ItemStack> m_DebugBeginnerItems;
-
     [Header("Database")]
     [SerializeField] private ItemDatabase m_ItemDatabase;
 

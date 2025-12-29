@@ -38,6 +38,7 @@ public abstract class RandomEventSO : ScriptableObject, IUnlockable, IIdentifiab
     }
 }
 
+[System.Serializable]
 public struct RandomEventWithProbability
 {
     public RandomEventSO RandomEvent;

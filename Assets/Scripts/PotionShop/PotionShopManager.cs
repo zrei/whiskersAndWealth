@@ -6,9 +6,6 @@ public class PotionShopManager : Singleton<PotionShopManager>
 {
     [SerializeField] private List<PotionShopUpgradeSO> m_PotionShopUpgrades;
 
-    [Header("Debug")]
-    [SerializeField] private int m_DebugShopStartingLevel = 0;
-
     private int m_CurrentUpgradeLevel;
     public int NextLevel => m_CurrentUpgradeLevel + 1;
 

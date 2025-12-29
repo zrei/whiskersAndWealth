@@ -5,12 +5,6 @@ using UnityEngine;
 /// </summary>
 public class StarvationManager : Singleton<StarvationManager>
 {
-    [Header("Starting Data")]
-    [SerializeField] private float m_StartingStarvationValue = 5;
-    
-    [Header("Debug")]
-    [SerializeField] private float m_DebugStartingStarvationValue = 0;
-
     private float m_StarvationAmount;
     public float StarvationAmount => m_StarvationAmount;
 
@@ -24,9 +18,6 @@ public class StarvationManager : Singleton<StarvationManager>
         base.HandleAwake();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent += HandleAdvanceTimePeriod;
-
-        if (m_StartingStarvationValue > GlobalSettings.MaxStarvationLevel)
-            Logger.Log(this.GetType().Name, "Starting starvation level is higher than max starvation level!", LogLevel.ERROR);
     }
 
     // unsubscribe to events and cleanup
@@ -58,6 +49,9 @@ public class StarvationManager : Singleton<StarvationManager>
         }
         else
             SetStarvationLevel(SaveManager.Instance.RetrieveStarvationLevel());
+
+        if (m_StarvationAmount > GlobalSettings.MaxStarvationLevel)
+            Logger.Log(this.GetType().Name, "Starting starvation level is higher than max starvation level!", LogLevel.ERROR);
     }
     #endregion
 

@@ -17,9 +17,6 @@ public class MapLoader : Singleton<MapLoader>
     [Header("References")]
     [SerializeField] private Transform m_MapParent;
 
-    [Header("Starting Data")]
-    [SerializeField] private MapSO m_StartingMap;
-
     [Header("Data")]
     [SerializeField] private List<MapSO> m_Maps;
 

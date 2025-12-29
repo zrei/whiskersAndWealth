@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class CoinManager : Singleton<CoinManager>
 {
-    [Header("Debug")]
-    [SerializeField] private int m_DebugStartingCoin = 10;
-
     private int m_CoinAmount = 0;
     public int CoinAmount => m_CoinAmount;
 

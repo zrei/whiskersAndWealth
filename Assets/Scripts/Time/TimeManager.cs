@@ -13,11 +13,7 @@ public enum TimePeriod
 /// Handles the advancement of time
 /// </summary>
 public class TimeManager : Singleton<TimeManager>
-{
-    [Header("Starting Data")]
-    [Tooltip("Starting period when first starting the game")]
-    [SerializeField] private TimePeriod m_StartingPeriod;
-    
+{    
     private TimePeriod m_CurrTimePeriod;
     public TimePeriod CurrTimePeriod => m_CurrTimePeriod;
 
