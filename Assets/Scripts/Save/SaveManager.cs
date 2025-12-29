@@ -18,7 +18,6 @@ public class SaveManager : Singleton<SaveManager>
     private Dictionary<string, float> m_FloatSaveValues = new Dictionary<string, float>();
     private Dictionary<string, int> m_IntSaveValues = new Dictionary<string, int>();
     private Dictionary<string, string> m_StringSaveValues = new Dictionary<string, string>();
-    private string m_InventorySave;
     #endregion
 
     #region Initialisation
@@ -250,6 +249,8 @@ public class SaveManager : Singleton<SaveManager>
 
         NarrativeManager.Instance.SavePersistentFlags();
         InventoryManager.Instance.SaveInventory();
+        // btw this doesn't do anything atm
+        ShopSystemManager.Instance.SaveShopStock();
 
         PlayerPrefs.Save();
     }

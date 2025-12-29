@@ -73,6 +73,11 @@ public class ShopSystemManager : Singleton<ShopSystemManager>
         return m_ShopItemDatabase.GetItemById(id);
     }
 
+    public void SaveShopStock()
+    {
+        
+    }
+
     #region Helper
     public string GetCurrentShopName()
     {

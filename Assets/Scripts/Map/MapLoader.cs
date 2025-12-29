@@ -44,7 +44,6 @@ public class MapLoader : Singleton<MapLoader>
         if (SaveManager.Instance.IsNewSave)
         {
             MapSO startingMap = AssetLoader.Instance.GetStartingMap();
-            SaveManager.Instance.SetCurrentMap(startingMap.m_MapName);
             StartCoroutine(LoadMap(startingMap));
         }
         else
@@ -162,6 +161,7 @@ public class MapLoader : Singleton<MapLoader>
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
+        SaveManager.Instance.SetCurrentMap(mapSO.m_MapName);
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
     }
     #endregion

@@ -40,11 +40,11 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
 
         if (SaveManager.Instance.IsNewSave)
         {
-            m_PreviousRandomEventId = AssetLoader.Instance.GetIntValue(ValueCollectionType.RANDOM_EVENT);
+            SetPreviousRandomEvent(AssetLoader.Instance.GetIntValue(ValueCollectionType.RANDOM_EVENT));
         }
         else
         {
-            m_PreviousRandomEventId = SaveManager.Instance.GetPreviousRandomEvent();
+            SetPreviousRandomEvent(SaveManager.Instance.GetPreviousRandomEvent());
         }
     }
 
@@ -96,6 +96,7 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
         GlobalEvents.UI.OnUILayerClosed -= FireEvent;
 
         m_CurrentlyFiringEvent.FireEvent();
+        SetPreviousRandomEvent(m_CurrentlyFiringEvent.GetId());
         m_CurrentlyFiringEvent = null;
     }
 
@@ -118,4 +119,10 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
         return usableEvents;
     }
     #endregion
+
+    private void SetPreviousRandomEvent(int randomEventId)
+    {
+        m_PreviousRandomEventId = randomEventId;
+        SaveManager.Instance.SetPreviousRandomEvent(m_PreviousRandomEventId);
+    }
 }

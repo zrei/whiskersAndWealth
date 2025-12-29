@@ -29,11 +29,11 @@ public class CoinManager : Singleton<CoinManager>
 
         if (SaveManager.Instance.IsNewSave)
         {
-            m_CoinAmount = AssetLoader.Instance.GetIntValue(ValueCollectionType.COIN);
+            SetCoinAmount(AssetLoader.Instance.GetIntValue(ValueCollectionType.COIN));
         }
         else
         {
-            m_CoinAmount = SaveManager.Instance.GetCurrentCoin();
+            SetCoinAmount(SaveManager.Instance.GetCurrentCoin());
         }
     }
 
@@ -45,18 +45,22 @@ public class CoinManager : Singleton<CoinManager>
     public void ConsumeCoin(int consumeAmt)
     {
         // do the check here or elsewhere?
-
-        m_CoinAmount = Mathf.Max(0, m_CoinAmount - consumeAmt);
+        SetCoinAmount(Mathf.Max(0, m_CoinAmount - consumeAmt));
 
         GlobalEvents.Coin.OnConsumeCoin?.Invoke(consumeAmt);
-        GlobalEvents.Coin.OnUpdateCoin?.Invoke(m_CoinAmount);
     }
 
     public void ObtainCoin(int coinAmt)
     {
-        m_CoinAmount += coinAmt;
+        SetCoinAmount(m_CoinAmount + coinAmt);
 
-        GlobalEvents.Coin.OnAddCoin?.Invoke(coinAmt);
+        GlobalEvents.Coin.OnAddCoin?.Invoke(coinAmt);        
+    }
+
+    private void SetCoinAmount(int coinAmt)
+    {
+        m_CoinAmount = coinAmt;
+        SaveManager.Instance.SetCurrentCoin(m_CoinAmount);
         GlobalEvents.Coin.OnUpdateCoin?.Invoke(m_CoinAmount);
     }
 }

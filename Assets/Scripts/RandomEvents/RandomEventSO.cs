@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class RandomEventSO : ScriptableObject, IUnlockable
+public abstract class RandomEventSO : ScriptableObject, IUnlockable, IIdentifiable
 {
     public int RandomEventId;
     public string EventDescription;
@@ -30,6 +30,11 @@ public abstract class RandomEventSO : ScriptableObject, IUnlockable
     public bool IsLocked()
     {
         return !NarrativeManager.Instance.CheckFlagValues(RequiredFlags);
+    }
+
+    public int GetId()
+    {
+        return RandomEventId;
     }
 }
 

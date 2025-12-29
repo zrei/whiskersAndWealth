@@ -54,11 +54,10 @@ public class StarvationManager : Singleton<StarvationManager>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            m_StarvationAmount = AssetLoader.Instance.GetIntValue(ValueCollectionType.STARVATION);
-            SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+            SetStarvationLevel(AssetLoader.Instance.GetIntValue(ValueCollectionType.STARVATION));
         }
         else
-            m_StarvationAmount = SaveManager.Instance.RetrieveStarvationLevel();
+            SetStarvationLevel(SaveManager.Instance.RetrieveStarvationLevel());
     }
     #endregion
 
@@ -72,20 +71,25 @@ public class StarvationManager : Singleton<StarvationManager>
     #region Restoration
     public void RestoreStarvationAmount(int amount)
     {
-        m_StarvationAmount = Mathf.Min(GlobalSettings.MaxStarvationLevel, m_StarvationAmount + amount);
+        SetStarvationLevel( Mathf.Min(GlobalSettings.MaxStarvationLevel, m_StarvationAmount + amount));
         GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
     }
     #endregion
 
     public void ConsumeStarvationAmount(int amount)
     {
-        m_StarvationAmount = Mathf.Max(0, m_StarvationAmount - amount);
-        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+        SetStarvationLevel(Mathf.Max(0, m_StarvationAmount - amount));
         GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
 
         if (m_StarvationAmount == 0)
         {
             GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
         }
+    }
+
+    private void SetStarvationLevel(float amount)
+    {
+        m_StarvationAmount = amount;
+        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
     }
 }

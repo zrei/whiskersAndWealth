@@ -36,11 +36,11 @@ public class PotionShopManager : Singleton<PotionShopManager>
 
         if (SaveManager.Instance.IsNewSave)
         {
-            m_CurrentUpgradeLevel = AssetLoader.Instance.GetIntValue(ValueCollectionType.POTION_SHOP);
+            SetCurrentUpgradeLevel(AssetLoader.Instance.GetIntValue(ValueCollectionType.POTION_SHOP));
         }
         else
         {
-            m_CurrentUpgradeLevel = SaveManager.Instance.GetShopLevel();
+            SetCurrentUpgradeLevel(SaveManager.Instance.GetShopLevel());
         }
     }
 
@@ -77,7 +77,7 @@ public class PotionShopManager : Singleton<PotionShopManager>
         foreach (ItemStack upgradeIngredient in potionShopUpgradeSO.RequiredItems)
             InventoryManager.Instance.TryConsumeItemQuantity(upgradeIngredient);
 
-        m_CurrentUpgradeLevel += 1;
+        SetCurrentUpgradeLevel(m_CurrentUpgradeLevel + 1);
         GlobalEvents.PotionShop.PotionShopUpgradedEvent?.Invoke();
 
         return true;
@@ -111,5 +111,11 @@ public class PotionShopManager : Singleton<PotionShopManager>
     public bool CanInteractWithPotionShop()
     {
         return true;
+    }
+
+    private void SetCurrentUpgradeLevel(int level)
+    {
+        m_CurrentUpgradeLevel = level;
+        SaveManager.Instance.SetShopLevel(m_CurrentUpgradeLevel);
     }
 }
