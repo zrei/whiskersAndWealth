@@ -103,6 +103,13 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
     #region Events
     private void OnTimePeriodAdvance(TimePeriod timePeriod)
     {
+        GlobalEvents.UI.OnUILayerClosed += OnMapLoadCompleteEvent;
+    }
+
+    private void OnMapLoadCompleteEvent()
+    {
+        GlobalEvents.UI.OnUILayerClosed -= OnMapLoadCompleteEvent;
+
         TryFireEvent();
     }
     #endregion

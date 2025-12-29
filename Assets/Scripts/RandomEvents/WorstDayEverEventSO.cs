@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WorstDayEverEventSO", menuName = "ScriptableObjects/RandomEvents/WorstDayEverEventSO")]
@@ -13,5 +14,24 @@ public class WorstDayEverEventSO : RandomEventSO
 
         if (m_FoodAmountToRemove > 0)
             StarvationManager.Instance.ConsumeStarvationAmount(m_FoodAmountToRemove);
+    }
+
+    public override string GetDescription()
+    {
+        StringBuilder finalString = new(base.GetDescription());
+
+        if (m_CoinAmountToDeduct > 0)
+        {
+            finalString.Append("\n");
+            finalString.Append("Coin - " + m_CoinAmountToDeduct);
+        }
+
+        if (m_FoodAmountToRemove > 0)
+        {
+            finalString.Append("\n");
+            finalString.Append("Removes " + m_FoodAmountToRemove + " food");
+        }
+
+        return finalString.ToString();
     }
 }

@@ -36,6 +36,11 @@ public abstract class RandomEventSO : ScriptableObject, IUnlockable, IIdentifiab
     {
         return RandomEventId;
     }
+
+    public virtual string GetDescription()
+    {
+        return EventDescription;
+    }
 }
 
 [System.Serializable]

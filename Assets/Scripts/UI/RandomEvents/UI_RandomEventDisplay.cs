@@ -31,6 +31,6 @@ public class UI_RandomEventDisplay : UILayer
     private void SetupDisplay()
     {
         m_RandomEventImage.sprite = m_TriggeredRandomEvent.EventImage;
-        m_RandomEventText.text = m_TriggeredRandomEvent.EventDescription;
+        m_RandomEventText.text = m_TriggeredRandomEvent.GetDescription();
     }
 }

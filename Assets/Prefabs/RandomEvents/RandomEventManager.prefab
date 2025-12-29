@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0fdad6b267e46f69fea6d4922d7f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BaseNoEventChance: 0.4
+  m_RandomEvents:
+  - RandomEvent: {fileID: 11400000, guid: b165156faebc64da1a51540b91a26302, type: 2}
+    TriggerChance: 1
+  m_BaseNoEventChance: 0
   m_RandomEventDisplay: {fileID: 6114477596404210864, guid: 7dc3982467fb04030bdbefcbe13629dd, type: 3}

@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: GiveFoodEventSO
   m_EditorClassIdentifier: 
   RandomEventId: 0
-  EventDescription: 
-  EventImage: {fileID: 0}
+  EventDescription: Oh wow! You found bread!
+  EventImage: {fileID: 1518477957, guid: 83cd9f7ff1a314e419ec3ee7e47c63b2, type: 3}
   RequiredFlags: []
   ProhibitedPreEventIds: 
   CanFireSuccessively: 1
   m_CoinAmountToGive: 0
   m_FoodAmountToGive: 0
-  m_ItemsToGive: []
+  m_ItemsToGive:
+  - Item: {fileID: 11400000, guid: f20866477da7548e9984ccbbf170db85, type: 2}
+    NumItem: 1
