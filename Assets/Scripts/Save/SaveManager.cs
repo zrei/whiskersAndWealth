@@ -34,36 +34,10 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     /// <summary>
-    /// Initialise the game's config, handling the case where there has not been a
-    /// config set before
-    /// </summary>
-    public void InitConfig()
-    {
-        if (!GetFlagValue("CONFIG"))
-            InitDefaultConfig();
-    }
-
-    /// <summary>
-    /// Initialise to the default config values
-    /// </summary>
-    private void InitDefaultConfig()
-    {
-        // set all config values here, this is an example
-        SetVolume(GlobalSettings.StartingVolume);
-
-        // indicate that a config exists
-        SetFlagValue("CONFIG", true);
-
-        // TODO: may need to separate this somehow from the saving game values
-        // because the player may reset config values from the menu after starting a game
-        Save();
-    }
-
-    /// <summary>
     /// Initialise an entirely new save file. Since no save values have been
     /// overridden, GAME_SAVE is set to false
     /// </summary>
-    public void InitNewSave()
+    public void InitNewGameSave()
     {
         // Indicate an entirely new save
         SetFlagValue("NEW_SAVE", true);
@@ -74,14 +48,25 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
 
     #region Config
-    public void SetVolume(float newVolume)
+    public void SetConfigValue(string flag, float value)
     {
-        PlayerPrefs.SetFloat("VOLUME", newVolume);
+        PlayerPrefs.SetFloat(flag, value);
     }
 
-    public float GetVolume()
+    public float ReadConfigValue(string flag)
     {
-        return PlayerPrefs.GetFloat("VOLUME");
+        return PlayerPrefs.GetFloat(flag);
+    }
+
+    public bool HasExistingConfig => GetFlagValue("CONFIG");
+
+    public void ConfigSave()
+    {
+        SetFlagValue("CONFIG", true);
+
+        // shouldn't need to set any temp values in since config values can be set directly to player prefs
+        // no need to clear temp values either since they should be unaffected
+        PlayerPrefs.Save();
     }
     #endregion
 
@@ -227,8 +212,10 @@ public class SaveManager : Singleton<SaveManager>
     /// Before calling this function, any values you set through
     /// this class is NOT saved to persistent memory.
     /// </summary>
-    public void Save()
+    public void GameSave()
     {
+        // TODO: Probably need a way to not save during the tutorial segment :)
+
         SetFlagValue("GAME_SAVE", true);
         SetFlagValue("NEW_SAVE", false);
 
@@ -255,22 +242,11 @@ public class SaveManager : Singleton<SaveManager>
         PlayerPrefs.Save();
     }
 
-    private void ClearSave()
+    private void ClearGameSave()
     {
         // should not clear config
         PlayerPrefs.DeleteKey("GAME_SAVE");
-        InitNewSave();
-    }
-    #endregion
-
-    #region Managing Config
-    /// <summary>
-    /// Reset config back to the default.
-    /// </summary>
-    public void ResetConfig()
-    {
-        PlayerPrefs.DeleteKey("CONFIG");
-        InitDefaultConfig();
+        InitNewGameSave();
     }
     #endregion
 

@@ -36,7 +36,8 @@ public class UI_PauseMenu : UILayer
 
     private void B_SaveGame()
     {
-        SaveManager.Instance.Save(); // TODO: block inputs while saving
+        // TODO: Some maps probably need to turn the save button off
+        SaveManager.Instance.GameSave(); // TODO: block inputs while saving
     }
     #endregion
 }

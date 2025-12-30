@@ -65,6 +65,7 @@ public class MapLoader : Singleton<MapLoader>
     private IEnumerator TransitionCurrMap()
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
+        SaveManager.Instance.GameSave();
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.3f);
         yield return null;
 
@@ -97,6 +98,10 @@ public class MapLoader : Singleton<MapLoader>
         yield return new WaitUntil(() => StarvationManager.IsReady);
 
         currLoadProgress += 0.1f;
+
+        // sometimes you'd do it pre-map load other times you'd do it post map-load so we need some additional handling for this
+        SaveManager.Instance.GameSave();
+
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return null;
 

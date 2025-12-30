@@ -44,7 +44,7 @@ public class UI_MainMenu : MonoBehaviour
 
     private void B_NewGame()
     {
-        SaveManager.Instance.InitNewSave();
+        SaveManager.Instance.InitNewGameSave();
         TransitionManager.Instance.ChangeScene(SceneEnum.GAME_SCENE);
     }
     #endregion
