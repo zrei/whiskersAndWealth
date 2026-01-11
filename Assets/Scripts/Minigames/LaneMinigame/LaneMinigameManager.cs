@@ -6,14 +6,13 @@ using UnityEngine;
 public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
 {
     [Header("References")]
-    [SerializeField] private LaneObj m_LaneObjPrefab;
+    [SerializeField] private LaneWallPool m_LaneWallPool;
     [SerializeField] private Transform m_LaneSpawnPosition;
 
     [Header("UI")]
     [SerializeField] private UI_LaneMinigame_Result m_LaneMinigame_ResultUI;
 
     private Queue<LaneObj> m_InUseLaneObjs = new();
-    private HashSet<LaneObj> m_FreeLaneObjs = new();
 
     private LaneMinigameSO m_MinigameSO = null;
     private LaneWaveSO m_CurrentWaveSO = null;
@@ -68,7 +67,6 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
             laneObj.OnPlayerInteractionComplete += OnPlayerInteractionComplete;
             ResetLanePosition(laneObj);
             laneObj.transform.position = new Vector3(laneObj.transform.position.x, laneObj.transform.position.y + GetInterval(waveSO) * i, laneObj.transform.position.z);
-            laneObj.gameObject.SetActive(true);
             m_InUseLaneObjs.Enqueue(laneObj);
         }
 
@@ -91,28 +89,22 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
     #region Lane Pool
     private LaneObj GetLaneObj()
     {
-        if (m_FreeLaneObjs.Count > 0)
-        {
-            LaneObj laneObj = m_FreeLaneObjs.First();
-            m_FreeLaneObjs.Remove(laneObj);
-            laneObj.gameObject.SetActive(false);
-            return laneObj;
-        }
-        else
-        {
-            LaneObj laneObj = Instantiate<LaneObj>(m_LaneObjPrefab);
-            laneObj.transform.localScale = Vector3.one;
-            laneObj.transform.rotation = Quaternion.identity;
-            laneObj.transform.parent = m_LaneSpawnPosition;
-            laneObj.gameObject.SetActive(false);
-            return laneObj;
-        }
+        return m_LaneWallPool.GetObjectFromPool(true);
     }
 
     private void ReturnLaneObj(LaneObj laneObj)
     {
-        laneObj.gameObject.SetActive(false);
-        m_FreeLaneObjs.Add(laneObj);
+        m_LaneWallPool.ReturnPoolObj(laneObj);
+    }
+
+    private void ReturnAllGatesToPool()
+    {
+        int numGates = m_InUseLaneObjs.Count;
+        for (int i = 0; i < numGates; i++)
+        {
+            LaneObj laneObj = m_InUseLaneObjs.Dequeue();
+            ReturnLaneObj(laneObj);
+        }
     }
     #endregion
 
@@ -166,17 +158,6 @@ public class LaneMinigameManager : MinigameManager<LaneMinigameSO>
         }
             
         BeginWave(m_MinigameSO.Waves[m_CurrentWaveNumber]);
-    }
-
-    private void ReturnAllGatesToPool()
-    {
-        int numGates = m_InUseLaneObjs.Count;
-        for (int i = 0; i < numGates; i++)
-        {
-            LaneObj laneObj = m_InUseLaneObjs.Dequeue();
-            laneObj.gameObject.SetActive(false);
-            m_FreeLaneObjs.Add(laneObj);
-        }
     }
 
     private void OnEndMinigame(bool wonGame, int waveReached)

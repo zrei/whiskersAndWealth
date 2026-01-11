@@ -57,6 +57,11 @@ public class SoundPlayer : MonoBehaviour
     private AudioState m_AudioState = AudioState.NOT_STARTED;
     #endregion
 
+    #region Id
+    private int m_Id;
+    public int ID => m_Id;
+    #endregion
+
     public bool IsPlaying => m_AudioState == AudioState.PLAYING;
     public bool IsPaused => m_AudioState == AudioState.PAUSED;
     public bool HasCompleted => m_Active && IsPlaying && !m_AudioPlayer.isPlaying;
@@ -103,8 +108,9 @@ public class SoundPlayer : MonoBehaviour
         }
     }
 
-    public void Init(SoundInstance soundInstance)
+    public void Init(SoundInstance soundInstance, int id)
     {
+        m_Id = id;
         m_AudioClip = soundInstance.AudioClip;
         m_SoundPlayerSetting = soundInstance.GetFinalSoundPlayerSetting();
 
