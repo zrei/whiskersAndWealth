@@ -37,21 +37,21 @@ public class SoundManager : Singleton<SoundManager>
         int id = GetNewId();
         soundPlayer.Init(soundInstance, id);
         m_AllPlayingSounds.Add(id, soundPlayer);
+        soundPlayer.OnReadyForCleanupEvent += OnSoundReadyForCleanup;
         return soundPlayer;
     }
 
-    public void ManualStopAndCleanup(int id)
+    public SoundPlayer GetPlayingSound(int id)
     {
-        SoundPlayer soundPlayer = m_AllPlayingSounds[id];
-        ManualStopAndCleanup(soundPlayer);
+        return m_AllPlayingSounds[id];
     }
 
-    public void ManualStopAndCleanup(SoundPlayer soundPlayer)
+    private void OnSoundReadyForCleanup(int id)
     {
-        soundPlayer.Stop();
-        soundPlayer.Cleanup();
-        m_AllPlayingSounds.Remove(soundPlayer.ID);
+        SoundPlayer soundPlayer = m_AllPlayingSounds[id];
+        soundPlayer.OnReadyForCleanupEvent -= OnSoundReadyForCleanup;
         m_SoundPlayerPool.ReturnPoolObj(soundPlayer);
+        m_AllPlayingSounds.Remove(id);
     }
 
     private int GetNewId()
@@ -82,6 +82,7 @@ public class SoundManager : Singleton<SoundManager>
                 soundPlayer.OnStop();
                 soundPlayer.Cleanup();
                 cleanedUpSounds.Add(soundPlayer);
+                soundPlayer.OnReadyForCleanupEvent -= OnSoundReadyForCleanup;
                 m_SoundPlayerPool.ReturnPoolObj(soundPlayer);
             }
         }

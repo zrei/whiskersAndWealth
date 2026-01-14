@@ -67,6 +67,8 @@ public class SoundPlayer : MonoBehaviour
     public bool HasCompleted => m_Active && IsPlaying && !m_AudioPlayer.isPlaying;
     public bool CleanupPostClip => m_SoundPlayerSetting.CleanupPostClip;
 
+    public IntEvent OnReadyForCleanupEvent;
+
     private void Start()
     {
         m_AudioPlayer = GetComponent<AudioSource>();
@@ -177,5 +179,8 @@ public class SoundPlayer : MonoBehaviour
 
         m_AudioPlayer.Stop();
         OnStop();
+
+        if (CleanupPostClip)
+            OnReadyForCleanupEvent?.Invoke(ID);
     }
 }
