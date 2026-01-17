@@ -27,6 +27,9 @@ public class UIManager : Singleton<UIManager>
     [Header("Inventory")]
     [SerializeField] private UI_Inventory m_InventoryPrefab;
 
+    [Header("Common")]
+    [SerializeField] private UI_ConfirmationBox m_ConfirmationBox;
+
     private HashSet<GameObject> m_OpenHUD;
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
@@ -208,6 +211,13 @@ public class UIManager : Singleton<UIManager>
     private void OpenInventory(InputAction.CallbackContext _)
     {
         OpenLayer(m_InventoryPrefab);
+    }
+    #endregion
+
+    #region Common
+    public UI_ConfirmationBox OpenConfirmationBox(ConfirmationBoxData confirmationBoxData)
+    {
+        return (UI_ConfirmationBox) OpenLayer(m_ConfirmationBox, confirmationBoxData);
     }
     #endregion
 

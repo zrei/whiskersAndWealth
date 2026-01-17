@@ -10,7 +10,7 @@ public abstract class UILayer : MonoBehaviour
     [SerializeField] private bool m_HidePreviousLayers = false;
     [SerializeField] private bool m_HideHUD = false;
 
-    public bool IsEscClosable => m_IsEscClosable;
+    public virtual bool IsEscClosable => m_IsEscClosable;
     public bool HideHUD => m_HideHUD;
     public bool HidePreviousLayers => m_HidePreviousLayers;
 

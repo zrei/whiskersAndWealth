@@ -8,6 +8,7 @@ public enum ValueCollectionType
     POTION_SHOP,
     RANDOM_EVENT,
     TIME_PERIOD,
+    DEBT_AMOUNT
 }
 
 [System.Serializable]
