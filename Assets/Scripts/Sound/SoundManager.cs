@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
 
 public enum SoundChannels
 {
@@ -13,22 +15,56 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private SoundPlayerPool m_SoundPlayerPool;
     [SerializeField] private float m_SoundCheckInterval;
 
-    // this may not correspond to 0-1 but will the actual raw values internally. Settings will map it
+    // must correspond to 0 - 1
     private float m_MasterVolume;
-    private Dictionary<SoundChannels, float> m_ChannelVolumes;
-    private Dictionary<int, SoundPlayer> m_AllPlayingSounds;
+    private Dictionary<SoundChannels, float> m_ChannelVolumes = new();
+    private Dictionary<int, SoundPlayer> m_AllPlayingSounds = new();
     private int m_CurrId = 0;
 
     private float m_CurrCheckTime = 0;
 
-    public void SetMasterVolume(float volume)
+    protected override void HandleAwake()
     {
-        m_MasterVolume = volume;
+        base.HandleAwake();
+
+        InitVolume();
     }
 
-    public float GetVolume(SoundChannels soundChannel)
+    private void InitVolume()
     {
-        return m_MasterVolume * m_ChannelVolumes.GetValueOrDefault<SoundChannels, float>(soundChannel, 1f);
+        SetMasterVolume(1f);
+
+        // for now
+        foreach (SoundChannels soundChannel in Enum.GetValues(typeof(SoundChannels)).Cast<SoundChannels>())
+            SetChannelVolume(soundChannel, 1f);      
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        if (volume == m_MasterVolume)
+            return;
+
+        m_MasterVolume = Mathf.Clamp(volume, 0, 1);
+        OnMasterVolumeUpdated();
+    }
+
+    public void SetChannelVolume(SoundChannels soundChannel, float volume)
+    {
+        if (m_ChannelVolumes.ContainsKey(soundChannel) && GetBaseChannelVolume(soundChannel) != volume)
+            return;
+
+        m_ChannelVolumes[soundChannel] = Mathf.Clamp(volume, 0f, 1f);
+        OnSoundChannelVolumeUpdated(soundChannel);
+    }
+
+    public float GetBaseChannelVolume(SoundChannels soundChannel)
+    {
+        return m_ChannelVolumes.GetValueOrDefault<SoundChannels, float>(soundChannel, 1f);
+    }
+
+    public float GetModulatedChannelVolume(SoundChannels soundChannel)
+    {
+        return m_MasterVolume * GetBaseChannelVolume(soundChannel);
     }
 
     public SoundPlayer PlaySound(SoundInstance soundInstance)
@@ -90,6 +126,23 @@ public class SoundManager : Singleton<SoundManager>
         foreach (SoundPlayer cleanedUpSound in cleanedUpSounds)
         {
             m_AllPlayingSounds.Remove(cleanedUpSound.ID);
+        }
+    }
+
+    private void OnMasterVolumeUpdated()
+    {
+        foreach (SoundChannels soundChannel in Enum.GetValues(typeof(SoundChannels)).Cast<SoundChannels>())
+        {
+            OnSoundChannelVolumeUpdated(soundChannel);    
+        }
+    }
+
+    private void OnSoundChannelVolumeUpdated(SoundChannels soundChannel)
+    {
+        foreach (SoundPlayer soundPlayer in m_AllPlayingSounds.Values)
+        {
+            if (soundPlayer.SoundChannel == soundChannel)
+                soundPlayer.UpdateVolume(GetModulatedChannelVolume(soundChannel));
         }
     }
 }

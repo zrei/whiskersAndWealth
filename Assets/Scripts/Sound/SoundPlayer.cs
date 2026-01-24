@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,6 +8,7 @@ public class SoundPlayerSetting
     public float StartPosition = 0f;
     public bool Loop = false;
     // modify the volume of this clip relative to the channel volume
+    [Range(0f, 1f)]
     public float Volume = 1f;
     // if this is set to false then the object that owns the sound player will have to manually clean it up
     public bool CleanupPostClip = true;
@@ -49,6 +51,9 @@ public class SoundPlayer : MonoBehaviour
     #region Settings
     private AudioClip m_AudioClip;
     private SoundPlayerSetting m_SoundPlayerSetting;
+    private SoundChannels m_SoundChannel;
+
+    public SoundChannels SoundChannel => m_SoundChannel;
     #endregion
 
     #region State
@@ -88,9 +93,10 @@ public class SoundPlayer : MonoBehaviour
         if (m_Active)
             return;
 
+        m_Active = true;
         m_AudioPlayer.clip = m_AudioClip;
 
-        m_AudioPlayer.volume = m_SoundPlayerSetting.Volume;
+        m_AudioPlayer.volume = m_SoundPlayerSetting.Volume * SoundManager.Instance.GetModulatedChannelVolume(m_SoundChannel);
         m_AudioPlayer.loop = m_SoundPlayerSetting.Loop;
         m_AudioPlayer.pitch = m_SoundPlayerSetting.Pitch;
         m_AudioPlayer.spatialBlend = m_SoundPlayerSetting.SpatialBlend;
@@ -115,8 +121,8 @@ public class SoundPlayer : MonoBehaviour
         m_Id = id;
         m_AudioClip = soundInstance.AudioClip;
         m_SoundPlayerSetting = soundInstance.GetFinalSoundPlayerSetting();
+        m_SoundChannel = soundInstance.SoundChannel;
 
-        m_Active = true;
         m_AudioState = AudioState.NOT_STARTED;
 
         Init_Delayed();
@@ -182,5 +188,10 @@ public class SoundPlayer : MonoBehaviour
 
         if (CleanupPostClip)
             OnReadyForCleanupEvent?.Invoke(ID);
+    }
+
+    public void UpdateVolume(float modulatedChannelVolume)
+    {
+        m_AudioPlayer.volume = m_SoundPlayerSetting.Volume * modulatedChannelVolume;
     }
 }

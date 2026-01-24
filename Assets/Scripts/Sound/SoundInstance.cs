@@ -13,6 +13,7 @@ public struct SoundInstance
     public bool OverrideLoop;
     public bool OverriddenLoop;
     public bool OverrideVolume;
+    [Range(0f, 1f)]
     public float OverriddenVolume;
     public bool OverrideCleanupPostClip;
     public bool OverriddenCleanupPostClip;
@@ -65,4 +66,5 @@ public struct SoundInstance
     }
 
     public AudioClip AudioClip => SoundAsset.AudioClip;
+    public SoundChannels SoundChannel => SoundAsset.SoundChannel;
 }
