@@ -47,6 +47,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SoundPlayerPool: {fileID: 8054400253740654671}
   m_SoundCheckInterval: 0.1
+  m_DebugSound:
+    SoundAsset: {fileID: 11400000, guid: 8babd7823b986458c93f22cbdabcfb6b, type: 2}
+    OverrideStartPlayingImmediately: 0
+    OverriddenStartPlayingImmediately: 0
+    OverrideStartPosition: 0
+    OverriddenStartPosition: 0
+    OverrideLoop: 0
+    OverriddenLoop: 0
+    OverrideVolume: 0
+    OverriddenVolume: 0
+    OverrideCleanupPostClip: 0
+    OverriddenCleanupPostClip: 0
+    OverridePitch: 0
+    OverriddenPitch: 0
+    OverrideSpatialBlend: 0
+    OverriddenSpatialBlend: 0
+    OverrideMinDistance: 0
+    OverriddenMinDistance: 0
+    OverrideMaxDistance: 0
+    OverriddenMaxDistance: 0
+    OverrideSpread: 0
+    OverriddenSpread: 0
 --- !u!1001 &3472787609836418544
 PrefabInstance:
   m_ObjectHideFlags: 0

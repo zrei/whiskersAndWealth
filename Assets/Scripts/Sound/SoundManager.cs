@@ -67,11 +67,11 @@ public class SoundManager : Singleton<SoundManager>
         return m_MasterVolume * GetBaseChannelVolume(soundChannel);
     }
 
-    public SoundPlayer PlaySound(SoundInstance soundInstance)
+    public SoundPlayer PlaySound(SoundInstance soundInstance, float fadeInTime = 0f)
     {
         SoundPlayer soundPlayer = m_SoundPlayerPool.GetObjectFromPool(true, gameObject.transform);
         int id = GetNewId();
-        soundPlayer.Init(soundInstance, id);
+        soundPlayer.Init(soundInstance, id, fadeInTime);
         m_AllPlayingSounds.Add(id, soundPlayer);
         soundPlayer.OnReadyForCleanupEvent += OnSoundReadyForCleanup;
         return soundPlayer;
@@ -105,7 +105,7 @@ public class SoundManager : Singleton<SoundManager>
         {
             CheckSounds();
             m_CurrCheckTime -= m_SoundCheckInterval;
-        }
+        }        
     }
 
     private void CheckSounds()
@@ -116,7 +116,6 @@ public class SoundManager : Singleton<SoundManager>
             if (soundPlayer.HasCompleted && soundPlayer.CleanupPostClip)
             {
                 soundPlayer.OnStop();
-                soundPlayer.Cleanup();
                 cleanedUpSounds.Add(soundPlayer);
                 soundPlayer.OnReadyForCleanupEvent -= OnSoundReadyForCleanup;
                 m_SoundPlayerPool.ReturnPoolObj(soundPlayer);
@@ -143,6 +142,26 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (soundPlayer.SoundChannel == soundChannel)
                 soundPlayer.UpdateVolume(GetModulatedChannelVolume(soundChannel));
+        }
+    }
+
+    public void StopAllSounds()
+    {
+        foreach (SoundPlayer soundPlayer in m_AllPlayingSounds.Values)
+        {
+            soundPlayer.OnReadyForCleanupEvent -= OnSoundReadyForCleanup;
+            soundPlayer.Stop();
+            m_SoundPlayerPool.ReturnPoolObj(soundPlayer);
+        }
+
+        m_AllPlayingSounds.Clear();
+    }
+
+    public void FadeOutAllSounds(float fadeOutTime)
+    {
+        foreach (SoundPlayer soundPlayer in m_AllPlayingSounds.Values)
+        {
+            soundPlayer.Stop(fadeOutTime);
         }
     }
 }

@@ -43,6 +43,14 @@ public enum AudioState
     STOPPED
 }
 
+public enum FadeState
+{
+    NONE,
+    FADING_IN,
+    FADING_OUT
+
+}
+
 [RequireComponent(typeof(AudioSource))]
 public class SoundPlayer : MonoBehaviour
 {
@@ -60,6 +68,10 @@ public class SoundPlayer : MonoBehaviour
     // has been initialised
     private bool m_Active = false;
     private AudioState m_AudioState = AudioState.NOT_STARTED;
+    private float m_FinalAudioLevel = 0f;
+    private float m_FinalFadeTime = 0f;
+    private float m_CurrentFadeTimer = 0f;
+    private FadeState m_FadeState = FadeState.NONE;
     #endregion
 
     #region Id
@@ -67,10 +79,15 @@ public class SoundPlayer : MonoBehaviour
     public int ID => m_Id;
     #endregion
 
+    #region Delayed Init
+    private float m_CachedFadeInTime = 0f;
+    #endregion
+
     public bool IsPlaying => m_AudioState == AudioState.PLAYING;
     public bool IsPaused => m_AudioState == AudioState.PAUSED;
     public bool HasCompleted => m_Active && IsPlaying && !m_AudioPlayer.isPlaying;
     public bool CleanupPostClip => m_SoundPlayerSetting.CleanupPostClip;
+    public bool IsFading => m_FadeState != FadeState.NONE;
 
     public IntEvent OnReadyForCleanupEvent;
 
@@ -80,6 +97,36 @@ public class SoundPlayer : MonoBehaviour
         m_AudioPlayer.playOnAwake = false;
 
         Init_Delayed();
+    }
+
+    private void Update()
+    {
+        if (!IsFading)
+            return;
+
+        m_CurrentFadeTimer += Time.deltaTime;
+        bool hasCompletedTimer = m_CurrentFadeTimer >= m_FinalFadeTime;
+        bool requireStop = hasCompletedTimer && m_FadeState == FadeState.FADING_OUT;
+        
+        switch (m_FadeState)
+        {
+            case FadeState.FADING_IN:
+                m_AudioPlayer.volume = Mathf.Lerp(0f, m_FinalAudioLevel, m_CurrentFadeTimer / m_FinalFadeTime);
+                break;
+            case FadeState.FADING_OUT:
+                m_AudioPlayer.volume = Mathf.Lerp(m_FinalAudioLevel, 0f, m_CurrentFadeTimer / m_FinalFadeTime);
+                break;
+        }
+
+        if (hasCompletedTimer)
+        {
+            m_FadeState = FadeState.NONE;
+        }
+
+        if (requireStop)
+        {
+            Stop();
+        }
     }
 
     private void Init_Delayed()
@@ -96,7 +143,7 @@ public class SoundPlayer : MonoBehaviour
         m_Active = true;
         m_AudioPlayer.clip = m_AudioClip;
 
-        m_AudioPlayer.volume = m_SoundPlayerSetting.Volume * SoundManager.Instance.GetModulatedChannelVolume(m_SoundChannel);
+        m_FinalAudioLevel = m_SoundPlayerSetting.Volume * SoundManager.Instance.GetModulatedChannelVolume(m_SoundChannel);
         m_AudioPlayer.loop = m_SoundPlayerSetting.Loop;
         m_AudioPlayer.pitch = m_SoundPlayerSetting.Pitch;
         m_AudioPlayer.spatialBlend = m_SoundPlayerSetting.SpatialBlend;
@@ -107,8 +154,7 @@ public class SoundPlayer : MonoBehaviour
 
         if (m_SoundPlayerSetting.StartPlayingImmediately)
         {
-            m_AudioState = AudioState.PLAYING;
-            m_AudioPlayer.Play();
+            OnPlay();
         }
         else
         {
@@ -116,7 +162,7 @@ public class SoundPlayer : MonoBehaviour
         }
     }
 
-    public void Init(SoundInstance soundInstance, int id)
+    public void Init(SoundInstance soundInstance, int id, float fadeInTime = 0f)
     {
         m_Id = id;
         m_AudioClip = soundInstance.AudioClip;
@@ -125,10 +171,12 @@ public class SoundPlayer : MonoBehaviour
 
         m_AudioState = AudioState.NOT_STARTED;
 
+        m_CachedFadeInTime = fadeInTime;
+
         Init_Delayed();
     }
 
-    public void Cleanup()
+    private void Cleanup()
     {
         m_Active = false;
         m_AudioState = AudioState.NOT_STARTED;
@@ -148,7 +196,7 @@ public class SoundPlayer : MonoBehaviour
         {
             case AudioState.NOT_STARTED:
             case AudioState.STOPPED:
-                m_AudioPlayer.Play();
+                OnPlay();
                 break;
             case AudioState.PAUSED:
                 m_AudioPlayer.UnPause();
@@ -156,6 +204,26 @@ public class SoundPlayer : MonoBehaviour
         }
 
         m_AudioState = AudioState.PLAYING;
+    }
+
+    private void OnPlay()
+    {
+        m_AudioState = AudioState.PLAYING;
+        m_AudioPlayer.Play();
+
+        if (m_CachedFadeInTime > 0f)
+        {
+            m_FadeState = FadeState.FADING_IN;
+            m_FinalFadeTime = m_CachedFadeInTime;
+            m_CurrentFadeTimer = 0f;
+            m_AudioPlayer.volume = 0f;
+        }
+        else
+        {
+            m_AudioPlayer.volume = m_FinalAudioLevel;
+        }
+
+        m_CachedFadeInTime = 0f;
     }
 
     public void Pause()
@@ -173,15 +241,24 @@ public class SoundPlayer : MonoBehaviour
     public void OnStop()
     {
         m_AudioState = AudioState.STOPPED;
+        Cleanup();
     }
 
-    public void Stop()
+    public void Stop(float fadeOutTime = 0f)
     {
         if (!m_Active)
             return;
 
         if (HasCompleted || m_AudioState == AudioState.STOPPED)
             return;
+
+        if (fadeOutTime > 0f)
+        {
+            m_FadeState = FadeState.FADING_OUT;
+            m_FinalFadeTime = fadeOutTime;
+            m_CurrentFadeTimer = 0f;
+            return;
+        }
 
         m_AudioPlayer.Stop();
         OnStop();
@@ -192,6 +269,9 @@ public class SoundPlayer : MonoBehaviour
 
     public void UpdateVolume(float modulatedChannelVolume)
     {
-        m_AudioPlayer.volume = m_SoundPlayerSetting.Volume * modulatedChannelVolume;
+        m_FinalAudioLevel = modulatedChannelVolume;
+
+        if (!IsFading)
+            m_AudioPlayer.volume = m_SoundPlayerSetting.Volume * modulatedChannelVolume;
     }
 }
