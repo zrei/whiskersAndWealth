@@ -99,6 +99,7 @@ MonoBehaviour:
     ConfirmationBoxDescription: Are you sure you want to end the game?
     RejectOnClose: 1
     AllowEscClose: 1
+  m_EndScreen: {fileID: 6622054240665767340, guid: 7aba95b781b5340b89a4c1ab1afd9a81, type: 3}
 --- !u!1 &2973491224347395982
 GameObject:
   m_ObjectHideFlags: 0

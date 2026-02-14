@@ -355,3 +355,4 @@ MonoBehaviour:
   m_IndicatorCanvas: {fileID: 630607867573305778}
   m_PauseMenuPrefab: {fileID: 3813591886959313044, guid: 8b6f107c27510be4692336e007ebc3dd, type: 3}
   m_InventoryPrefab: {fileID: -8823281465701454966, guid: 4da9ed2e79567475faa4311d31dc4594, type: 3}
+  m_ConfirmationBox: {fileID: 4114338326088458222, guid: 9aa85680c9e2b4e508e0136b00fae1ab, type: 3}

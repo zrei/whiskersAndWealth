@@ -16,7 +16,7 @@ MonoBehaviour:
   - ValueCollectionType: 4
     Value: 0
   - ValueCollectionType: 0
-    Value: 0
+    Value: 10000
   - ValueCollectionType: 1
     Value: 5
   - ValueCollectionType: 3

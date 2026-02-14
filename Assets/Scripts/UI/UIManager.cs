@@ -181,6 +181,19 @@ public class UIManager : Singleton<UIManager>
             m_OpenLayers.Peek().HandleUISelect();
         }
     }
+
+    public void ClearAllUI()
+    {
+        while (m_OpenLayers.Count() > 0)
+            CloseLayer();
+
+        foreach (GameObject hudObject in m_OpenHUD)
+        {
+            Destroy(hudObject);
+        }
+
+        m_OpenHUD.Clear();
+    }
     #endregion
 
     #region UI Elements
