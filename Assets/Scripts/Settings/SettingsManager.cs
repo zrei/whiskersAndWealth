@@ -1,5 +1,22 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 public class SettingsManager : Singleton<SettingsManager>
 {
+    [SerializeField] private SettingsDB m_SettingsDB;
+    [SerializeField] private UILayer m_SettingsMenuPrefab;
+
+    private Dictionary<Setting, float> m_CurrentSettingsValue = new();
+
+    public const float TOGGLE_FALSE_FLOAT_VALUE = 0f;
+    public const float TOGGLE_TRUE_FLOAT_VALUE = 1f;
+
+    public static float TranslateToggleFloatValue(bool toggleValue) 
+    {
+        return toggleValue ? TOGGLE_TRUE_FLOAT_VALUE : TOGGLE_FALSE_FLOAT_VALUE;
+    }
+
     protected override void HandleAwake()
     {
         base.HandleAwake();
@@ -33,6 +50,8 @@ public class SettingsManager : Singleton<SettingsManager>
     {
         if (!SaveManager.Instance.HasExistingConfig)
             InitDefaultConfig();
+        else
+            LoadConfig();
     }
 
     /// <summary>
@@ -40,23 +59,27 @@ public class SettingsManager : Singleton<SettingsManager>
     /// </summary>
     private void InitDefaultConfig()
     {
-        // set all config values here, this is an example
-        SetVolume(GlobalSettings.StartingVolume);
+        m_CurrentSettingsValue.Clear();
 
-        SaveManager.Instance.ConfigSave();
+        foreach (SettingsSO settingsSO in m_SettingsDB.SettingsCollection)
+        {
+            SetSettingFloatValue(settingsSO.SettingTag, settingsSO.GetDefaultFloatValue());
+        }
+
+        SaveConfig();
     }
 
-    #region Config
-    public void SetVolume(float newVolume)
+    private void LoadConfig()
     {
-        SaveManager.Instance.SetConfigValue("VOLUME", newVolume);
-    }
+        m_CurrentSettingsValue.Clear();
 
-    public float GetVolume()
-    {
-        return SaveManager.Instance.ReadConfigValue("VOLUME");
+        // Iterate through setting tag, go to string, and read it from the save manager
+        // if it doesn't exist, write default value
+        foreach (Setting setting in Enum.GetValues(typeof(Setting)))
+        {
+            SetSettingFloatValue(setting, SaveManager.Instance.ReadConfigValue(setting.ToString()));
+        }
     }
-    #endregion
 
     #region Managing Config
     /// <summary>
@@ -65,6 +88,39 @@ public class SettingsManager : Singleton<SettingsManager>
     public void ResetConfig()
     {
         InitDefaultConfig();
+    }
+
+    public void SaveConfig()
+    {
+        SaveManager.Instance.ConfigSave();
+    }
+    #endregion
+
+    public bool IsSettingToggledOn(Setting setting)
+    {
+        return m_CurrentSettingsValue[setting] == TOGGLE_TRUE_FLOAT_VALUE;
+    }
+
+    public float GetSettingFloatValue(Setting setting)
+    {
+        return m_CurrentSettingsValue[setting];
+    }
+
+    public void SetSettingToggleValue(Setting setting, bool toggleOn)
+    {
+        SetSettingFloatValue(setting, TranslateToggleFloatValue(toggleOn));
+    }
+
+    public void SetSettingFloatValue(Setting setting, float value)
+    {
+        m_CurrentSettingsValue[setting] = value;
+        SaveManager.Instance.SetConfigValue(setting.ToString(), value);
+    }
+
+    #region UI Menu
+    public void OpenSettingsMenu()
+    {
+        UIManager.Instance.OpenLayer(m_SettingsMenuPrefab, m_SettingsDB);
     }
     #endregion
 }
