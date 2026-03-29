@@ -10,7 +10,8 @@ public enum Setting
 {
     MasterVolume,
     MusicVolume,
-    SFXVolume
+    SFXVolume,
+    CameraShake
 }
 
 [CreateAssetMenu(fileName = "SettingsSO", menuName = "ScriptableObjects/Settings/SettingsSO")]
