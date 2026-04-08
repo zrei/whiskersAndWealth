@@ -16,4 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 08abbddb113ac499db87428788a2d620, type: 2}
   - {fileID: 11400000, guid: f348bccaea54644fbbc1af5b8cbefb12, type: 2}
   - {fileID: 11400000, guid: 78263f75c7742494d9af018fa7370d2b, type: 2}
-  SettingsUIOrder: 000000000100000002000000
+  - {fileID: 11400000, guid: 4908326bc325f403ea166e5a9ee1a2bf, type: 2}
+  SettingsUIOrder: 00000000010000000200000003000000

@@ -52,10 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemTile: {fileID: 2490385101371877437, guid: fdd0e360e35ae4923941489f4e2fac6a, type: 3}
+  m_GridLayout: {fileID: 5982780949527973997}
   m_NumRows: 0
   m_NumCols: 0
   m_ShowEmptyBoxes: 0
-  m_GridLayout: {fileID: 5982780949527973997}
 --- !u!114 &5982780949527973997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,8 +108,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 4fb526f517c8d4e8bbf671bf638535b2, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
