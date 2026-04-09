@@ -30,8 +30,7 @@ public class UI_MainMenu : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_NewGameBtn.OnSubmitted -= B_NewGame;
-        m_ContinueBtn.OnSubmitted -= B_ContinueGame;
+        UnsubscribeButtons();
         InputManager.UnsubscribeToAction(InputType.UI_SELECT, OnUISelect);
     }
     #endregion
@@ -39,11 +38,13 @@ public class UI_MainMenu : MonoBehaviour
     #region Btn Callbacks
     private void B_ContinueGame()
     {
+        UnsubscribeButtons();
         TransitionManager.Instance.ChangeScene(SceneEnum.GAME_SCENE);
     }
 
     private void B_NewGame()
     {
+        UnsubscribeButtons();
         SaveManager.Instance.InitNewGameSave();
         TransitionManager.Instance.ChangeScene(SceneEnum.GAME_SCENE);
     }
@@ -58,4 +59,10 @@ public class UI_MainMenu : MonoBehaviour
         // perform any actions here
     }
     #endregion
+
+    private void UnsubscribeButtons()
+    {
+        m_NewGameBtn.OnSubmitted -= B_NewGame;
+        m_ContinueBtn.OnSubmitted -= B_ContinueGame;
+    }
 }
