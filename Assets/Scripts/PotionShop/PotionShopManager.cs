@@ -6,9 +6,6 @@ public class PotionShopManager : Singleton<PotionShopManager>
 {
     [SerializeField] private List<PotionShopUpgradeSO> m_PotionShopUpgrades;
 
-    [Header("Debug")]
-    [SerializeField] private int m_DebugShopStartingLevel = 0;
-
     private int m_CurrentUpgradeLevel;
     public int NextLevel => m_CurrentUpgradeLevel + 1;
 
@@ -16,12 +13,32 @@ public class PotionShopManager : Singleton<PotionShopManager>
     {
         base.HandleAwake();
 
-        m_CurrentUpgradeLevel = m_DebugShopStartingLevel;
+        HandleDependencies();
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            SetCurrentUpgradeLevel(AssetLoader.Instance.GetIntValue(ValueCollectionType.POTION_SHOP));
+        }
+        else
+        {
+            SetCurrentUpgradeLevel(SaveManager.Instance.GetShopLevel());
+        }
     }
 
     public bool TryMakePotiion(PotionSO potion)
@@ -57,7 +74,7 @@ public class PotionShopManager : Singleton<PotionShopManager>
         foreach (ItemStack upgradeIngredient in potionShopUpgradeSO.RequiredItems)
             InventoryManager.Instance.TryConsumeItemQuantity(upgradeIngredient);
 
-        m_CurrentUpgradeLevel += 1;
+        SetCurrentUpgradeLevel(m_CurrentUpgradeLevel + 1);
         GlobalEvents.PotionShop.PotionShopUpgradedEvent?.Invoke();
 
         return true;
@@ -91,5 +108,11 @@ public class PotionShopManager : Singleton<PotionShopManager>
     public bool CanInteractWithPotionShop()
     {
         return true;
+    }
+
+    private void SetCurrentUpgradeLevel(int level)
+    {
+        m_CurrentUpgradeLevel = level;
+        SaveManager.Instance.SetShopLevel(m_CurrentUpgradeLevel);
     }
 }

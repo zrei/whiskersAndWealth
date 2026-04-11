@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 8da0fb8f2825e48a9a95f285c5249ca0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -507,8 +507,8 @@ MonoBehaviour:
   m_ItemBox: {fileID: 2976853135355323174}
   m_Cg: {fileID: 812429686429328045}
   m_FilledSelection: {fileID: 8001942953771215701}
-  m_CreateButton: {fileID: 3704030923444991120}
   m_PriceText: {fileID: 3885115367176873134}
+  m_CreateButton: {fileID: 3704030923444991120}
 --- !u!114 &2976853135355323174 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6073173874514155564, guid: 17d3158d54c81423abfaaf135ebd49c8, type: 3}

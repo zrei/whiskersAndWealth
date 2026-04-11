@@ -2,10 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Text;
 
 [CreateAssetMenu(fileName = "ShopItemSO", menuName = "ScriptableObjects/Shop/ShopItemSO")]
-public class ShopItemSO : FlagUnlockable, ITransaction
+public class ShopItemSO : FlagUnlockable, ITransaction, IIdentifiable
 {
+    public int Id;
     public ItemSO Item;
     public bool LimitTotalDayStock;
     public int TotalDayStock;
@@ -31,6 +33,8 @@ public class ShopItemSO : FlagUnlockable, ITransaction
     {
         return !IsLocked() && CoinManager.Instance.CanPurchase(Price);
     }
+
+    public int GetId() { return Id; }
 }
 
 [System.Serializable]
@@ -57,6 +61,18 @@ public class ShopItemStockInstance : ITransaction
         foreach (TimePeriod timePeriod in Enum.GetValues(typeof(TimePeriod)))
         {
             m_TimePeriodPurchaseAmt.Add(0);
+        }
+    }
+
+    public ShopItemStockInstance(int shopItemId, string serialisedStock)
+    {
+        m_ShopItemSO = ShopSystemManager.Instance.GetShopItemById(shopItemId);
+
+        string[] timePeriodStocks = serialisedStock.Split("|");
+
+        foreach (string timePeriodStock in timePeriodStocks)
+        {
+            m_TimePeriodPurchaseAmt.Add(Int32.Parse(timePeriodStock));
         }
     }
 
@@ -104,6 +120,19 @@ public class ShopItemStockInstance : ITransaction
     public void OnPurchase()
     {
         m_TimePeriodPurchaseAmt[(int)TimeManager.Instance.CurrTimePeriod] += 1;
+    }
+
+    public string GetSerialisedShopItemStockInstance()
+    {
+        StringBuilder serialiser = new();
+        serialiser.Append(m_ShopItemSO.Id.ToString() + "_");
+        foreach (int timePeriodPurcahseAmt in m_TimePeriodPurchaseAmt)
+        {
+            serialiser.Append(timePeriodPurcahseAmt);
+            serialiser.Append("|");
+        }
+
+        return serialiser.ToString();
     }
 }
 

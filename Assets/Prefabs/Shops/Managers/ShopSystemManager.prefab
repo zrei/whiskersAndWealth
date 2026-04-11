@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ShopSOs:
   - {fileID: 11400000, guid: c59a741f7a8c94342a2b0f10924ba039, type: 2}
+  m_ShopItemDatabase: {fileID: 11400000, guid: 0c508a821e1ba4c56af740c79da7243a, type: 2}

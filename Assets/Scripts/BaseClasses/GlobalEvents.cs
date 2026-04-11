@@ -6,11 +6,13 @@ public delegate void IntEvent(int _);
 public delegate void VoidEvent();
 public delegate void FloatEvent(float _);
 public delegate void Vector3Event(Vector3 _);
+public delegate void BoolEvent(bool _);
 
 public static class GlobalEvents {
 
     public static class UI {
-
+        public static VoidEvent OnUILayerOpened;
+        public static VoidEvent OnUILayerClosed;
     }
 
     public static class Player {
@@ -75,5 +77,12 @@ public static class GlobalEvents {
     {
         public static VoidEvent PotionShopUpgradedEvent;
         public static VoidEvent OnPotionMadeEvent;
+    }
+
+    public static class Coin
+    {
+        public static IntEvent OnConsumeCoin;
+        public static IntEvent OnAddCoin;
+        public static IntEvent OnUpdateCoin;        
     }
 }

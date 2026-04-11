@@ -19,4 +19,4 @@ MonoBehaviour:
   m_Price: 5
   PotionName: Potion A
   Description: Heals your wounds.
-  PotionSprite: {fileID: 620568521, guid: 83cd9f7ff1a314e419ec3ee7e47c63b2, type: 3}
+  PotionSprite: {fileID: 21300000, guid: 8b014045ece044e0788c19132ec97b64, type: 3}

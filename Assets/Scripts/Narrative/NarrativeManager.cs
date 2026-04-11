@@ -45,23 +45,46 @@ public class NarrativeManager : Singleton<NarrativeManager>
     {
         m_Flags = new Dictionary<string, bool>();
         InitPersistentFlags(SaveManager.Instance.IsNewSave);
-        InitSessionFlags();
+        InitSessionFlags(SaveManager.Instance.IsNewSave);
     }
 
     private void InitPersistentFlags(bool isNewSave)
     {
-        foreach (string flag in m_ListFlagsPersistent)
+        if (isNewSave)
         {
-            m_Flags[flag] = isNewSave ? false : SaveManager.Instance.GetFlagValue(flag);
-            Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
+            List<string> startingFlags = AssetLoader.Instance.GetStartingFlags();
+            foreach (string flag in m_ListFlagsPersistent)
+            {
+                m_Flags[flag] = startingFlags.Contains(flag);
+                Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
+            }
+        }
+        else
+        {
+            foreach (string flag in m_ListFlagsPersistent)
+            {
+                m_Flags[flag] = SaveManager.Instance.GetFlagValue(flag);
+                Logger.Log(this.GetType().Name, $"Value of flag {flag} is {m_Flags[flag]}", LogLevel.LOG);
+            }
         }
     }
 
-    private void InitSessionFlags()
+    private void InitSessionFlags(bool isNewSave)
     {
-        foreach (string flag in m_ListFlagsSession)
+        if (isNewSave)
         {
-            m_Flags[flag] = false;
+            List<string> startingFlags = AssetLoader.Instance.GetStartingFlags();
+            foreach (string flag in m_ListFlagsSession)
+            {
+                m_Flags[flag] = startingFlags.Contains(flag);
+            }
+        }
+        else
+        {
+            foreach (string flag in m_ListFlagsSession)
+            {
+                m_Flags[flag] = false;
+            }
         }
     }
     #endregion

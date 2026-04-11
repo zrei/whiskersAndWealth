@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 34d584b0c4cf9472abfc91bd056ddb4c, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -187,8 +187,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: be1ea685b74094852a4fdc2a96ecc1f1, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -422,9 +422,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsEscClosable: 0
-  m_ReturnMap:
-    m_Map: {fileID: 11400000, guid: b7820619d8f1f430eb6afc5ab6f386ec, type: 2}
-    m_AdvanceTime: 1
+  m_HidePreviousLayers: 0
+  m_HideHUD: 0
   m_ResultText: {fileID: 7339240051856430755}
   m_ReturnToTownBtn: {fileID: 8680946512583129934}
 --- !u!1 &7195741082874369120

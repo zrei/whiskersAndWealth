@@ -17,9 +17,6 @@ public class MapLoader : Singleton<MapLoader>
     [Header("References")]
     [SerializeField] private Transform m_MapParent;
 
-    [Header("Starting Data")]
-    [SerializeField] private MapSO m_StartingMap;
-
     [Header("Data")]
     [SerializeField] private List<MapSO> m_Maps;
 
@@ -43,8 +40,8 @@ public class MapLoader : Singleton<MapLoader>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            SaveManager.Instance.SetCurrentMap(m_StartingMap.m_MapName);
-            StartCoroutine(LoadMap(m_StartingMap));
+            MapSO startingMap = AssetLoader.Instance.GetStartingMap();
+            StartCoroutine(LoadMap(startingMap));
         }
         else
         {
@@ -68,6 +65,7 @@ public class MapLoader : Singleton<MapLoader>
     private IEnumerator TransitionCurrMap()
     {
         GlobalEvents.Map.MapLoadBeginEvent?.Invoke();
+        SaveManager.Instance.GameSave();
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(0.3f);
         yield return null;
 
@@ -100,6 +98,10 @@ public class MapLoader : Singleton<MapLoader>
         yield return new WaitUntil(() => StarvationManager.IsReady);
 
         currLoadProgress += 0.1f;
+
+        // sometimes you'd do it pre-map load other times you'd do it post map-load so we need some additional handling for this
+        SaveManager.Instance.GameSave();
+
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(currLoadProgress);
         yield return null;
 
@@ -161,6 +163,7 @@ public class MapLoader : Singleton<MapLoader>
         GlobalEvents.Map.MapLoadProgressEvent?.Invoke(1f);
         yield return null;
 
+        SaveManager.Instance.SetCurrentMap(mapSO.m_MapName);
         GlobalEvents.Map.MapLoadCompleteEvent?.Invoke();
     }
     #endregion

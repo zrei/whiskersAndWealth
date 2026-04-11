@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8695bc48a58d947bebcdd78887d9d70e, type: 3}
   m_Name: Ingredient_WheatSO
   m_EditorClassIdentifier: 
+  ItemId: 1
   ItemSprite: {fileID: 858120148, guid: 83cd9f7ff1a314e419ec3ee7e47c63b2, type: 3}
   ItemName: Wheat
   Description: Lovable, reliable carb.

@@ -10,14 +10,14 @@ using UnityEngine.InputSystem;
 public class UI_MainMenu : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private Button m_NewGameBtn;
-    [SerializeField] private Button m_ContinueBtn;
+    [SerializeField] private UI_Button m_NewGameBtn;
+    [SerializeField] private UI_Button m_ContinueBtn;
 
     #region Initialisation
     private void Awake()
     {
-        m_NewGameBtn.onClick.AddListener(B_NewGame);
-        m_ContinueBtn.onClick.AddListener(B_ContinueGame);
+        m_NewGameBtn.OnSubmitted += B_NewGame;
+        m_ContinueBtn.OnSubmitted += B_ContinueGame;
         InputManager.SubscribeToAction(InputType.UI_SELECT, OnUISelect);
         HandleDependencies();
     }
@@ -30,8 +30,7 @@ public class UI_MainMenu : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_NewGameBtn.onClick.RemoveAllListeners();
-        m_ContinueBtn.onClick.RemoveAllListeners();
+        UnsubscribeButtons();
         InputManager.UnsubscribeToAction(InputType.UI_SELECT, OnUISelect);
     }
     #endregion
@@ -39,12 +38,14 @@ public class UI_MainMenu : MonoBehaviour
     #region Btn Callbacks
     private void B_ContinueGame()
     {
+        UnsubscribeButtons();
         TransitionManager.Instance.ChangeScene(SceneEnum.GAME_SCENE);
     }
 
     private void B_NewGame()
     {
-        SaveManager.Instance.InitNewSave();
+        UnsubscribeButtons();
+        SaveManager.Instance.InitNewGameSave();
         TransitionManager.Instance.ChangeScene(SceneEnum.GAME_SCENE);
     }
     #endregion
@@ -58,4 +59,10 @@ public class UI_MainMenu : MonoBehaviour
         // perform any actions here
     }
     #endregion
+
+    private void UnsubscribeButtons()
+    {
+        m_NewGameBtn.OnSubmitted -= B_NewGame;
+        m_ContinueBtn.OnSubmitted -= B_ContinueGame;
+    }
 }

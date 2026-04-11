@@ -13,11 +13,7 @@ public enum TimePeriod
 /// Handles the advancement of time
 /// </summary>
 public class TimeManager : Singleton<TimeManager>
-{
-    [Header("Starting Data")]
-    [Tooltip("Starting period when first starting the game")]
-    [SerializeField] private TimePeriod m_StartingPeriod;
-    
+{    
     private TimePeriod m_CurrTimePeriod;
     public TimePeriod CurrTimePeriod => m_CurrTimePeriod;
 
@@ -52,15 +48,12 @@ public class TimeManager : Singleton<TimeManager>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            m_CurrTimePeriod = m_StartingPeriod;
-            SaveManager.Instance.SetTimePeriod((int) m_CurrTimePeriod);
+            SetCurrentTimePeriod((TimePeriod) AssetLoader.Instance.GetIntValue(ValueCollectionType.TIME_PERIOD));
         }
         else
         {
-            m_CurrTimePeriod = (TimePeriod) SaveManager.Instance.GetTimePeriod();
+            SetCurrentTimePeriod((TimePeriod) SaveManager.Instance.GetTimePeriod());
         }
-
-        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrTimePeriod.ToString(), true);
     }
     #endregion
 
@@ -68,9 +61,15 @@ public class TimeManager : Singleton<TimeManager>
     public void AdvanceTimePeriod()
     {
         GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrTimePeriod.ToString(), false);
-        m_CurrTimePeriod = (TimePeriod) (((int) m_CurrTimePeriod + 1) % Enum.GetNames(typeof(TimePeriod)).Length);
-        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrTimePeriod.ToString(), true);
+        SetCurrentTimePeriod((TimePeriod) (((int) m_CurrTimePeriod + 1) % Enum.GetNames(typeof(TimePeriod)).Length));
         GlobalEvents.Time.AdvanceTimePeriodEvent?.Invoke(m_CurrTimePeriod);
     }
     #endregion
+
+    private void SetCurrentTimePeriod(TimePeriod timePeriod)
+    {
+        m_CurrTimePeriod = timePeriod;
+        GlobalEvents.Narrative.SetFlagValueEvent?.Invoke(m_CurrTimePeriod.ToString(), true);
+        SaveManager.Instance.SetTimePeriod((int) m_CurrTimePeriod);
+    }
 }

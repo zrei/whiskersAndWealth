@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class RandomEventSO : ScriptableObject
-{
-    public string EventDescription;
-    public List<string> RequiredFlags;
-
-    public abstract void FireEvent();
-
-    public abstract bool CanFire();
-}
-
 // inherit to implement the effects of the event
 public class RandomEventsManager : Singleton<RandomEventsManager>
 {
-    [SerializeField] private List<RandomEventSO> m_RandomEvents;
+    [SerializeField] private List<RandomEventWithProbability> m_RandomEvents;
+    [SerializeField] private float m_BaseNoEventChance;
+    [SerializeField] private UI_RandomEventDisplay m_RandomEventDisplay;
+
+    private int m_PreviousRandomEventId = -1;
+    private RandomEventSO m_CurrentlyFiringEvent;
+    public int PreviousRandomEventId => m_PreviousRandomEventId;
 
     protected override void HandleAwake()
     {
         base.HandleAwake();
+
+        HandleDependencies();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent += OnTimePeriodAdvance;
     }
@@ -30,37 +28,108 @@ public class RandomEventsManager : Singleton<RandomEventsManager>
         GlobalEvents.Time.AdvanceTimePeriodEvent -= OnTimePeriodAdvance;
     }
 
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            SetPreviousRandomEvent(AssetLoader.Instance.GetIntValue(ValueCollectionType.RANDOM_EVENT));
+        }
+        else
+        {
+            SetPreviousRandomEvent(SaveManager.Instance.GetPreviousRandomEvent());
+        }
+    }
+
     private bool TryFireEvent()
     {
-        List<RandomEventSO> usableEvents = GetUsableRandomEvents();
+        List<RandomEventWithProbability> usableEvents = GetUsableRandomEvents();
 
         if (usableEvents.Count == 0)
             return false;
 
-        int randomIndex = Random.Range(0, usableEvents.Count - 1);
+        float totalEventChance = m_BaseNoEventChance;
 
-        usableEvents[randomIndex].FireEvent();
+        foreach (RandomEventWithProbability randomEventWithProbability in usableEvents)
+        {
+            totalEventChance += randomEventWithProbability.TriggerChance;
+        }
 
-        return true;
+        float generatedFloat = Random.Range(0, totalEventChance);
+        float accumulatedFloat = m_BaseNoEventChance;
+
+        // no event will fire
+        if (generatedFloat < accumulatedFloat)
+            return false;
+
+        foreach (RandomEventWithProbability randomEvent in usableEvents)
+        {
+            accumulatedFloat += randomEvent.TriggerChance;
+            if (generatedFloat < accumulatedFloat)
+            {
+                DisplayEvent(randomEvent.RandomEvent);
+                return true;
+            }
+                
+        }
+
+        return false;
+    }
+
+    private void DisplayEvent(RandomEventSO randomEventSO)
+    {
+        m_CurrentlyFiringEvent = randomEventSO;
+        UIManager.Instance.OpenLayer(m_RandomEventDisplay, randomEventSO);
+
+        GlobalEvents.UI.OnUILayerClosed += FireEvent;
+    }
+
+    private void FireEvent()
+    {
+        GlobalEvents.UI.OnUILayerClosed -= FireEvent;
+
+        m_CurrentlyFiringEvent.FireEvent();
+        SetPreviousRandomEvent(m_CurrentlyFiringEvent.GetId());
+        m_CurrentlyFiringEvent = null;
     }
 
     #region Events
     private void OnTimePeriodAdvance(TimePeriod timePeriod)
     {
+        GlobalEvents.UI.OnUILayerClosed += OnMapLoadCompleteEvent;
+    }
+
+    private void OnMapLoadCompleteEvent()
+    {
+        GlobalEvents.UI.OnUILayerClosed -= OnMapLoadCompleteEvent;
+
         TryFireEvent();
     }
     #endregion
 
     #region Utility
-    private List<RandomEventSO> GetUsableRandomEvents()
+    private List<RandomEventWithProbability> GetUsableRandomEvents()
     {
-        List<RandomEventSO> usableEvents = new();
+        List<RandomEventWithProbability> usableEvents = new();
 
-        foreach (RandomEventSO randomEventSO in m_RandomEvents)
-            if (randomEventSO.CanFire())
-                usableEvents.Add(randomEventSO);
+        foreach (RandomEventWithProbability randomEventWithProbability in m_RandomEvents)
+            if (randomEventWithProbability.RandomEvent.CanFire())
+                usableEvents.Add(randomEventWithProbability);
 
         return usableEvents;
     }
     #endregion
+
+    private void SetPreviousRandomEvent(int randomEventId)
+    {
+        m_PreviousRandomEventId = randomEventId;
+        SaveManager.Instance.SetPreviousRandomEvent(m_PreviousRandomEventId);
+    }
 }

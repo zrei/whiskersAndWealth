@@ -1,10 +1,3 @@
-[] Win condition<br/>
-[] Implement a few random events for funsies<br/>
-
-[] Simple UI for shops + upgrades<br/>
-[] Response events for coin update, inven updates, flag updates
-
-[] Hide HUD on UI open<br/>
-[] Add support for UI layers hiding other layers
-
-Translate item info to item stack it's a copy anyway... then we can directly consume without worry
+- [ ] Updated: saving for shop stock remains a ?. Insert an actual save BEFORE the transition occurs and one for AFTER the transition if the map is allowed to be saved on
+- [ ] Keybinding
+- [ ] Controller navigation

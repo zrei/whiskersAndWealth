@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 012d71adee62a4e0bb13b3f78677bfc8, type: 3}
   m_Name: Food_BreadSO
   m_EditorClassIdentifier: 
-  ItemSprite: {fileID: 21300000, guid: fa4a0de7e28a644f890d1e5372197134, type: 3}
+  ItemId: 0
+  ItemSprite: {fileID: 21300000, guid: 42fc3e9bd17f848eba44365d993e06ed, type: 3}
   ItemName: Bread
   Description: Cruncy!
   NumHealthRestored: 2

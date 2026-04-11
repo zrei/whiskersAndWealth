@@ -2,22 +2,36 @@ using UnityEngine;
 
 public class CoinManager : Singleton<CoinManager>
 {
-    [Header("Debug")]
-    [SerializeField] private int m_DebugStartingCoin = 10;
-
     private int m_CoinAmount = 0;
+    public int CoinAmount => m_CoinAmount;
 
     protected override void HandleAwake()
     {
         base.HandleAwake();
 
-        if (GlobalSettings.DoDebug)
-            m_CoinAmount = m_DebugStartingCoin;
+        HandleDependencies();
     }
 
     protected override void HandleDestroy()
     {
         base.HandleDestroy();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+            SaveManager.OnReady += HandleDependencies;
+
+        SaveManager.OnReady -= HandleDependencies;
+
+        if (SaveManager.Instance.IsNewSave)
+        {
+            SetCoinAmount(AssetLoader.Instance.GetIntValue(ValueCollectionType.COIN));
+        }
+        else
+        {
+            SetCoinAmount(SaveManager.Instance.GetCurrentCoin());
+        }
     }
 
     public bool CanPurchase(int purchaseAmt)
@@ -28,16 +42,22 @@ public class CoinManager : Singleton<CoinManager>
     public void ConsumeCoin(int consumeAmt)
     {
         // do the check here or elsewhere?
+        SetCoinAmount(Mathf.Max(0, m_CoinAmount - consumeAmt));
 
-        m_CoinAmount -= consumeAmt;
-
-        // call visuals
+        GlobalEvents.Coin.OnConsumeCoin?.Invoke(consumeAmt);
     }
 
     public void ObtainCoin(int coinAmt)
     {
-        m_CoinAmount += coinAmt;
+        SetCoinAmount(m_CoinAmount + coinAmt);
 
-        // call visuals
+        GlobalEvents.Coin.OnAddCoin?.Invoke(coinAmt);        
+    }
+
+    private void SetCoinAmount(int coinAmt)
+    {
+        m_CoinAmount = coinAmt;
+        SaveManager.Instance.SetCurrentCoin(m_CoinAmount);
+        GlobalEvents.Coin.OnUpdateCoin?.Invoke(m_CoinAmount);
     }
 }

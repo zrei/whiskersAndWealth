@@ -5,9 +5,6 @@ using UnityEngine;
 /// </summary>
 public class StarvationManager : Singleton<StarvationManager>
 {
-    [Header("Starting Data")]
-    [SerializeField] private float m_StartingStarvationValue = 5;
-
     private float m_StarvationAmount;
     public float StarvationAmount => m_StarvationAmount;
 
@@ -21,9 +18,6 @@ public class StarvationManager : Singleton<StarvationManager>
         base.HandleAwake();
 
         GlobalEvents.Time.AdvanceTimePeriodEvent += HandleAdvanceTimePeriod;
-
-        if (m_StartingStarvationValue > GlobalSettings.MaxStarvationLevel)
-            Logger.Log(this.GetType().Name, "Starting starvation level is higher than max starvation level!", LogLevel.ERROR);
     }
 
     // unsubscribe to events and cleanup
@@ -36,6 +30,14 @@ public class StarvationManager : Singleton<StarvationManager>
 
     private void HandleDependencies()
     {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        SaveManager.OnReady -= HandleDependencies;
+
         InitStarvation();
     }
 
@@ -43,33 +45,46 @@ public class StarvationManager : Singleton<StarvationManager>
     {
         if (SaveManager.Instance.IsNewSave)
         {
-            m_StarvationAmount = m_StartingStarvationValue;
-            SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+            SetStarvationLevel(AssetLoader.Instance.GetIntValue(ValueCollectionType.STARVATION));
         }
         else
-            m_StarvationAmount = SaveManager.Instance.RetrieveStarvationLevel();
+            SetStarvationLevel(SaveManager.Instance.RetrieveStarvationLevel());
+
+        if (m_StarvationAmount > GlobalSettings.MaxStarvationLevel)
+            Logger.Log(this.GetType().Name, "Starting starvation level is higher than max starvation level!", LogLevel.ERROR);
     }
     #endregion
 
     #region Event Callbacks
     private void HandleAdvanceTimePeriod(TimePeriod _)
     {
-        m_StarvationAmount -= 1;
-        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
-        GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
-
-        if (m_StarvationAmount == 0)
-        {
-            GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
-        }
+        ConsumeStarvationAmount(1);
     }
     #endregion
 
     #region Restoration
     public void RestoreStarvationAmount(int amount)
     {
-        m_StarvationAmount = Mathf.Min(GlobalSettings.MaxStarvationLevel, m_StarvationAmount + amount);
+        SetStarvationLevel( Mathf.Min(GlobalSettings.MaxStarvationLevel, m_StarvationAmount + amount));
         GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
     }
     #endregion
+
+    public void ConsumeStarvationAmount(int amount)
+    {
+        SetStarvationLevel(Mathf.Max(0, m_StarvationAmount - amount));
+        GlobalEvents.Starvation.StarvationChangeEvent?.Invoke(m_StarvationAmount);
+
+        if (m_StarvationAmount == 0)
+        {
+            GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
+            UIManager.Instance.OpenGameOverScreen();
+        }
+    }
+
+    private void SetStarvationLevel(float amount)
+    {
+        m_StarvationAmount = amount;
+        SaveManager.Instance.SetStarvationLevel(m_StarvationAmount);
+    }
 }

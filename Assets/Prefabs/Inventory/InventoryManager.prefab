@@ -48,6 +48,7 @@ MonoBehaviour:
   m_DebugBeginnerItems:
   - Item: {fileID: 11400000, guid: 53a017a32d4454306bd563a11147faf3, type: 2}
     NumItem: 10
+  m_ItemDatabase: {fileID: 11400000, guid: 586764acf4a5a4b518fbf69735367e22, type: 2}
 --- !u!114 &2689118110000278798
 MonoBehaviour:
   m_ObjectHideFlags: 0

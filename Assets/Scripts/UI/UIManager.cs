@@ -27,6 +27,12 @@ public class UIManager : Singleton<UIManager>
     [Header("Inventory")]
     [SerializeField] private UI_Inventory m_InventoryPrefab;
 
+    [Header("Game State")]
+    [SerializeField] private UI_GameOverScreen m_GameOverScreen;
+
+    [Header("Common")]
+    [SerializeField] private UI_ConfirmationBox m_ConfirmationBox;
+
     private HashSet<GameObject> m_OpenHUD;
     private HashSet<GameObject> m_OpenIndicators;
     private Stack<UILayer> m_OpenLayers;
@@ -116,6 +122,8 @@ public class UIManager : Singleton<UIManager>
         layerInstance.HandleOpen(arguments);
         m_OpenLayers.Push(layerInstance);
 
+        GlobalEvents.UI.OnUILayerOpened?.Invoke();
+
         if (m_OpenLayers.Count == 1)
         {
             Time.timeScale = 0f;
@@ -129,6 +137,7 @@ public class UIManager : Singleton<UIManager>
             m_IsHUDHidden = true;
         }
 
+        layerInstance.OnLayerOpened?.Invoke();
         return layerInstance;
     }
 
@@ -136,7 +145,9 @@ public class UIManager : Singleton<UIManager>
     {
         UILayer layer = m_OpenLayers.Pop();
         layer.HandleClose();
+        layer.OnLayerClosed?.Invoke();
         Destroy(layer.gameObject);
+        GlobalEvents.UI.OnUILayerClosed?.Invoke();
 
         if (m_OpenLayers.Count == 0)
         {
@@ -173,6 +184,19 @@ public class UIManager : Singleton<UIManager>
             m_OpenLayers.Peek().HandleUISelect();
         }
     }
+
+    public void ClearAllUI()
+    {
+        while (m_OpenLayers.Count() > 0)
+            CloseLayer();
+
+        foreach (GameObject hudObject in m_OpenHUD)
+        {
+            Destroy(hudObject);
+        }
+
+        m_OpenHUD.Clear();
+    }
     #endregion
 
     #region UI Elements
@@ -203,6 +227,20 @@ public class UIManager : Singleton<UIManager>
     private void OpenInventory(InputAction.CallbackContext _)
     {
         OpenLayer(m_InventoryPrefab);
+    }
+    #endregion
+
+    #region Game State
+    public void OpenGameOverScreen()
+    {
+        OpenLayer(m_GameOverScreen);
+    }
+    #endregion
+
+    #region Common
+    public UI_ConfirmationBox OpenConfirmationBox(ConfirmationBoxData confirmationBoxData)
+    {
+        return (UI_ConfirmationBox) OpenLayer(m_ConfirmationBox, confirmationBoxData);
     }
     #endregion
 
