@@ -27,6 +27,9 @@ public class UIManager : Singleton<UIManager>
     [Header("Inventory")]
     [SerializeField] private UI_Inventory m_InventoryPrefab;
 
+    [Header("Game State")]
+    [SerializeField] private UI_GameOverScreen m_GameOverScreen;
+
     [Header("Common")]
     [SerializeField] private UI_ConfirmationBox m_ConfirmationBox;
 
@@ -224,6 +227,13 @@ public class UIManager : Singleton<UIManager>
     private void OpenInventory(InputAction.CallbackContext _)
     {
         OpenLayer(m_InventoryPrefab);
+    }
+    #endregion
+
+    #region Game State
+    public void OpenGameOverScreen()
+    {
+        OpenLayer(m_GameOverScreen);
     }
     #endregion
 

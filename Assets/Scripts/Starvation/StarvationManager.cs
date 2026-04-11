@@ -78,6 +78,7 @@ public class StarvationManager : Singleton<StarvationManager>
         if (m_StarvationAmount == 0)
         {
             GlobalEvents.Starvation.PlayerStarveEvent?.Invoke();
+            UIManager.Instance.OpenGameOverScreen();
         }
     }
 
