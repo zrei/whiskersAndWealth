@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public delegate void IntEvent(int _);
 public delegate void VoidEvent();
@@ -84,5 +85,15 @@ public static class GlobalEvents {
         public static IntEvent OnConsumeCoin;
         public static IntEvent OnAddCoin;
         public static IntEvent OnUpdateCoin;        
+    }
+
+    public static class Input
+    {
+        public static class Keybinding
+        {
+            public delegate void InputActionRefEvent(InputAction _, int _2);
+
+            public static InputActionRefEvent OnInputActionPathChangedEvent;
+        }
     }
 }

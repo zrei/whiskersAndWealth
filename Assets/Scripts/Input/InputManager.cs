@@ -48,6 +48,9 @@ public class InputManager : Singleton<InputManager>
     [Header("Input Map")]
     [SerializeField] private InputActionAsset m_InputActionAsset;
 
+    [Header("Keybinds")]
+    [SerializeField] private UI_KeybindMenu m_KeybindMenu;
+
     [Header("Debug")]
     [SerializeField] private bool m_DoDebug = false; // TODO: Move this to global settings or something later
 
@@ -73,6 +76,19 @@ public class InputManager : Singleton<InputManager>
         // TODO: Clean up this debug
         InputAction action = GetInputAction(InputType.PLAYER_DEBUG);
         action.performed += DebugAction;
+
+        HandleDependencies();
+    }
+
+    private void HandleDependencies()
+    {
+        if (!SaveManager.IsReady)
+        {
+            SaveManager.OnReady += HandleDependencies;
+            return;
+        }
+
+        m_InputActionAsset.LoadBindingOverridesFromJson(SaveManager.Instance.GetRebindJSON());
     }
 
     // unsubscribe to events and cleanup
@@ -269,6 +285,21 @@ public class InputManager : Singleton<InputManager>
         {
             ToggleInputBlocked(blockedInput, true);
         }
+    }
+    #endregion
+
+    #region Keybinding
+    public void OpenKeybindMenu(bool isKBM)
+    {
+        UILayer keybindMenu = UIManager.Instance.OpenLayer(m_KeybindMenu, isKBM ? "KBM" : "Controller");
+        keybindMenu.OnLayerClosed += () => OnKeybindMenuClosed(keybindMenu);
+    }
+
+    private void OnKeybindMenuClosed(UILayer keybindMenu)
+    {
+        keybindMenu.OnLayerClosed = null;
+        SaveManager.Instance.SetRebindJSON(m_InputActionAsset.SaveBindingOverridesAsJson());
+        SaveManager.Instance.ConfigSave();
     }
     #endregion
 

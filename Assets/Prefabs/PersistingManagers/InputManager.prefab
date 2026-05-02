@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InputActionAsset: {fileID: -944628639613478452, guid: 760e510fc23bb48a4851b4fdcea9db2e, type: 3}
+  m_KeybindMenu: {fileID: 824653537633696492, guid: 984ee71ed4fb9461fb0e22faa3ba0be8, type: 3}
+  m_DoDebug: 0

@@ -8,6 +8,10 @@ public class UI_PauseMenu : UILayer
     [SerializeField] private Button m_MainMenuBtn;
     [SerializeField] private Button m_SaveBtn;
     [SerializeField] private Button m_SettingsBtn;
+    [SerializeField] private Button m_GamepadKeybindsBtn;
+    [SerializeField] private Button m_KBMKeybindsBtn;
+
+    [SerializeField]
 
     #region Interactions
     public override void HandleClose()
@@ -15,6 +19,8 @@ public class UI_PauseMenu : UILayer
         m_MainMenuBtn.onClick.RemoveListener(B_GoToMainMenu);
         m_SaveBtn.onClick.RemoveListener(B_SaveGame);
         m_SettingsBtn.onClick.RemoveListener(B_SettingsBtn);
+        m_KBMKeybindsBtn.onClick.RemoveListener(B_KBMKeybindsBtn);
+        m_GamepadKeybindsBtn.onClick.RemoveListener(B_GamepadKeybindsBtn);
     }
 
     public override void HandleOpen(params object[] arguments)
@@ -22,6 +28,8 @@ public class UI_PauseMenu : UILayer
         m_MainMenuBtn.onClick.AddListener(B_GoToMainMenu);
         m_SaveBtn.onClick.AddListener(B_SaveGame);
         m_SettingsBtn.onClick.AddListener(B_SettingsBtn);
+        m_KBMKeybindsBtn.onClick.AddListener(B_KBMKeybindsBtn);
+        m_GamepadKeybindsBtn.onClick.AddListener(B_GamepadKeybindsBtn);
     }
 
     public override void HandleUISelect()
@@ -47,5 +55,20 @@ public class UI_PauseMenu : UILayer
     {
         SettingsManager.Instance.OpenSettingsMenu();
     }
+
+    private void B_KBMKeybindsBtn()
+    {
+        OpenKeybindsMenu(true);
+    }
+
+    private void B_GamepadKeybindsBtn()
+    {
+        OpenKeybindsMenu(false);
+    }
     #endregion
+
+    private void OpenKeybindsMenu(bool isKBM)
+    {
+        InputManager.Instance.OpenKeybindMenu(isKBM);
+    }
 }

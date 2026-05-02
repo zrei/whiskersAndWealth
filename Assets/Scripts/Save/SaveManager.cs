@@ -70,6 +70,18 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
 
+    #region Keybinds
+    public void SetRebindJSON(string rebindJSON)
+    {
+        PlayerPrefs.SetString("REBINDS", rebindJSON);
+    }
+
+    public string GetRebindJSON()
+    {
+        return PlayerPrefs.GetString("REBINDS", string.Empty);
+    }
+    #endregion
+
     #region Starvation
     public void SetStarvationLevel(float starvationLevel)
     {
