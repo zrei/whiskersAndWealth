@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d78b1aff46824512af96beea952040a, type: 3}
+  m_Name: TownMapBinds
+  m_EditorClassIdentifier: 
+  MapName: Player
+  MapInputRemappingSOs:
+  - {fileID: 11400000, guid: 603fc9f92cf484396a544aa4addf01ea, type: 2}
+  - {fileID: 11400000, guid: 7bbec4180ed76425d9f5d63fbd5610c0, type: 2}
+  - {fileID: 11400000, guid: 82cf4cb1be75f41afa214193cf728136, type: 2}
+  - {fileID: 11400000, guid: 7b6b838c2e984449090d78779e21ae6a, type: 2}
+  - {fileID: 11400000, guid: d64e2f86ca98848ac97bce7c3bbb970e, type: 2}
+  - {fileID: 11400000, guid: 73983bf8fd55342e49750fa386462ac4, type: 2}
+  - {fileID: 11400000, guid: 1876581e9ad0040d6af55fd3bedb8871, type: 2}
+  - {fileID: 11400000, guid: 8fdb7908e02c74154b52b2fb3ad0c4bf, type: 2}
