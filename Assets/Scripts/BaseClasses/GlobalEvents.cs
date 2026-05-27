@@ -95,5 +95,8 @@ public static class GlobalEvents {
 
             public static InputActionRefEvent OnInputActionPathChangedEvent;
         }
+
+        public delegate void ControlSchemeEvent(InputControlScheme _);
+        public static ControlSchemeEvent OnControlSchemeChangedEvent;
     }
 }

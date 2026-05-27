@@ -3,6 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.Users;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// Enum to provide strong typing for the rest of the project.
@@ -39,6 +42,12 @@ public struct InputMapAndAction
     }
 }
 
+public enum ControlSchemeType
+{
+    KBM,
+    Gamepad
+}
+
 /// <summary>
 /// Handles which inputs are enabled, and the detection of inputs which activate
 /// the appropriate events that other classes can subscribe to
@@ -47,12 +56,21 @@ public class InputManager : Singleton<InputManager>
 {
     [Header("Input Map")]
     [SerializeField] private InputActionAsset m_InputActionAsset;
+    [SerializeField] private InputControlScheme m_KeyboardAndMouseControlScheme;
+    [SerializeField] private InputControlScheme m_GamepadControlScheme;
 
     [Header("Keybinds")]
     [SerializeField] private UI_KeybindMenu m_KeybindMenu;
+    [SerializeField] private KeyDisplayDB_SO m_KeyDisplayDB;
 
     [Header("Debug")]
     [SerializeField] private bool m_DoDebug = false; // TODO: Move this to global settings or something later
+
+    // device caching
+    private InputDevice m_LastInputDevice = null;
+    private ControlSchemeType m_CurrControlScheme = ControlSchemeType.KBM;
+
+    public UI_KeyDisplay DefaultKeyDisplay => m_KeyDisplayDB.DefaultKeyDisplay;
 
     // TODO: Better way to do this?
     public const string UI_ACTION_MAP_NAME = "UI";
@@ -76,8 +94,43 @@ public class InputManager : Singleton<InputManager>
         // TODO: Clean up this debug
         InputAction action = GetInputAction(InputType.PLAYER_DEBUG);
         action.performed += DebugAction;
-
+        
+        InputSystem.onEvent += OnDeviceChange;
         HandleDependencies();
+    }
+
+    private void OnDeviceChange(InputEventPtr eventPtr, InputDevice device)  {
+        if (m_LastInputDevice == device) return;
+
+        if (eventPtr.type != StateEvent.Type) return;
+
+        bool validPress = false;
+        foreach (InputControl control in eventPtr.EnumerateChangedControls(device, 0.01F))
+        {
+            validPress = true;
+            break;
+        }
+        if (validPress is false) return;
+
+        if (device is Keyboard || device is Mouse)
+        {
+            if (m_CurrControlScheme == ControlSchemeType.KBM) return;
+            
+            m_CurrControlScheme = ControlSchemeType.KBM;
+        }
+        else if (device is Gamepad)
+        {
+            if (m_CurrControlScheme == ControlSchemeType.Gamepad) return;
+            
+            m_CurrControlScheme = ControlSchemeType.Gamepad;
+        }
+
+        GlobalEvents.Input.OnControlSchemeChangedEvent?.Invoke(GetCurrControlScheme());
+    }
+
+    public InputControlScheme GetCurrControlScheme()
+    {
+        return m_CurrControlScheme == ControlSchemeType.KBM ? m_KeyboardAndMouseControlScheme : m_GamepadControlScheme;
     }
 
     private void HandleDependencies()
@@ -95,6 +148,7 @@ public class InputManager : Singleton<InputManager>
     protected override void HandleDestroy()
     {
         m_InputActionAsset.Disable();
+        InputSystem.onEvent -= OnDeviceChange;
         base.HandleDestroy();
     }
 
@@ -300,6 +354,16 @@ public class InputManager : Singleton<InputManager>
         keybindMenu.OnLayerClosed = null;
         SaveManager.Instance.SetRebindJSON(m_InputActionAsset.SaveBindingOverridesAsJson());
         SaveManager.Instance.ConfigSave();
+    }
+
+    public KeyDisplay GetKeyDisplay(string deviceLayout, string controlPath)
+    {
+        return m_KeyDisplayDB.GetKeyDisplay(deviceLayout, controlPath);
+    }
+
+    public Sprite GetKeySprite(string deviceLayout, string controllerPath)
+    {
+        return m_KeyDisplayDB.GetKeyIcon(deviceLayout, controllerPath);
     }
     #endregion
 
