@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Enum to provide strong typing for the rest of the project.
@@ -66,6 +67,9 @@ public class InputManager : Singleton<InputManager>
     [Header("Debug")]
     [SerializeField] private bool m_DoDebug = false; // TODO: Move this to global settings or something later
 
+    [Header("Event System")]
+    [SerializeField] private EventSystem m_PersistentEventSystem;
+
     // device caching
     private InputDevice m_LastInputDevice = null;
     private ControlSchemeType m_CurrControlScheme = ControlSchemeType.KBM;
@@ -96,6 +100,7 @@ public class InputManager : Singleton<InputManager>
         action.performed += DebugAction;
         
         InputSystem.onEvent += OnDeviceChange;
+
         HandleDependencies();
     }
 
@@ -364,6 +369,13 @@ public class InputManager : Singleton<InputManager>
     public Sprite GetKeySprite(string deviceLayout, string controllerPath)
     {
         return m_KeyDisplayDB.GetKeyIcon(deviceLayout, controllerPath);
+    }
+    #endregion
+
+    #region UI Navigation
+    public void SetSelectedObject(GameObject selectedObject)
+    {
+        m_PersistentEventSystem.SetSelectedGameObject(selectedObject);
     }
     #endregion
 

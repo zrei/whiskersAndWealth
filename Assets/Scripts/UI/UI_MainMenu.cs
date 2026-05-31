@@ -19,6 +19,7 @@ public class UI_MainMenu : MonoBehaviour
         m_NewGameBtn.OnSubmitted += B_NewGame;
         m_ContinueBtn.OnSubmitted += B_ContinueGame;
         InputManager.SubscribeToAction(InputType.UI_SELECT, OnUISelect);
+        InputManager.Instance.SetSelectedObject(m_NewGameBtn.gameObject);
         HandleDependencies();
     }
 
