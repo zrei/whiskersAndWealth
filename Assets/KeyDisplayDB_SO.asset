@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f774f31b94544f196261176c9ee921, type: 3}
+  m_Name: KeyDisplayDB_SO
+  m_EditorClassIdentifier: 
+  KeyDisplays:
+  - ApplicablePaths:
+    - <Gamepad>/buttonSouth
+    - <Gamepad>/buttonNorth
+    - <Gamepad>/buttonEast
+    - <Gamepad>/start
+    - <Gamepad>/select
+    OverrideKeyDisplayClass: {fileID: 6032173672390490545, guid: 685037be46084477aac7563afd2ac783, type: 3}
+    KeyOverrideText: 
+  RecognisedGamepadSubstrings:
+  - Gamepad
+  PlaystationIcons: {fileID: 11400000, guid: 56f26a76035104464a30c64c98191667, type: 2}
+  XboxIcons: {fileID: 11400000, guid: decfba04140c94d60b794010ae8c682b, type: 2}
+  DefaultKeyDisplay: {fileID: 8019229322399612348, guid: 5bacd5f61a1bd4ecdbfc1abfa400ff7c, type: 3}

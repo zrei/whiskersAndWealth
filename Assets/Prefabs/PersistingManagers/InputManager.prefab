@@ -45,5 +45,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InputActionAsset: {fileID: -944628639613478452, guid: 760e510fc23bb48a4851b4fdcea9db2e, type: 3}
+  m_KeyboardAndMouseControlScheme:
+    m_Name: KBM
+    m_BindingGroup: KBM
+    m_DeviceRequirements:
+    - m_ControlPath: <Keyboard>
+      m_Flags: 0
+    - m_ControlPath: <Mouse>
+      m_Flags: 0
+  m_GamepadControlScheme:
+    m_Name: Controller
+    m_BindingGroup: Controller
+    m_DeviceRequirements:
+    - m_ControlPath: <Gamepad>
+      m_Flags: 0
   m_KeybindMenu: {fileID: 824653537633696492, guid: 984ee71ed4fb9461fb0e22faa3ba0be8, type: 3}
+  m_KeyDisplayDB: {fileID: 11400000, guid: fa7c400a558474a1481ffaef19cbb753, type: 2}
   m_DoDebug: 0
